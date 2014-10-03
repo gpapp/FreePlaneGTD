@@ -78,20 +78,21 @@ public class GTDReport {
 	private static GTDReport gtdReport = new GTDReport();
 
 	private String txtVer = "0.9";
+	private String txtURI = "http://www.itworks.hu/index.php/freeplane-gtd+";
 	private GTDMapReader gtdMapReader;
 	private Proxy.Controller ctrl;
 	private String ByProject = "";
-	private String ByWhere = "";
+	private String ByContext = "";
 	private String ByWho = "";
 	private String ByWhen = "";
 	private int selTab = 0;
 	private String userPath = "";
 	private JLabel reportByProject = new JLabel();
-	private JLabel reportByWhere = new JLabel();
+	private JLabel reportByContext = new JLabel();
 	private JLabel reportByWho = new JLabel();
 	private JLabel reportByWhen = new JLabel();
 	private JEditorPane htmlByProject = new JEditorPane("text/html", "Project");
-	private JEditorPane htmlByWhere = new JEditorPane("text/html", "Where");
+	private JEditorPane htmlByContext = new JEditorPane("text/html", "Context");
 	private JEditorPane htmlByWho = new JEditorPane("text/html", "Who");
 	private JEditorPane htmlByWhen = new JEditorPane("text/html", "When");
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -139,11 +140,11 @@ public class GTDReport {
 		JScrollPane scrollpane3 = new JScrollPane(panel3);
 		tabbedPane.addTab("<html><body height=50><b><i>By Who</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountDelegated().toString() + "</h1></body></html>", icon, scrollpane3, "List next actions by owners (who)");
 
-		// build By Where tab
-		JComponent panel2 = makeTextPanel(htmlByWhere);
+		// build By Context tab
+		JComponent panel2 = makeTextPanel(htmlByContext);
 		panel2.setBackground(Color.WHITE);
 		JScrollPane scrollpane2 = new JScrollPane(panel2);
-		tabbedPane.addTab("<html><body height=50><b><i>By Where</i></b></body></html>", icon, scrollpane2, "List next actions by context (where done)");
+		tabbedPane.addTab("<html><body height=50><b><i>By Context</i></b></body></html>", icon, scrollpane2, "List next actions by context (Context done)");
 
 		// build By When tab
 		JComponent panel4 = makeTextPanel(htmlByWhen);
@@ -164,12 +165,12 @@ public class GTDReport {
 		appName.setHorizontalAlignment(JLabel.CENTER);
 		panel5.setLayout(new GridLayout(2, 1));
 		panel5.add(appName);
-		JLabel linkURL = new JLabel("<html><h4>By Gergely Papp based on the original code by Auxilus Systems LLC<br/>Licensed under GNU GPL Version 3</h4><a href='http://www.itworks.hu/index.php/freeplane-gtd+'>http://www.itworks.hu/index.php/freeplane-gtd+</a></html>");
+		JLabel linkURL = new JLabel("<html><h4>by Gergely Papp<br/><h5>based on the original code by Auxilus Systems LLC</h5><h4>Licensed under GNU GPL Version 3</h4><a href='"+txtURI+"'>"+txtURI+"</a></html>");
 		linkURL.setHorizontalAlignment(JLabel.CENTER);
 		linkURL.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		linkURL.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				URI uriLink = new URI("http://www.itworks.hu/index.php/freeplane-gtd+");
+				URI uriLink = new URI(txtURI);
 				browseLink(uriLink);
 			}
 		});
@@ -202,7 +203,7 @@ public class GTDReport {
 	}
 
 	public String ContextReport() {
-		return ByWhere;
+		return ByContext;
 	}
 
 	public String OwnerReport() {
@@ -320,13 +321,13 @@ public class GTDReport {
 
 		// Get HTML for next action lists
 		ByProject = gtdMapReader.getHTMLByProject();
-		ByWhere = gtdMapReader.getHTMLByWhere();
+		ByContext = gtdMapReader.getHTMLByContext();
 		ByWho = gtdMapReader.getHTMLByWho();
 		ByWhen = gtdMapReader.getHTMLByWhen();
 
 		// add reports to labels
 		htmlByProject.setText(ByProject);
-		htmlByWhere.setText(ByWhere);
+		htmlByContext.setText(ByContext);
 		htmlByWho.setText(ByWho);
 		htmlByWhen.setText(ByWhen);
 
@@ -345,7 +346,7 @@ public class GTDReport {
 public class GTDMapReader {
 
 	private String ByProject = "";
-	private String ByWhere = "";
+	private String ByContext = "";
 	private String ByWho = "";
 	private String ByWhen = "";
 	private boolean filterDone = false;
@@ -421,7 +422,7 @@ public class GTDMapReader {
 				ByProject += "<h1>" + strProject + "</h1>\n<ul>\n";
 				naByProject[strProject].each {
 					CountNextActions = CountNextActions + 1;
-					String strWhere = it['where'];
+					String strContext = it['context'];
 					String strWho = it['who'];
 					String strWhen = it['when'];
 					boolean done = it['done'];
@@ -436,7 +437,7 @@ public class GTDMapReader {
 					strAssign = strAssign.trim();
 					ByProject += "\t<li>" +
 						(done?"<strike>":"") +
-							"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + (strWhere==null ? "":" @" + strWhere + " ") + strAssign +
+							"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + (strContext==null ? "":" @" + strContext + " ") + strAssign +
 						(done?"</strike>":"") +
 						"</li>\n";
 				}
@@ -452,15 +453,15 @@ public class GTDMapReader {
 		return ByProject;
 	}
 
-	public String getHTMLByWhere(){
-		ByWhere = htmlBodyStyle;
-		def naByWhere = NAList.groupBy{it['where']};
-		naByWhere = naByWhere.sort{it.toString().toLowerCase()};
-		if (naByWhere.size()>0){
-			naByWhere.each {
-				key, value -> String strWhere = key;
-				ByWhere += "<h1>" + (strWhere==null ? "Unspecified" : strWhere) + "</h1>\n<ul>\n";
-				naByWhere[strWhere].each {
+	public String getHTMLByContext(){
+		ByContext = htmlBodyStyle;
+		def naByContext = NAList.groupBy{it['context']};
+		naByContext = naByContext.sort{it.toString().toLowerCase()};
+		if (naByContext.size()>0){
+			naByContext.each {
+				key, value -> String strContext = key;
+				ByContext += "<h1>" + (strContext==null ? "Unspecified" : strContext) + "</h1>\n<ul>\n";
+				naByContext[strContext].each {
 					String strProject = it['project'];
 					String strWho = it['who'];
 					String strWhen = it['when'];
@@ -474,20 +475,20 @@ public class GTDMapReader {
 					if (strWhen.length()>0){strDue = "{" + strWhen + "}";}
 					String strAssign = strOwner + " " + strDue;
 					strAssign = strAssign.trim();
-					ByWhere += "\t<li>" +
+					ByContext += "\t<li>" +
 						(done?"<strike>":"") +
 							"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + " (for: " + strProject + ")" + " " + strAssign +
 						(done?"</strike>":"") +
 						"</li>\n";
 				}
-				ByWhere += "</ul>\n";
+				ByContext += "</ul>\n";
 			}
 		}
 		else {
-			ByWhere += "<h1 style='color:#666666;'>No Next Actions Found On This Map</h1><p>Make sure to mark Next Actions with icon specified by 'Icon:Next action' node under 'Settings' node</p>"
+			ByContext += "<h1 style='color:#666666;'>No Next Actions Found On This Map</h1><p>Make sure to mark Next Actions with icon specified by 'Icon:Next action' node under 'Settings' node</p>"
 		}
-		ByWhere += "</body></html>";
-		return ByWhere;
+		ByContext += "</body></html>";
+		return ByContext;
 	}
 
 	public String getHTMLByWho(){
@@ -503,13 +504,14 @@ public class GTDMapReader {
 					CountDelegated = CountDelegated + 1;
 					String strProject = it['project'];
 					String strWhen = it['when'];
+					String strContext = it['context'];
 					boolean done = it['done'];
 					if (strWhen=="tbd"){strWhen = "";}
 					strWhen = strWhen.trim();
 					if (strWhen.length()>0){strWhen = " {" + strWhen + "}";}
 						ByWho += "\t<li>" +
 							(done?"<strike>":"") +
-								"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + " (for: " + strProject + ")" + strWhen +
+								"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + (strContext==null ? "":" @" + strContext + " ") + " (for: " + strProject + ")" + strWhen +
 							(done?"</strike>":"") +
 							"</li>\n";
 				}
@@ -535,13 +537,14 @@ public class GTDMapReader {
 				naByWhen[strWhen].each {
 					String strProject = it['project'];
 					String strWho = it['who'];
+					String strContext = it['context'];
 					boolean done = it['done'];
 					if (strWho=="tbd"){strWho = "";}
 					strWho = strWho.trim();
 					if (strWho.length()>0){strWho = " [" + strWho + "]";}
 						ByWhen += "\t<li>" +
 							(done?"<strike>":"") +
-								"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + " (for: " + strProject + ")" + strWho +
+								"<a href='" + it['nodeID'] + "'>" + it['action'] + "</a>" + (strContext==null ? "":" @" + strContext + " ") + " (for: " + strProject + ")" + strWho +
 							(done?"</strike>":"") +
 							"</li>\n";
 					}
@@ -634,7 +637,7 @@ public class GTDMapReader {
 		boolean foundIconDone = false;
 
 		// use index method to get attributes
-		String naWhere = thisNode['Where'].toString();
+		String naContext = thisNode['Where'].toString();
 		String naWho = thisNode['Who'].toString();
 		String naWhen = thisNode['When'].toString();
 
@@ -672,7 +675,7 @@ public class GTDMapReader {
 				def naProject = findNextActionProject(thisNode, listProjects);
 				if (foundIconToday){naWhen = "Today";}
 				if (!(foundIconDone && filterDone)) {
-					result = [action:naAction, project:naProject, where:naWhere, who:naWho, when:naWhen, nodeID:naNodeID, done:foundIconDone];
+					result = [action:naAction, project:naProject, context:naContext, who:naWho, when:naWhen, nodeID:naNodeID, done:foundIconDone];
 				}
 			}
 		}
@@ -686,7 +689,7 @@ public class GTDMapReader {
 
 	//--------------------------------------------------------------
 	// Convert next action shorthand notation with recursive walk:
-	// shorthand: *<next action> @<where> [<who>] {<when>}
+	// shorthand: *<next action> @<Context> [<who>] {<when>}
 	// becomes:
 	// node.text     = <next action>
 	// node['Where'] = <where>
@@ -705,7 +708,6 @@ public class GTDMapReader {
 			if (field[2]){nodeAttr["Who"]=field[2];}
 			if (field[3]){nodeAttr["When"]=field[3];}
 			thisNode.attributes = nodeAttr;
-			//thisNode.attributes = ["Where":field[1], "Who":field[2], "When":field[3]];
 			thisNode.icons.add(IconNextAction);
 		}
 
@@ -727,7 +729,7 @@ public class GTDMapReader {
 		int posWho2 = nodeText.indexOf("]");
 		int posWhen1 = nodeText.indexOf("{");
 		int posWhen2 = nodeText.indexOf("}");
-		int posWhere = nodeText.indexOf("@");
+		int posContext = nodeText.indexOf("@");
 		int posFirst;
 		int posMax;
 
@@ -753,16 +755,16 @@ public class GTDMapReader {
 		posMax = nodeText.length();
 		if (posWhen1==-1){posWhen1 = posMax;}
 		if (posWho1==-1){posWho1 = posMax;}
-		if (posWhere==-1){posWhere = posMax;}
+		if (posContext==-1){posContext = posMax;}
 		posFirst = Math.min(posWhen1, posWho1);
-		posFirst = Math.min(posFirst, posWhere);
+		posFirst = Math.min(posFirst, posContext);
 		field[0] = nodeText.substring(1,posFirst);
 		field[0] = field[0].trim();
 
-		// parse Where
-		posWhere = nodeText.indexOf("@");
-		if (posWhere>0){
-			nodeText = nodeText.substring(posWhere);
+		// parse Context
+		posContext = nodeText.indexOf("@");
+		if (posContext>0){
+			nodeText = nodeText.substring(posContext);
 			posWho1 = nodeText.indexOf("[");
 			posWhen1 = nodeText.indexOf("{");
 			posMax = nodeText.length();
@@ -835,7 +837,7 @@ public class GTDMapReader {
 
 		// Get HTML for next action lists
 		ByProject = getHTMLByProject();
-		ByWhere = getHTMLByWhere();
+		ByContext = getHTMLByContext();
 		ByWho = getHTMLByWho();
 		ByWhen = getHTMLByWhen();
 	}
