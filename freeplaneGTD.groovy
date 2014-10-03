@@ -164,12 +164,12 @@ public class GTDReport {
 		appName.setHorizontalAlignment(JLabel.CENTER);
 		panel5.setLayout(new GridLayout(2, 1));
 		panel5.add(appName);
-		JLabel linkURL = new JLabel("<html><h4>Auxilus Systems LLC<br/>Licensed under GNU GPL Version 3</h4><a href='http://ordino.auxilus.com/freeplanegtd'>http://ordino.auxilus.com/freeplanegtd</a></html>");
+		JLabel linkURL = new JLabel("<html><h4>By Gergely Papp based on the original code by Auxilus Systems LLC<br/>Licensed under GNU GPL Version 3</h4><a href='http://www.itworks.hu/index.php/freeplane-gtd+'>http://www.itworks.hu/index.php/freeplane-gtd+</a></html>");
 		linkURL.setHorizontalAlignment(JLabel.CENTER);
 		linkURL.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		linkURL.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				URI uriLink = new URI("http://ordino.auxilus.com/freeplanegtd");
+				URI uriLink = new URI("http://www.itworks.hu/index.php/freeplane-gtd+");
 				browseLink(uriLink);
 			}
 		});
