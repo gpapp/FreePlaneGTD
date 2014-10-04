@@ -389,7 +389,7 @@ public class GTDMapReader {
 	}
 
 	public String getDoneIcon(){
-		IconToday = findIconKey(RootNode,NodeDoneIcon,IconDone);
+		IconDone = findIconKey(RootNode,NodeDoneIcon,IconDone);
 		return IconDone;
 	}
 
