@@ -65,7 +65,12 @@
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412326124928">
+<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412444221470">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="WordPress"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1412444311101">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
