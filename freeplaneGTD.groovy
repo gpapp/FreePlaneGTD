@@ -133,7 +133,7 @@ public class GTDReport {
 		panel1.setBackground(Color.WHITE);
 		JScrollPane scrollpane1 = new JScrollPane(panel1);
 		tabbedPane.addTab("<html><body height=50><b><i>By Project</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountNextActions().toString() + "</h1></body></html>", icon, scrollpane1, "List next actions by project");
-
+		
 		// build By Who tab
 		JComponent panel3 = makeTextPanel(htmlByWho);
 		panel3.setBackground(Color.WHITE);
@@ -304,9 +304,8 @@ public class GTDReport {
 
 		// make the frame half the height and width
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int frHeight = (screenSize.height)/2;
-		int frWidth = (screenSize.width)/2;
-
+		int frHeight = (screenSize.height)/4*3;
+		int frWidth = (screenSize.width)/4*3;
 
 		//Display the window
 		frame.pack();
