@@ -67,8 +67,9 @@
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412444221470">
+<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412724043560">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
@@ -185,10 +186,10 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412606788028">
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412724020691">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v0.9"/>
+<attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
@@ -206,10 +207,10 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412600652344">
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412724024459">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v0.9"/>
+<attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
@@ -230,6 +231,11 @@
 </html>
 </richcontent>
 </node>
+<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 <node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412326124926">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -249,11 +255,6 @@
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
-</node>
-<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
 </node>
 </node>
 </node>
