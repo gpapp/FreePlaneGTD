@@ -55,8 +55,9 @@
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1412322586539">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="GIT initialization" ID="ID_831667569" CREATED="1412322339486" MODIFIED="1412326124931">
+<node TEXT="GIT initialization" ID="ID_831667569" CREATED="1412322339486" MODIFIED="1412595984653">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Browser"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
@@ -79,6 +80,16 @@
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="email"/>
 <attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1412596036136">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="WordPress"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1412596062741">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="WordPress"/>
+<attribute NAME="When" VALUE="v1.1"/>
 </node>
 </node>
 <node TEXT="Config" POSITION="left" ID="ID_1683616886" CREATED="1412442290868" MODIFIED="1412442749954">
@@ -107,7 +118,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="Icon: Project" ID="ID_868847204" CREATED="1412442368874" MODIFIED="1412442387680">
 <icon BUILTIN="list"/>
@@ -161,6 +171,59 @@
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Increase default size of the GTD pane" ID="ID_202339886" CREATED="1412606744935" MODIFIED="1412606776637">
+<icon BUILTIN="button_ok"/>
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412606788028">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      http://www.coderanch.com/t/342584/GUI/java/JScrollPane-Set-Scroll-Position
+    </p>
+    <p>
+      http://www.coderanch.com/t/336161/GUI/java/set-initial-position-vertical-scrollbar
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412600652344">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      http://alvinalexander.com/blog/post/jfc-swing/how-create-simple-swing-html-viewer-browser-java
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      http://www.javaworld.com/article/2076334/java-se/start-customizing-swing-s-editor-pane----patch-the-swing-htmleditorkit.html
+    </p>
+  </body>
+</html>
+
+</richcontent>
 </node>
 <node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412326124926">
 <icon BUILTIN="yes"/>
