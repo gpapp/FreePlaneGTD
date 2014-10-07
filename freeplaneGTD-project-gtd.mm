@@ -61,8 +61,9 @@
 <attribute NAME="Where" VALUE="Browser"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1412326124930">
+<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1412722704590">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
@@ -172,6 +173,12 @@
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
+<node TEXT="Create script to update groovy script in addon package" ID="ID_1478401136" CREATED="1412722766734" MODIFIED="1412722876060">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
 <node TEXT="Increase default size of the GTD pane" ID="ID_202339886" CREATED="1412606744935" MODIFIED="1412606776637">
 <icon BUILTIN="button_ok"/>
 <icon BUILTIN="yes"/>
@@ -197,7 +204,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412600652344">
@@ -222,7 +228,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412326124926">
