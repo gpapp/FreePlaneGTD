@@ -51,28 +51,10 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="6"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="8"/>
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1412322586539">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="GIT initialization" ID="ID_831667569" CREATED="1412322339486" MODIFIED="1412595984653">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Browser"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1412722704590">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="WordPress"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412724043560">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="WordPress"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
 <node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1412444311101">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
@@ -137,56 +119,7 @@
 <node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1412322322277">
 <icon BUILTIN="list"/>
 <edge COLOR="#ff0000"/>
-<node TEXT="Date to format" ID="ID_655452047" CREATED="1412322237091" MODIFIED="1412339891886">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v0.9"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
-
-<html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      Allow parsing dates to Date, if successful assign Date object to attribute.
-    </p>
-    <p>
-      Truncate dates for aggregation.
-    </p>
-    <p>
-      Allow non-date specific whens.
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node TEXT="Add default shortcut (Ctrl+H)" ID="ID_1205718068" CREATED="1412441691419" MODIFIED="1412442206604">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Update package contents" ID="ID_1128364129" CREATED="1412442218528" MODIFIED="1412442282556">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Create script to update groovy script in addon package" ID="ID_1478401136" CREATED="1412722766734" MODIFIED="1412722876060">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Increase default size of the GTD pane" ID="ID_202339886" CREATED="1412606744935" MODIFIED="1412606776637">
-<icon BUILTIN="button_ok"/>
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412724020691">
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412769690575">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -207,7 +140,12 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412724024459">
+<node TEXT="Add option to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1412769088546">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412769690577">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -236,25 +174,158 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412326124926">
+<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412769690578">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow collecting the project hierarchy for the actions, and display them accordingly.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      eg. The done tasks in this file should be displayed for project &quot;Previous releases/v0.9&quot; instead of 'v0.9'
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1412769155166">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-scope tasks" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1412326124925">
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1412769272733">
 <icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1412326124924">
+<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1412769690573">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow definition of markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Look for scope marker definition nodes like <b>Icon: @Home</b>
+      </li>
+      <li>
+        Update scope attribute from marker in nodes
+      </li>
+      <li>
+        Add markers for scope from shorthands
+      </li>
+      <li>
+        Add markers for scope from attibute
+      </li>
+    </ul>
+    <p>
+      Scope marker should take precedence.
+    </p>
+  </body>
+</html>
+
+</richcontent>
 </node>
 <node TEXT="Marker to done" ID="ID_518957387" CREATED="1412322229804" MODIFIED="1412326124923">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
+</node>
+<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1412769358667">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+</node>
+</node>
+<node TEXT="Previous releases" POSITION="right" ID="ID_563183329" CREATED="1412769003141" MODIFIED="1412769079890">
+<icon BUILTIN="list"/>
+<edge COLOR="#00007c"/>
+<node TEXT="v0.9" ID="ID_1487316277" CREATED="1412769048518" MODIFIED="1412769077682">
+<icon BUILTIN="list"/>
+<node TEXT="Date to format" ID="ID_655452047" CREATED="1412322237091" MODIFIED="1412769016104">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow parsing dates to Date, if successful assign Date object to attribute.
+    </p>
+    <p>
+      Truncate dates for aggregation.
+    </p>
+    <p>
+      Allow non-date specific whens.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node TEXT="Add default shortcut (Ctrl+H)" ID="ID_1205718068" CREATED="1412441691419" MODIFIED="1412769016108">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Update package contents" ID="ID_1128364129" CREATED="1412442218528" MODIFIED="1412769016113">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Create script to update groovy script in addon package" ID="ID_1478401136" CREATED="1412722766734" MODIFIED="1412769016117">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Increase default size of the GTD pane" ID="ID_202339886" CREATED="1412606744935" MODIFIED="1412769016131">
+<icon BUILTIN="button_ok"/>
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="GIT initialization" ID="ID_831667569" CREATED="1412322339486" MODIFIED="1412769023921">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Browser"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1412769023925">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="WordPress"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412769023939">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="WordPress"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
 </node>
 </node>
 </node>
