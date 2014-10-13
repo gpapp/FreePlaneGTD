@@ -119,6 +119,21 @@
 <node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1412322322277">
 <icon BUILTIN="list"/>
 <edge COLOR="#ff0000"/>
+<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413201145866">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413201160398">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413201169407">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 <node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412769690575">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -140,7 +155,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add option to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1412769088546">
+<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413201046829">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -196,7 +211,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1412769155166">
@@ -240,7 +254,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Marker to done" ID="ID_518957387" CREATED="1412322229804" MODIFIED="1412326124923">
