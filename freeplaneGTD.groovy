@@ -5,7 +5,7 @@
 // Groovy script to extract GTD-style Next Action list
 // from a Freeplane mind map
 //
-// Version 0.9
+// Version 1.0-beta
 //
 // Copyright (c)2014 Gergely Papp
 // Copyright (c)2011 Auxilus Systems LLC
@@ -77,7 +77,7 @@ public class GTDReport {
 
 	private static GTDReport gtdReport = new GTDReport();
 
-	private String txtVer = "0.9";
+	private String txtVer = "1.0-beta";
 	private String txtURI = "http://www.itworks.hu/index.php/freeplane-gtd+";
 	private GTDMapReader gtdMapReader;
 	private Proxy.Controller ctrl;
