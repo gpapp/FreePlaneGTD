@@ -9,6 +9,7 @@ VERSION=`sed -n '/^version/ ! d; /^version/ {s/version=//; p}' .properties`
 # update groovy and preferences
 xmlstarlet  ed -P -L -O \
  -u "/map/node/node[@TEXT='scripts']/node[@TEXT='freeplaneGTD.groovy']/node/@TEXT" -v "$(cat src/freeplaneGTD.groovy)" \
+ -u "/map/node/node[@TEXT='scripts']/node[@TEXT='freeplaneShorthand.groovy']/node/@TEXT" -v "$(cat src/freeplaneShorthand.groovy)" \
  -u "/map/node/node[@TEXT='preferences.xml']/node/@TEXT" -v "$(cat src/preferences.xml)" \
  -u "/map/node/attribute[@NAME='version']/@VALUE" -v "$VERSION" \
  freeplaneGTD-${VERSION}.addon.mm

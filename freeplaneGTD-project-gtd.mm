@@ -158,8 +158,9 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413201046829">
+<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
