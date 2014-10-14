@@ -67,6 +67,7 @@ import org.freeplane.plugin.script.proxy.ControllerProxy;
 import org.freeplane.plugin.script.proxy.Proxy;
 import org.freeplane.core.resources.ResourceController;
 import freeplaneGTD.DateUtil;
+import freeplaneGTD.GTDMapReader;
 //=========================================================
 // classes
 //=========================================================
@@ -80,7 +81,7 @@ public class GTDReport {
 
 	private String txtVer = "1.0-beta";
 	private String txtURI = "http://www.itworks.hu/index.php/freeplane-gtd+";
-	private GTDMapReader gtdMapReader;
+	private GTDMapReader2 gtdMapReader;
 	private Proxy.Controller ctrl;
 	private String ByProject = "";
 	private String ByContext = "";
@@ -231,7 +232,7 @@ public class GTDReport {
 		return ctrl;
 	}
 
-	public void setMapReader(GTDMapReader MapReader){
+	public void setMapReader(GTDMapReader2 MapReader){
 		gtdMapReader = MapReader;
 		this.Refresh();
 	}
@@ -344,7 +345,7 @@ public class GTDReport {
 //---------------------------------------------------------
 // GTDMapReader: reads and parses GTD map for next actions
 //---------------------------------------------------------
-public class GTDMapReader {
+public class GTDMapReader2 {
 
 	private String ByProject = "";
 	private String ByContext = "";
@@ -354,54 +355,28 @@ public class GTDMapReader {
 	private int CountNextActions = 0;
 	private int CountDelegated = 0;
 	private String htmlBodyStyle = "<html><body>\n";
-	private String IconNextAction = "yes";
-	private String IconProject = "list";
-	private String IconToday = "excellent";
-	private String IconDone = "button_ok";
-	private String NodeNextActionIcon ="Icon: Next action";
-	private String NodeProjectIcon ="Icon: Project";
-	private String NodeTodayIcon ="Icon: Today";
-	private String NodeDoneIcon ="Icon: Done";
 	private Proxy.Node RootNode;
 	private def NAList;
 	private def ProjectList;
+	private GTDMapReader mapreader;
 
 	//--------------------------------------------------------------
 	// constructor
-	public GTDMapReader(Proxy.Node rootNode, boolean filterDone){
+	public GTDMapReader2(Proxy.Node rootNode, boolean filterDone){
 		RootNode = rootNode;
         this.filterDone = filterDone;
-	}
 
-	//--------------------------------------------------------------
-	// properties
-	public String getNextActionIcon() {
-		IconNextAction = findIconKey(RootNode,NodeNextActionIcon,IconNextAction);
-		return IconNextAction;
-	}
-
-	public String getProjectIcon() {
-		IconProject = findIconKey(RootNode,NodeProjectIcon,IconProject);
-		return IconProject;
-	}
-
-	public String getTodayIcon(){
-		IconToday = findIconKey(RootNode,NodeTodayIcon,IconToday);
-		return IconToday;
-	}
-
-	public String getDoneIcon(){
-		IconDone = findIconKey(RootNode,NodeDoneIcon,IconDone);
-		return IconDone;
+		// Get icon keys for next actions and projects
+		this.mapreader = new GTDMapReader(rootNode);
 	}
 
 	public def getProjectList(){
-		ProjectList = findProjects(RootNode,IconProject);
+		ProjectList = findProjects(RootNode, mapreader.IconProject);
 		return ProjectList;
 	}
 
 	public def getNAList(){
-		NAList = findNextActions(RootNode, ProjectList,IconNextAction,IconToday,IconDone);
+		NAList = findNextActions(RootNode, ProjectList, mapreader.IconNextAction, mapreader.IconToday, mapreader.IconDone);
 		return NAList;
 	}
 
@@ -579,23 +554,6 @@ public class GTDMapReader {
 	}
 
 	//--------------------------------------------------------------
-	//Get icon key names from Settings/Icons nodes
-	private String findIconKey(Proxy.Node thisNode, String nodeLabel, String iconLast){
-		def icons = thisNode.icons.icons;
-		String nodeText = thisNode.text;
-		String iconFound = iconLast;
-
-		if (nodeText.trim() == nodeLabel){
-			iconFound = icons[0];
-		}
-
-		thisNode.children.each {
-			iconFound = findIconKey(it, nodeLabel, iconFound);
-		}
-		return iconFound;
-	}
-
-	//--------------------------------------------------------------
 	// recursive walk through nodes to find Projects
 	private def findProjects(Proxy.Node thisNode, String iconProject){
 		def icon = thisNode.icons.icons;
@@ -690,106 +648,10 @@ public class GTDMapReader {
 	}
 
 	//--------------------------------------------------------------
-	// Convert next action shorthand notation with recursive walk:
-	// shorthand: *<next action> @<Context> [<who>] {<when>}
-	// becomes:
-	// node.text     = <next action>
-	// node['Where'] = <where>
-	// node['Who']   = <who>
-	// node['When']  = <when>
-	//
-	public void ConvertShorthand(Proxy.Node thisNode){
-		String nodeText = thisNode.text.trim();
-		String[] field;
-
-		if (nodeText.length()>0 && nodeText.charAt(0) == "*"){
-			field = parseShorthand(nodeText);
-			thisNode.text = field[0];
-			def nodeAttr = [:];
-			if (field[1]){nodeAttr["Where"]=field[1];}
-			if (field[2]){nodeAttr["Who"]=field[2];}
-			if (field[3]){nodeAttr["When"]=field[3];}
-			thisNode.attributes = nodeAttr;
-			thisNode.icons.add(IconNextAction);
-		}
-
-		thisNode.children.each {
-			ConvertShorthand(it);
-		}
-	}
-
-	//--------------------------------------------------------------
-	// Parse next action shorthand notation
-	// field[0] = <next action>
-	// field[1] = <where>
-	// field[2] = <who>
-	// field[3] = <when>
-	//
-	private String[] parseShorthand(String nodeText){
-		String[] field
-		int posWho1 = nodeText.indexOf("[");
-		int posWho2 = nodeText.indexOf("]");
-		int posWhen1 = nodeText.indexOf("{");
-		int posWhen2 = nodeText.indexOf("}");
-		int posContext = nodeText.indexOf("@");
-		int posFirst;
-		int posMax;
-
-		field = new String[4];
-
-		// parse When
-		if ((posWhen1>0)&&(posWhen2>0)){
-			field[3] = nodeText.substring(posWhen1+1, posWhen2);
-			field[3] = field[3].trim();
-			SimpleDateFormat fmt = DateUtil.determineDateFormat(field[3]);
-			if (fmt!=null) {
-				field[3]=fmt.parse(field[3]).format("yyyy-MM-dd");
-			}
-		}
-
-		// parse Who
-		if ((posWho1>0)&&(posWho2>0)){
-			field[2] = nodeText.substring(posWho1+1, posWho2);
-			field[2] = field[2].trim();
-		}
-
-		// parse Action
-		posMax = nodeText.length();
-		if (posWhen1==-1){posWhen1 = posMax;}
-		if (posWho1==-1){posWho1 = posMax;}
-		if (posContext==-1){posContext = posMax;}
-		posFirst = Math.min(posWhen1, posWho1);
-		posFirst = Math.min(posFirst, posContext);
-		field[0] = nodeText.substring(1,posFirst);
-		field[0] = field[0].trim();
-
-		// parse Context
-		posContext = nodeText.indexOf("@");
-		if (posContext>0){
-			nodeText = nodeText.substring(posContext);
-			posWho1 = nodeText.indexOf("[");
-			posWhen1 = nodeText.indexOf("{");
-			posMax = nodeText.length();
-			if (posWho1==-1){posWho1 = posMax;}
-			if (posWhen1==-1){posWhen1 = posMax;}
-			posFirst = Math.min(posWhen1, posWho1);
-			field[1] = nodeText.substring(1,posFirst);
-			field[1] = field[1].trim();
-		}
-		return field;
-	}
-
-	//--------------------------------------------------------------
 	// parse the GTD mind map
 	public void ParseMap(){
-		// Get icon keys for next actions and projects
-		IconNextAction = getNextActionIcon();
-		IconProject = getProjectIcon();
-		IconToday = getTodayIcon();
-		IconDone = getDoneIcon();
-
 		// Expand any nodes with next action shorthand
-		ConvertShorthand(RootNode);
+		mapreader.ConvertShorthand(RootNode);
 
 		// Get project and next action lists
 		ProjectList = getProjectList();
@@ -952,7 +814,6 @@ public class NodeLink implements HyperlinkListener {
 		rootNode.setFolded(false);
 	}
 
-
 	public NodeLink(GTDReport gtdReport){
 		report = gtdReport;
 		ctrl = report.getController();
@@ -969,7 +830,7 @@ Proxy.Node rootNode = node.map.root;
 c.select(rootNode);
 
 // create a GTDMapReader
-GTDMapReader gtdMapReader = new GTDMapReader(rootNode, config.getBooleanProperty('freeplaneGTD_filter_done'));
+GTDMapReader2 gtdMapReader = new GTDMapReader2(rootNode, config.getBooleanProperty('freeplaneGTD_filter_done'));
 
 // generate report GUI
 GTDReport report = new GTDReport();
