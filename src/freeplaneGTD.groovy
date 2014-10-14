@@ -133,7 +133,7 @@ public class GTDReport {
 		panel1.setBackground(Color.WHITE);
 		JScrollPane scrollpane1 = new JScrollPane(panel1);
 		tabbedPane.addTab("<html><body height=50><b><i>By Project</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountNextActions().toString() + "</h1></body></html>", icon, scrollpane1, "List next actions by project");
-		
+
 		// build By Who tab
 		JComponent panel3 = makeTextPanel(htmlByWho);
 		panel3.setBackground(Color.WHITE);
@@ -199,7 +199,7 @@ public class GTDReport {
 	}
 
 	public String ProjectReport() {
-		return ByProject;	
+		return ByProject;
 	}
 
 	public String ContextReport() {
@@ -257,7 +257,7 @@ public class GTDReport {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
 				frame.dispose();
-			}	
+			}
 		});
 
 		// on close window the close method is called
@@ -290,7 +290,8 @@ public class GTDReport {
 		cmdPanel.add(cancelButton);
 
 		// Create filter button for done items
-		JCheckBox cbShowDone = new JCheckBox("Show done");
+		JCheckBox cbShowDone = new JCheckBox("Filter done");
+        cbShowDone.selected=gtdMapReader.filterDone;
 		cbShowDone.addChangeListener(new ChangeListener() {
 			void stateChanged (ChangeEvent event) {
 				JCheckBox cb = event.getSource();
@@ -348,7 +349,7 @@ public class GTDMapReader {
 	private String ByContext = "";
 	private String ByWho = "";
 	private String ByWhen = "";
-	private boolean filterDone = false;
+	private boolean filterDone;
 	private int CountNextActions = 0;
 	private int CountDelegated = 0;
 	private String htmlBodyStyle = "<html><body>\n";
@@ -366,8 +367,9 @@ public class GTDMapReader {
 
 	//--------------------------------------------------------------
 	// constructor
-	public GTDMapReader(Proxy.Node rootNode){
+	public GTDMapReader(Proxy.Node rootNode, boolean filterDone){
 		RootNode = rootNode;
+        this.filterDone = filterDone;
 	}
 
 	//--------------------------------------------------------------
@@ -425,7 +427,7 @@ public class GTDMapReader {
 					String strWho = it['who'];
 					String strWhen = it['when'];
 					boolean done = it['done'];
-					
+
 					if (strWho=="tbd"){strWho = "";}
 					if (strWhen=="tbd"){strWhen = "";}
 					String strOwner = "";
@@ -465,7 +467,7 @@ public class GTDMapReader {
 					String strWho = it['who'];
 					String strWhen = it['when'];
 					boolean done = it['done'];
-					
+
 					if (strWho=="tbd"){strWho = "";}
 					if (strWhen=="tbd"){strWhen = "";}
 					String strOwner = "";
@@ -643,10 +645,10 @@ public class GTDMapReader {
 		// take care of missing attributes. null or empty string evaluates as boolean false
 		if (!naWho) {naWho = "tbd";}
 		if (!naWhen) {naWhen = "This Week";}
-		else { 
+		else {
 			SimpleDateFormat fmt = determineDateFormat(naWhen);
 			if (fmt!=null) {
-				naWhen = fmt.parse(naWhen).format("yyyy-MM-dd"); 
+				naWhen = fmt.parse(naWhen).format("yyyy-MM-dd");
 				//TODO: write back value
 				//thisNode['When'] = naWhen;
 			}
@@ -849,7 +851,7 @@ public class GTDMapReader {
 // Refresh the GUI window
 //---------------------------------------------------------
 public class RefreshUIWindow implements ActionListener {
-	private GTDReport report;	
+	private GTDReport report;
 
 	public void actionPerformed(ActionEvent e) {
 		report.Refresh();
@@ -892,12 +894,12 @@ public class PrintUIWindow implements ActionListener {
 				// show a message indicating that printing was cancelled
 			}
 		} catch (PrinterException pe) {
-			// Printing failed, report to the user  
+			// Printing failed, report to the user
 		}
 	}
 
 	public PrintUIWindow(GTDReport gtdReport) {
-		reportToPrint = gtdReport;      
+		reportToPrint = gtdReport;
 	}
 }
 
@@ -906,7 +908,7 @@ public class PrintUIWindow implements ActionListener {
 //---------------------------------------------------------
 public class CloseUIWindow implements ActionListener {
    JFrame frameToClose;
-  
+
    public void actionPerformed(ActionEvent e) {
    frameToClose.setVisible(false);
    frameToClose.dispose();
@@ -924,8 +926,8 @@ public class CopyUIWindow implements ActionListener {
 	GTDReport reportToCopy;
 	int reportNum = 0;
 	String strReport = "";
-  
-	public void actionPerformed(ActionEvent e) {    
+
+	public void actionPerformed(ActionEvent e) {
 		// get currently selected tab
 		reportNum = reportToCopy.TabIndex();
 
@@ -933,11 +935,11 @@ public class CopyUIWindow implements ActionListener {
 		switch (reportNum) {
 			case 0: strReport = reportToCopy.ProjectReport(); break;
 			case 1: strReport = reportToCopy.OwnerReport(); break;
-			case 2: strReport = reportToCopy.ContextReport(); break;   
+			case 2: strReport = reportToCopy.ContextReport(); break;
 			case 3: strReport = reportToCopy.DueReport(); break;
 			default: strReport = "(no report)"; break;
 		}
-	  
+
 		// copy to system clipboard as plain text
 		strReport = strReport.replaceAll("\\<.*?>","");
 		StringSelection ss = new StringSelection(strReport);
@@ -945,7 +947,7 @@ public class CopyUIWindow implements ActionListener {
    }
 
 	public CopyUIWindow(GTDReport gtdReport) {
-		reportToCopy = gtdReport;   
+		reportToCopy = gtdReport;
 	}
 }
 
@@ -1010,7 +1012,7 @@ Proxy.Node rootNode = node.map.root;
 c.select(rootNode);
 
 // create a GTDMapReader
-GTDMapReader gtdMapReader = new GTDMapReader(rootNode);
+GTDMapReader gtdMapReader = new GTDMapReader(rootNode, config.getBooleanProperty('freeplaneGTD_filter_done'));
 
 // generate report GUI
 GTDReport report = new GTDReport();

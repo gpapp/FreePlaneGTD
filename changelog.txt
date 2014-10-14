@@ -1,0 +1,10 @@
+v0.9
+    Added support to close the GTD window with ESC key
+    Added Done icon marking
+    Showing done items crossed out in project view
+    Added support to filter done items
+    Parsed and reformatted set dates to use uniform, locale specific date format (NB. truncates time from items)
+v1.0
+    Added global preference to filter completed tasks
+    Added Hungarian translation
+    
