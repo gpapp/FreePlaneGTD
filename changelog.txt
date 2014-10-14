@@ -7,4 +7,4 @@ v0.9
 v1.0
     Added global preference to filter completed tasks
     Added Hungarian translation
-    
+    Updated package to follow developer guidelines
