@@ -66,6 +66,7 @@ import org.freeplane.core.ui.components.UITools;
 import org.freeplane.plugin.script.proxy.ControllerProxy;
 import org.freeplane.plugin.script.proxy.Proxy;
 import org.freeplane.core.resources.ResourceController;
+import DateUtil;
 //=========================================================
 // classes
 //=========================================================
@@ -646,7 +647,7 @@ public class GTDMapReader {
 		if (!naWho) {naWho = "tbd";}
 		if (!naWhen) {naWhen = "This Week";}
 		else {
-			SimpleDateFormat fmt = determineDateFormat(naWhen);
+			SimpleDateFormat fmt = freeplaneUtil.DateUtil.determineDateFormat(naWhen);
 			if (fmt!=null) {
 				naWhen = fmt.parse(naWhen).format("yyyy-MM-dd");
 				//TODO: write back value
@@ -740,7 +741,7 @@ public class GTDMapReader {
 		if ((posWhen1>0)&&(posWhen2>0)){
 			field[3] = nodeText.substring(posWhen1+1, posWhen2);
 			field[3] = field[3].trim();
-			SimpleDateFormat fmt = determineDateFormat(field[3]);
+			SimpleDateFormat fmt = freeplaneUtil.DateUtil.determineDateFormat(field[3]);
 			if (fmt!=null) {
 				field[3]=fmt.parse(field[3]).format("yyyy-MM-dd");
 			}
@@ -778,50 +779,6 @@ public class GTDMapReader {
 		return field;
 	}
 
-	private static final def DATE_FORMAT_REGEXPS = [
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
-		'^\\d{8}$': new SimpleDateFormat("yyyyMMdd"),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}$':  new SimpleDateFormat("dd-MM-yyyy"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat("yyyy-MM-dd"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}$':  new SimpleDateFormat("MM/dd/yyyy"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}$':  new SimpleDateFormat("yyyy/MM/dd"),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat("yyyy.MM.dd"),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat("yyyy.MM.dd."),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$':  new SimpleDateFormat("dd MMM yyyy"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$':  new SimpleDateFormat("dd MMMM yyyy"),
-		'^\\d{12}$':  new SimpleDateFormat("yyyyMMddHHmm"),
-		'^\\d{8}\\s\\d{4}$':  new SimpleDateFormat("yyyyMMdd HHmm"),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd-MM-yyyy HH:mm"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("yyyy-MM-dd HH:mm"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("MM/dd/yyyy HH:mm"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("yyyy/MM/dd HH:mm"),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd MMM yyyy HH:mm"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd MMMM yyyy HH:mm"),
-		'^\\d{14}$':  new SimpleDateFormat("yyyyMMddHHmmss"),
-		'^\\d{8}\\s\\d{6}$':  new SimpleDateFormat("yyyyMMdd HHmmss"),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd MMMM yyyy HH:mm:ss"),
-	];
-	/**
-	* Determine SimpleDateFormat pattern matching with the given date string. Returns null if
-	* format is unknown. You can simply extend DateUtil with more formats if needed.
-	* @param dateString The date string to determine the SimpleDateFormat pattern for.
-	* @return The matching SimpleDateFormat pattern, or null if format is unknown.
-	* @see SimpleDateFormat
-	*/
-	public static SimpleDateFormat determineDateFormat(String dateString) {
-		for (key in DATE_FORMAT_REGEXPS.keySet()) {
-			if (dateString.toLowerCase().matches(key)) {
-				return DATE_FORMAT_REGEXPS[key];
-			}
-		}
-		return null; // Unknown format.
-	}
 	//--------------------------------------------------------------
 	// parse the GTD mind map
 	public void ParseMap(){
