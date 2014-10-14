@@ -66,7 +66,7 @@ import org.freeplane.core.ui.components.UITools;
 import org.freeplane.plugin.script.proxy.ControllerProxy;
 import org.freeplane.plugin.script.proxy.Proxy;
 import org.freeplane.core.resources.ResourceController;
-import DateUtil;
+import freeplaneGTD.DateUtil;
 //=========================================================
 // classes
 //=========================================================
