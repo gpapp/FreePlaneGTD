@@ -95,12 +95,18 @@ class GTDMapReader {
 		if (nodeText.length()>0 && nodeText.charAt(0) == "*"){
 			field = parseShorthand(nodeText);
 			thisNode.text = field[0];
+			
 			def nodeAttr = [:];
+			thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name]=thisNode.attributes.get(i)}			
+			
 			if (field[1]){nodeAttr["Where"]=field[1];}
 			if (field[2]){nodeAttr["Who"]=field[2];}
 			if (field[3]){nodeAttr["When"]=field[3];}
 			thisNode.attributes = nodeAttr;
-			thisNode.icons.add(IconNextAction);
+			boolean hasNextAction
+			if (!thisNode.icons.contains(IconNextAction)) {
+				thisNode.icons.add(IconNextAction);
+			}
 		}
 
 		thisNode.children.each {
@@ -167,34 +173,5 @@ class GTDMapReader {
 			field[1] = field[1].trim();
 		}
 		return field;
-	}
-	
-	//--------------------------------------------------------------
-	// Convert next action shorthand notation with recursive walk:
-	// shorthand: *<next action> @<Context> [<who>] {<when>}
-	// becomes:
-	// node.text     = <next action>
-	// node['Where'] = <where>
-	// node['Who']   = <who>
-	// node['When']  = <when>
-	//
-	ConvertShorthand(Proxy.Node thisNode) {
-		String nodeText = thisNode.text.trim();
-		String[] field;
-
-		if (nodeText.length()>0 && nodeText.charAt(0) == "*"){
-			field = parseShorthand(nodeText);
-			thisNode.text = field[0];
-			def nodeAttr = [:];
-			if (field[1]){nodeAttr["Where"]=field[1];}
-			if (field[2]){nodeAttr["Who"]=field[2];}
-			if (field[3]){nodeAttr["When"]=field[3];}
-			thisNode.attributes = nodeAttr;
-			thisNode.icons.add(IconNextAction);
-		}
-
-		thisNode.children.each {
-			ConvertShorthand(it);
-		}
 	}
 }

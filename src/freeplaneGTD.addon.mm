@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413298996309" BACKGROUND_COLOR="#97c7dc" LINK="https://raw.githubusercontent.com/gpapp/FreePlaneGTD/master/freeplaneGTD-v1.0-beta.addon.mm">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413476033212" BACKGROUND_COLOR="#97c7dc" LINK="https://raw.githubusercontent.com/gpapp/FreePlaneGTD/master/freeplaneGTD-v1.0-beta.addon.mm">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -96,7 +96,7 @@
 </html>
 </richcontent>
 <edge COLOR="#999999"/>
-<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1413298467529" HGAP="100" VSHIFT="-40">
+<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1413476033225" HGAP="100" VSHIFT="-40">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -150,7 +150,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1413298467533" HGAP="10" VSHIFT="10">
+<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1413476033227" HGAP="10" VSHIFT="10">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -190,9 +190,41 @@
 <node TEXT="v1.0" ID="ID_550285274" CREATED="0" MODIFIED="0">
 <node TEXT="Added global preference to filter completed tasks" ID="ID_272767125" CREATED="0" MODIFIED="0"/>
 <node TEXT="Added Hungarian translation" ID="ID_921527886" CREATED="0" MODIFIED="0"/>
+<node TEXT="Allow to re-parse items by placing an * in the front" ID="ID_512682227" CREATED="1413477280860" MODIFIED="1413477302986"/>
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413477245834">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The shorthand parsing can be redone on a node, by adding a * in the begining of the line.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      This is useful to add/update attributes when needed.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      The parsing should NOT erase the already existing attributes, but update them instead.
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
 </node>
-<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413298467536" VSHIFT="-10">
+</node>
+<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413476033228" VSHIFT="-10">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -217,7 +249,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1413298467540" HGAP="30" VSHIFT="-20">
+<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1413476033230" HGAP="30" VSHIFT="-20">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -237,7 +269,7 @@
 </richcontent>
 <node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;&#x9;&lt;tabbed_pane&gt;&#xa;&#x9;&#x9;&lt;tab name=&quot;plugins&quot;&gt;&#xa;&#x9;&#x9;&#x9;&lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;&#x9;&#x9;&#x9;&lt;/separator&gt;&#xa;&#x9;&#x9;&lt;/tab&gt;&#xa;&#x9;&lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413235874574"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413298467543">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413476033231">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -255,7 +287,7 @@
 <attribute_layout NAME_WIDTH="192"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1413298467546" HGAP="80" VSHIFT="10">
+<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1413476033233" HGAP="80" VSHIFT="10">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -302,7 +334,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1413298543690" HGAP="170" VSHIFT="21">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1413476033234" HGAP="170" VSHIFT="21">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -323,12 +355,12 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/freeplaneShorthand.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/icons/fpgtdIcon.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/DateUtil.groovy"/>
-<attribute NAME="delete" VALUE="${installationbase}/src/freeplaneGTD/DateUtil.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/GTDMapReader.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/freeplaneGTD.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/freeplaneGTD-icon.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/fpgtdLogo.png"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1413298467557" HGAP="90" VSHIFT="-90">
+<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1413476033238" HGAP="90" VSHIFT="-90">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -478,7 +510,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1413298467586" HGAP="90" VSHIFT="-30">
+<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1413476033254" HGAP="90" VSHIFT="-30">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -520,7 +552,7 @@
 <node TEXT="icons" ID="ID_1422580718" CREATED="1323094256288" MODIFIED="1413298793053" VSHIFT="-20" LINK="zips/icons/"/>
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1413298787850" LINK="zips/lib/"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1413298467599" HGAP="90" VSHIFT="-120"><richcontent TYPE="NOTE">
+<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1413476033260" HGAP="90" VSHIFT="-120"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -563,7 +595,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1413298467582"><richcontent TYPE="NOTE">
+<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1413476033251"><richcontent TYPE="NOTE">
 
 <html>
   <head>

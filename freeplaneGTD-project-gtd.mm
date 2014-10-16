@@ -1,7 +1,7 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
 <attribute_registry FONT_SIZE="8"/>
-<node TEXT="Freeplane GTD" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1412442739139"><hook NAME="MapStyle">
+<node TEXT="Freeplane GTD" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413475051174"><hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
 
 <map_styles>
@@ -121,14 +121,53 @@
 <node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1412322322277">
 <icon BUILTIN="list"/>
 <edge COLOR="#ff0000"/>
-<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413201145866">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
+<node TEXT="Planned for v1.0" ID="ID_621353594" CREATED="1413475385799" MODIFIED="1413475394269">
 <node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413477245834">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The shorthand parsing can be redone on a node, by adding a * in the begining of the line.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      This is useful to add/update attributes when needed.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      The parsing should NOT erase the already existing attributes, but update them instead.
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413201145866">
+<icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
@@ -153,36 +192,6 @@
     </p>
     <p>
       http://www.coderanch.com/t/336161/GUI/java/set-initial-position-vertical-scrollbar
-    </p>
-  </body>
-</html>
-</richcontent>
-</node>
-<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1412769690577">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
-
-<html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      http://alvinalexander.com/blog/post/jfc-swing/how-create-simple-swing-html-viewer-browser-java
-    </p>
-    <p>
-      
-    </p>
-    <p>
-      http://www.javaworld.com/article/2076334/java-se/start-customizing-swing-s-editor-pane----patch-the-swing-htmleditorkit.html
     </p>
   </body>
 </html>
@@ -222,9 +231,8 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1412769272733">
-<icon BUILTIN="yes"/>
 </node>
+<node TEXT="Planned for v1.1" ID="ID_1199174305" CREATED="1413475408604" MODIFIED="1413475415610">
 <node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1412769690573">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -269,6 +277,43 @@
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
+</node>
+</node>
+<node TEXT="Planned for v1.2" ID="ID_715310332" CREATED="1413475421834" MODIFIED="1413475429933">
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1413475345041">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.2"/>
+</node>
+<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1413475479726">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.2"/>
+</node>
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413477038451">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="V1.2"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      http://alvinalexander.com/blog/post/jfc-swing/how-create-simple-swing-html-viewer-browser-java
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      http://www.javaworld.com/article/2076334/java-se/start-customizing-swing-s-editor-pane----patch-the-swing-htmleditorkit.html
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 </node>
 </node>
 <node TEXT="Previous releases" POSITION="right" ID="ID_563183329" CREATED="1412769003141" MODIFIED="1412769079890">
