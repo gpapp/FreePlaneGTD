@@ -222,6 +222,12 @@
 </html>
 </richcontent>
 </node>
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413539806794">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 </node>
 </node>
 <node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413476033228" VSHIFT="-10">
@@ -267,9 +273,9 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;&#x9;&lt;tabbed_pane&gt;&#xa;&#x9;&#x9;&lt;tab name=&quot;plugins&quot;&gt;&#xa;&#x9;&#x9;&#x9;&lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;&#x9;&#x9;&#x9;&lt;/separator&gt;&#xa;&#x9;&#x9;&lt;/tab&gt;&#xa;&#x9;&lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413235874574"/>
+<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_default_view&quot; min=&quot;1&quot; max=&quot;4&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413539200064"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413476033231">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413537004159">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -286,6 +292,7 @@
 </richcontent>
 <attribute_layout NAME_WIDTH="192"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
+<attribute NAME="freeplaneGTD_default_view" VALUE="1" OBJECT="org.freeplane.features.format.FormattedNumber|1"/>
 </node>
 <node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1413476033233" HGAP="80" VSHIFT="10">
 <edge COLOR="#999999" WIDTH="3"/>
@@ -313,23 +320,25 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1413250956368" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1413537128865" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.listNextActions" VALUE="Next action list"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filter completed tasks by default"/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Default view (1-Project, 2-Who, 3-Context, 4-When)"/>
 <attribute NAME="addons.parseShorthand" VALUE="Convert tasks from shorthand"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1413251012528" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1413537185015" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.listNextActions" VALUE="Teend\u0151k"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD tulajdons\u00E1gai"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="K\u00E9sz elemek sz\u0171r\u00E9se alapb\u00F3l"/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Kezdeti n&#xe9;zet (1-Projekt, 2-Felel&#x151;s, 3-Kontextus, 4-Id&#x151;vonal)"/>
 <attribute NAME="addons.parseShorthand" VALUE="Feladatok l\u00E9trehoz\u00E1sa r\u00F6vid\u00EDt\u00E9sb\u0151l"/>
 <edge COLOR="#999999"/>
 </node>

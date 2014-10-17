@@ -184,6 +184,7 @@ public class GTDReport {
 		// Enable scrolling tabs and set location
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.setTabPlacement(JTabbedPane.RIGHT);
+		tabbedPane.setSelectedIndex(selTab);
 
 		// Register a change listener to track selected tab
 		tabbedPane.addChangeListener(new ChangeListener() {
@@ -837,4 +838,5 @@ GTDReport report = new GTDReport();
 report.setUserPath(c.userDirectory.toString());
 report.setController(c);
 report.setMapReader(gtdMapReader);
+report.selTab=config.getIntProperty('freeplaneGTD_default_view')-1;
 report.Show();
