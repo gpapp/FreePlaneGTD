@@ -212,7 +212,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1413619338464">
 <icon BUILTIN="yes"/>
@@ -238,7 +237,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1413619334240">
@@ -284,7 +282,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 </node>
 </node>
@@ -350,7 +347,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
@@ -422,7 +418,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1413619861067">
@@ -453,7 +448,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 </node>
@@ -534,7 +528,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 </node>
@@ -570,7 +563,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1413619424764">
@@ -597,7 +589,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413619411710">
