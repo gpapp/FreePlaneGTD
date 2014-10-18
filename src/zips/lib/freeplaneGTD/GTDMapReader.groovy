@@ -92,7 +92,7 @@ class GTDMapReader {
 		String nodeText = thisNode.text.trim();
 		String[] field;
 
-		if (nodeText.length()>0 && nodeText.charAt(0) == "*"){
+		if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.contains(IconNextAction))){
 			field = parseShorthand(nodeText);
 			thisNode.text = field[0];
 			
@@ -128,9 +128,9 @@ class GTDMapReader {
 		int posWhen1 = nodeText.indexOf("{");
 		int posWhen2 = nodeText.indexOf("}");
 		int posContext = nodeText.indexOf("@");
+		int posAction = nodeText.indexOf("*");
 		int posFirst;
 		int posMax;
-
 		field = new String[4];
 
 		// parse When
@@ -156,21 +156,13 @@ class GTDMapReader {
 		if (posContext==-1){posContext = posMax;}
 		posFirst = Math.min(posWhen1, posWho1);
 		posFirst = Math.min(posFirst, posContext);
-		field[0] = nodeText.substring(1,posFirst);
+		field[0] = nodeText.substring(posAction+1,posFirst);
 		field[0] = field[0].trim();
 
 		// parse Context
-		posContext = nodeText.indexOf("@");
-		if (posContext>0){
-			nodeText = nodeText.substring(posContext);
-			posWho1 = nodeText.indexOf("[");
-			posWhen1 = nodeText.indexOf("{");
-			posMax = nodeText.length();
-			if (posWho1==-1){posWho1 = posMax;}
-			if (posWhen1==-1){posWhen1 = posMax;}
-			posFirst = Math.min(posWhen1, posWho1);
-			field[1] = nodeText.substring(1,posFirst);
-			field[1] = field[1].trim();
+		if (posContext!=nodeText.length()){
+		    posFirst = nodeText.substring(posContext+1).findIndexOf { it == ' ' ||  it == '[' || it == '{' };
+		    field[1] = posFirst>0?nodeText.substring(posContext+1,posContext+1+posFirst):nodeText.substring(posContext+1)
 		}
 		return field;
 	}
