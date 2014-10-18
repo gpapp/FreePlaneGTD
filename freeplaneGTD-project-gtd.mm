@@ -51,7 +51,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="8"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="12"/>
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1412322586539">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
@@ -121,13 +121,8 @@
 <node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1412322322277">
 <icon BUILTIN="list"/>
 <edge COLOR="#ff0000"/>
-<node TEXT="Planned for v1.0" ID="ID_621353594" CREATED="1413475385799" MODIFIED="1413475394269">
-<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
+<node TEXT="UI experience" ID="ID_1229777349" CREATED="1413618360682" MODIFIED="1413618366176">
+<node TEXT="Map" ID="ID_347499073" CREATED="1413618419902" MODIFIED="1413618433636">
 <node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
@@ -165,14 +160,144 @@
 </html>
 </richcontent>
 </node>
+<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413618042165">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="help"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
+</node>
+<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1413618070412">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="help"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
+</node>
+<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1413619341680"><richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow definition of markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Look for scope marker definition nodes like <b>Icon: @Home</b>
+      </li>
+      <li>
+        Update scope attribute from marker in nodes
+      </li>
+      <li>
+        Add markers for scope from shorthands
+      </li>
+      <li>
+        Add markers for scope from attibute
+      </li>
+      <li>
+        Scope marker should take precedence.
+      </li>
+      <li>
+        Only the first scope should be considered.
+      </li>
+      <li>
+        The scope attribute should always be overwritten by the scope defined by the icon.
+      </li>
+      <li>
+        The parser should issue a warning if any icon is reused in the config.
+      </li>
+    </ul>
+  </body>
+</html>
+
+</richcontent>
+<node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1413619338464">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow definition of markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Look for scope marker definition nodes like <b>Icon: @Home</b>
+      </li>
+      <li>
+        The parser should issue a warning if any icon is reused in the config
+      </li>
+    </ul>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1413619334240">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Update scope attribute from marker in nodes
+      </li>
+      <li>
+        Add markers for scope from attibute
+
+        <ul>
+          <li>
+            Only the first scope marker should be considered.
+          </li>
+          <li>
+            The scope attribute should always be <b>overwritten</b>&#160;by the scope defined by the marker, not only on the initial parsing
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          Add markers for scope from shorthands
+        </p>
+        <ul>
+          <li>
+            Scope marker should take precedence.
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>
+
+</richcontent>
+</node>
+</node>
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1413475345041">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.2"/>
+</node>
+</node>
+<node TEXT="Action view" ID="ID_100212872" CREATED="1413618434079" MODIFIED="1413618500167">
 <node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413539806794">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413201145866">
-<icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
@@ -197,9 +322,58 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
+<node TEXT="Add config parameter parsing to the map, to change the default view set in preferences" ID="ID_760673545" CREATED="1413618092101" MODIFIED="1413618354335">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      My maps are for different purposes, some are personal task management, some are for group task assingment, some for project task planning. This requires different default views.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      If there is a Config property to set the default view, like a node &quot;GTD: Default view&quot; this can be varying from map-to-map.
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413617603053">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+</node>
+<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1412769358667">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+</node>
+<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1413475479726">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.2"/>
+</node>
+</node>
+</node>
+<node TEXT="Task management" ID="ID_1223056012" CREATED="1413618366915" MODIFIED="1413618370248">
+<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
 <node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412769690578">
@@ -226,17 +400,10 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1412769155166">
+<node TEXT="Add priority handling to actions" ID="ID_1848651146" CREATED="1413619475951" MODIFIED="1413619776525">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-</node>
-<node TEXT="Planned for v1.1" ID="ID_1199174305" CREATED="1413475408604" MODIFIED="1413475415610">
-<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1412769690573">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
+<attribute NAME="When" VALUE="v1.2"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
@@ -245,55 +412,192 @@
   </head>
   <body>
     <p>
-      Allow definition of markers to be converted to scope and backwards.
+      Use the number icons to set the urgency of the tasks.
     </p>
-    <ul>
-      <li>
-        Look for scope marker definition nodes like <b>Icon: @Home</b>
-      </li>
-      <li>
-        Update scope attribute from marker in nodes
-      </li>
-      <li>
-        Add markers for scope from shorthands
-      </li>
-      <li>
-        Add markers for scope from attibute
-      </li>
-    </ul>
     <p>
-      Scope marker should take precedence.
+      Add a new tab to sort tasks by urgency dynamically.
     </p>
   </body>
 </html>
+
 </richcontent>
 </node>
-<node TEXT="Marker to done" ID="ID_518957387" CREATED="1412322229804" MODIFIED="1412326124923">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-</node>
-<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1412769358667">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-</node>
-</node>
-<node TEXT="Planned for v1.2" ID="ID_715310332" CREATED="1413475421834" MODIFIED="1413475429933">
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1413475345041">
+<node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1413619861067">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Enhance the done/undone state marking of the tasks with level of completeness.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Use the task readyness icons to mark the status of the tasks
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Display a task state tab, only when any of the completeness icons are used.
+    </p>
+  </body>
+</html>
+
+</richcontent>
 </node>
-<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1413475479726">
+</node>
+<node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413618378071">
+<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
 <icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+</node>
+<node TEXT="Scope management" ID="ID_1606059144" CREATED="1413618728883" MODIFIED="1413618733105"/>
+<node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413619880793">
+<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1413620893583">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Idea"/>
+<attribute NAME="When" VALUE="v2.0"/>
+<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
+<richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Turn the mindmap into a context map by rotating the tasks around the aspects (project, where, who, when).
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      This requires multi level aspects to be available to be useful.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      <b>Rotate in place </b>
+    </p>
+    <p>
+      Since not all tasks are in aspects this would require the
+    </p>
+    <ul>
+      <li>
+        action nodes to be detached from the parent
+      </li>
+      <li>
+        store the parent node id in an attribute
+      </li>
+      <li>
+        store the parent project (not the same as the parent project) in an attribute
+      </li>
+      <li>
+        build a new structure in root to show the context
+      </li>
+      <li>
+        store the current aspect somewhere in the map (root node attribute?)
+      </li>
+    </ul>
+    <p>
+      <b>Build a new map with the aspect only </b>
+    </p>
+    <p>
+      Good for creating delagation lists.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      <b>Add a node with the copy of the rotated aspects&#160;to root, overwrite if exists</b>
+    </p>
+    <p>
+      Useful for creating typed action lists
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+</node>
+<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1413618708554">
+<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413619444351">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_cancel"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Set the icon default shorthand to Icon + A for actions and Icon + P for projects.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      These are my default settings and are quite useful.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Scrapped, as this is not an important issue.
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1413619424764">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_cancel"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow tasks to be in multiple scopes at once.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      I think it's against GTD principles, so this idea is scrapped for the time being.
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413619411710">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_cancel"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
-</node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413477038451">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="V1.2"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
@@ -356,6 +660,12 @@
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+<node TEXT="Marker to done" ID="ID_518957387" CREATED="1412322229804" MODIFIED="1413617740016">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
 <node TEXT="Create script to update groovy script in addon package" ID="ID_1478401136" CREATED="1412722766734" MODIFIED="1412769016117">
