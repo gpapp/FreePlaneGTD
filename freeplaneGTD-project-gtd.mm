@@ -1,7 +1,7 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
 <attribute_registry FONT_SIZE="8"/>
-<node TEXT="Freeplane GTD" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413475051174"><hook NAME="MapStyle">
+<node TEXT="Freeplane GTD" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413635195477"><hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
 
 <map_styles>
@@ -51,16 +51,15 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="12"/>
-<node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1412322586539">
+<hook NAME="AutomaticEdgeColor" COUNTER="2"/>
+<node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1413635324311">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1413246758350">
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1413635331763" VSHIFT="50">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
-<arrowlink SHAPE="CUBIC_CURVE" COLOR="#000000" WIDTH="2" TRANSPARENCY="80" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_518264125" STARTINCLINATION="40;0;" ENDINCLINATION="40;45;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
 </node>
 <node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1412326124928">
 <icon BUILTIN="yes"/>
@@ -118,10 +117,11 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1412322322277">
+<node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1413635243906">
 <icon BUILTIN="list"/>
 <edge COLOR="#ff0000"/>
-<node TEXT="UI experience" ID="ID_1229777349" CREATED="1413618360682" MODIFIED="1413618366176">
+<node TEXT="UI experience" ID="ID_1229777349" CREATED="1413618360682" MODIFIED="1413633214518">
+<icon BUILTIN="list"/>
 <node TEXT="Map" ID="ID_347499073" CREATED="1413618419902" MODIFIED="1413618433636">
 <node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
 <icon BUILTIN="yes"/>
@@ -301,6 +301,12 @@
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413637550528">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 <node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412769690575">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -347,11 +353,6 @@
 
 </richcontent>
 </node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413617603053">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
 <node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -369,15 +370,17 @@
 </node>
 </node>
 </node>
-<node TEXT="Task management" ID="ID_1223056012" CREATED="1413618366915" MODIFIED="1413618370248">
+<node TEXT="Task management" ID="ID_1223056012" CREATED="1413618366915" MODIFIED="1413633214520">
+<icon BUILTIN="list"/>
 <node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1412769690578">
+<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413635367849">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -454,21 +457,25 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413618378071">
+<node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413633214520">
+<icon BUILTIN="list"/>
 <node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
 </node>
-<node TEXT="Scope management" ID="ID_1606059144" CREATED="1413618728883" MODIFIED="1413618733105"/>
-<node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413619880793">
-<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1413620893583">
+<node TEXT="Scope management" ID="ID_1606059144" CREATED="1413618728883" MODIFIED="1413633214521">
+<icon BUILTIN="list"/>
+</node>
+<node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413633214521">
+<icon BUILTIN="list"/>
+<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1413620923992">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Idea"/>
 <attribute NAME="When" VALUE="v2.0"/>
 <attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-<richcontent TYPE="DETAILS">
+<richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
   <head>
@@ -531,7 +538,8 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1413618708554">
+<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1413633214521">
+<icon BUILTIN="list"/>
 <node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413619444351">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_cancel"/>
@@ -620,11 +628,14 @@
 </node>
 </node>
 </node>
-<node TEXT="Previous releases" POSITION="right" ID="ID_563183329" CREATED="1412769003141" MODIFIED="1412769079890">
-<icon BUILTIN="list"/>
+<node TEXT="Previous releases" POSITION="right" ID="ID_563183329" CREATED="1412769003141" MODIFIED="1413635156569">
 <edge COLOR="#00007c"/>
-<node TEXT="v0.9" ID="ID_1487316277" CREATED="1412769048518" MODIFIED="1412769077682">
+<node TEXT="v0.9" ID="ID_1487316277" CREATED="1412769048518" MODIFIED="1413635155020">
+<node TEXT="Features" ID="ID_1984572841" CREATED="1413635164820" MODIFIED="1413635169920">
 <icon BUILTIN="list"/>
+<node TEXT="UI experience" ID="ID_222840344" CREATED="1413635031140" MODIFIED="1413635161119">
+<icon BUILTIN="list"/>
+<node TEXT="Map" ID="ID_420079780" CREATED="1413635085538" MODIFIED="1413635087975">
 <node TEXT="Date to format" ID="ID_655452047" CREATED="1412322237091" MODIFIED="1412769016104">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
@@ -650,25 +661,15 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add default shortcut (Ctrl+H)" ID="ID_1205718068" CREATED="1412441691419" MODIFIED="1412769016108">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
-<node TEXT="Update package contents" ID="ID_1128364129" CREATED="1412442218528" MODIFIED="1412769016113">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v0.9"/>
-</node>
 <node TEXT="Marker to done" ID="ID_518957387" CREATED="1412322229804" MODIFIED="1413617740016">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Create script to update groovy script in addon package" ID="ID_1478401136" CREATED="1412722766734" MODIFIED="1412769016117">
+</node>
+<node TEXT="Action view" ID="ID_1040844796" CREATED="1413635074803" MODIFIED="1413635090654">
+<node TEXT="Add default shortcut (Ctrl+H)" ID="ID_1205718068" CREATED="1412441691419" MODIFIED="1412769016108">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
@@ -678,6 +679,17 @@
 <icon BUILTIN="button_ok"/>
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v0.9"/>
+</node>
+</node>
+</node>
+</node>
+<node TEXT="Administration" ID="ID_414647314" CREATED="1413635112144" MODIFIED="1413635191869">
+<icon BUILTIN="list"/>
+<node TEXT="Update package contents" ID="ID_1128364129" CREATED="1412442218528" MODIFIED="1412769016113">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
 <node TEXT="GIT initialization" ID="ID_831667569" CREATED="1412322339486" MODIFIED="1412769023921">
@@ -697,6 +709,7 @@
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
+</node>
 </node>
 </node>
 </node>

@@ -89,6 +89,7 @@ public class GTDReport {
 	private String ByWhen = "";
 	private int selTab = 0;
 	private String userPath = "";
+	private JFrame frame;
 	private JLabel reportByProject = new JLabel();
 	private JLabel reportByContext = new JLabel();
 	private JLabel reportByWho = new JLabel();
@@ -249,7 +250,7 @@ public class GTDReport {
 	public void Show() {
 		//Create and set up the window
 		ImageIcon icon = new ImageIcon(userPath + "/icons/fpgtdIcon.png");
-		JFrame frame = new JFrame("Freeplane|GTD Next Actions");
+		frame = new JFrame("Freeplane|GTD Next Actions");
 		frame.setIconImage(icon.getImage());
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -340,6 +341,11 @@ public class GTDReport {
 			tabbedPane.setTitleAt(1, "<html><body height=50>By Who<br/><h1 style='color:#666666;text-align:center;'>" + gtdMapReader.getCountDelegated().toString() + "</h1></body></html>");
 		}
 	}
+	
+	public void Close () {
+		frame.setVisible(false);
+		frame.dispose();
+	}
 }
 
 
@@ -358,7 +364,6 @@ public class GTDMapReader2 {
 	private String htmlBodyStyle = "<html><body>\n";
 	private Proxy.Node RootNode;
 	private def NAList;
-	private def ProjectList;
 	private GTDMapReader mapreader;
 
 	//--------------------------------------------------------------
@@ -371,13 +376,9 @@ public class GTDMapReader2 {
 		this.mapreader = new GTDMapReader(rootNode);
 	}
 
-	public def getProjectList(){
-		ProjectList = findProjects(RootNode, mapreader.IconProject);
-		return ProjectList;
-	}
 
 	public def getNAList(){
-		NAList = findNextActions(RootNode, ProjectList, mapreader.IconNextAction, mapreader.IconToday, mapreader.IconDone);
+		NAList = findNextActions(RootNode, mapreader.IconProject, mapreader.IconNextAction, mapreader.IconToday, mapreader.IconDone);
 		return NAList;
 	}
 
@@ -555,41 +556,25 @@ public class GTDMapReader2 {
 	}
 
 	//--------------------------------------------------------------
-	// recursive walk through nodes to find Projects
-	private def findProjects(Proxy.Node thisNode, String iconProject){
-		def icon = thisNode.icons.icons;
-		def result = [];
-
-		// include result if it has project icon and its not the icon setting node for projects
-		if (icon[0] == iconProject){
-			if (!(thisNode.text =~ /Icon:/)){
-				result = [thisNode];
-			}
-		}
-
-		thisNode.children.each {
-			result += findProjects(it, iconProject);
-		}
-		return result;
-	}
-
-	//--------------------------------------------------------------
 	// find parent for the next action, either direct (task) or indirect (project)
-	private def findNextActionProject(Proxy.Node thisNode, listProjects){
+	private def findNextActionProject(Proxy.Node thisNode, String iconProject){
 		Proxy.Node parentNode = thisNode.getParent();
-		def naProject = parentNode.text;
-
-		listProjects.each {
-			if (it!=null && thisNode.isDescendantOf(it)){
-				naProject = it.text;
+		def retval;
+		if (parentNode!=null && thisNode.isDescendantOf(parentNode)){
+			Proxy.Node walker = parentNode;
+			while (walker) {
+				if(walker.icons.contains(iconProject)) {
+					retval=walker.text+(retval?'/'+retval:'');
+				}
+				walker = walker.parent;
 			}
-		}
-		return naProject;
+		}		
+		return retval?retval:parentNode.text;
 	}
 
 	//--------------------------------------------------------------
 	// recursive walk through nodes to find Next Actions
-	private def findNextActions(Proxy.Node thisNode, listProjects, String iconNextAction, String iconToday, String iconDone){
+	private def findNextActions(Proxy.Node thisNode, String iconProject, String iconNextAction, String iconToday, String iconDone){
 		def icons = thisNode.icons.icons;
 		def naAction = thisNode.text;
 		def naNodeID = thisNode.nodeID;
@@ -633,7 +618,7 @@ public class GTDMapReader2 {
 		// include result if it has next action icon and its not the icon setting node for next actions
 		if (foundIconNextAction){
 			if (!(naAction =~ /Icon:/)){
-				def naProject = findNextActionProject(thisNode, listProjects);
+				def naProject = findNextActionProject(thisNode, iconProject);
 				if (foundIconToday){naWhen = "Today";}
 				if (!(foundIconDone && filterDone)) {
 					result = [action:naAction, project:naProject, context:naContext, who:naWho, when:naWhen, nodeID:naNodeID, done:foundIconDone];
@@ -643,7 +628,7 @@ public class GTDMapReader2 {
 
 		thisNode.children.each {
 
-		result += findNextActions(it, listProjects, iconNextAction, iconToday, iconDone);
+		result += findNextActions(it, iconProject, iconNextAction, iconToday, iconDone);
 		}
 		return result;
 	}
@@ -654,8 +639,7 @@ public class GTDMapReader2 {
 		// Expand any nodes with next action shorthand
 		mapreader.ConvertShorthand(RootNode);
 
-		// Get project and next action lists
-		ProjectList = getProjectList();
+		// Get next action lists
 		NAList = getNAList();
 
 		// Get HTML for next action lists
@@ -784,11 +768,13 @@ public class NodeLink implements HyperlinkListener {
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
 			String linkNodeID = e.getDescription();
 			def nodesFound = ctrl.find{ it.nodeID == linkNodeID};
+
 			if (nodesFound[0] != null){
 				FoldToTop(nodesFound[0]);
 				UnfoldBranch(nodesFound[0]);
-				ctrl.centerOnNode(nodesFound[0]);
 				ctrl.select(nodesFound[0]);
+				ctrl.centerOnNode(nodesFound[0]);
+				report.Close();
 			}
 			else {
 				UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
