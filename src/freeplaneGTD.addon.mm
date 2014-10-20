@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413476033212" BACKGROUND_COLOR="#97c7dc" LINK="https://raw.githubusercontent.com/gpapp/FreePlaneGTD/master/freeplaneGTD-v1.0-beta.addon.mm">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1413673313420" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd/">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -96,7 +96,7 @@
 </html>
 </richcontent>
 <edge COLOR="#999999"/>
-<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1413476033225" HGAP="100" VSHIFT="-40">
+<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1413673313349">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -150,7 +150,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1413476033227" HGAP="10" VSHIFT="10">
+<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1413673313358">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -191,9 +191,7 @@
 <node TEXT="Added global preference to filter completed tasks" ID="ID_272767125" CREATED="0" MODIFIED="0"/>
 <node TEXT="Added Hungarian translation" ID="ID_921527886" CREATED="0" MODIFIED="0"/>
 <node TEXT="Allow to re-parse items by placing an * in the front" ID="ID_512682227" CREATED="1413477280860" MODIFIED="1413477302986"/>
-<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413477245834">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413673272666">
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -222,21 +220,15 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413539806794">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413673272675">
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
+<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413673272679">
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413635367849">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
+<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413673272683">
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -259,15 +251,18 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413637550528">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413673272698">
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
+<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413673272703">
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
 </node>
 </node>
-<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413476033228" VSHIFT="-10">
+</node>
+<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413673313365">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -292,7 +287,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1413476033230" HGAP="30" VSHIFT="-20">
+<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1413673313372">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -310,9 +305,9 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_default_view&quot; min=&quot;1&quot; max=&quot;4&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413539200064"/>
+<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413659673642"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413537004159">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1413673313381">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -327,11 +322,11 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout NAME_WIDTH="192"/>
+<attribute_layout NAME_WIDTH="170" VALUE_WIDTH="173"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
-<attribute NAME="freeplaneGTD_default_view" VALUE="1" OBJECT="org.freeplane.features.format.FormattedNumber|1"/>
+<attribute NAME="freeplaneGTD_default_view" VALUE="2" OBJECT="org.freeplane.features.format.FormattedNumber|2|#0.####"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1413476033233" HGAP="80" VSHIFT="10">
+<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1413673313389">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -357,30 +352,67 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1413537128865" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1413665971521" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.listNextActions" VALUE="Next action list"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filter completed tasks by default"/>
-<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Default view (1-Project, 2-Who, 3-Context, 4-When)"/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Default action view"/>
+<attribute NAME="freeplaneGTD_view_project" VALUE="Project"/>
+<attribute NAME="freeplaneGTD_view_who" VALUE="Who"/>
+<attribute NAME="freeplaneGTD_view_context" VALUE="Context"/>
+<attribute NAME="freeplaneGTD_view_when" VALUE="Timeline"/>
 <attribute NAME="addons.parseShorthand" VALUE="Convert tasks from shorthand"/>
+<attribute NAME="freeplaneGTD.tab.project.title" VALUE="By Project"/>
+<attribute NAME="freeplaneGTD.tab.project.tooltip" VALUE="List actions by project"/>
+<attribute NAME="freeplaneGTD.tab.who.title" VALUE="By Who"/>
+<attribute NAME="freeplaneGTD.tab.who.tooltip" VALUE="List action by delegates"/>
+<attribute NAME="freeplaneGTD.tab.context.title" VALUE="By Context"/>
+<attribute NAME="freeplaneGTD.tab.context.tooltip" VALUE="List actions by context"/>
+<attribute NAME="freeplaneGTD.tab.when.title" VALUE="Timeline"/>
+<attribute NAME="freeplaneGTD.tab.when.tooltip" VALUE="List actions by time"/>
+<attribute NAME="freeplaneGTD.tab.about.title" VALUE="About"/>
+<attribute NAME="freeplaneGTD.tab.about.tooltip" VALUE="About Freeplane|GTD+"/>
+<attribute NAME="freeplaneGTD.button.refresh" VALUE="Refresh"/>
+<attribute NAME="freeplaneGTD.button.print" VALUE="Print"/>
+<attribute NAME="freeplaneGTD.button.copy" VALUE="Copy"/>
+<attribute NAME="freeplaneGTD.button.cancel" VALUE="Close"/>
+<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Filter done"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1413537185015" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1413666114821" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.listNextActions" VALUE="Teend\u0151k"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD tulajdons\u00E1gai"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="K\u00E9sz elemek sz\u0171r\u00E9se alapb\u00F3l"/>
-<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Kezdeti n&#xe9;zet (1-Projekt, 2-Felel&#x151;s, 3-Kontextus, 4-Id&#x151;vonal)"/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Kezdeti feladat n\u00E9zet"/>
+<attribute NAME="freeplaneGTD_view_project" VALUE="Projekt"/>
+<attribute NAME="freeplaneGTD_view_who" VALUE="Who"/>
+<attribute NAME="freeplaneGTD_view_context" VALUE="Kontextus"/>
+<attribute NAME="freeplaneGTD_view_when" VALUE="Id\u0151vonal"/>
 <attribute NAME="addons.parseShorthand" VALUE="Feladatok l\u00E9trehoz\u00E1sa r\u00F6vid\u00EDt\u00E9sb\u0151l"/>
+<attribute NAME="freeplaneGTD.tab.project.title" VALUE="Projektenk\u00E9nt"/>
+<attribute NAME="freeplaneGTD.tab.project.tooltip" VALUE="Feladatok list\u00E1ja projektenk\u00E9nt"/>
+<attribute NAME="freeplaneGTD.tab.who.title" VALUE="Szem\u00E9lyenk\u00E9nt"/>
+<attribute NAME="freeplaneGTD.tab.who.tooltip" VALUE="Feladatok list\u00E1ja szem\u00E9lyenk\u00E9nt"/>
+<attribute NAME="freeplaneGTD.tab.context.title" VALUE="Kontextusonk\u00E9nt"/>
+<attribute NAME="freeplaneGTD.tab.when.title" VALUE="Id\u0151vonal"/>
+<attribute NAME="freeplaneGTD.tab.when.tooltip" VALUE="Feladatok list\u00E1ja id\u0151rendi sorrendben"/>
+<attribute NAME="freeplaneGTD.tab.about.title" VALUE="N\u00E9vjegy"/>
+<attribute NAME="freeplaneGTD.tab.about.tooltip" VALUE="A Freeplane|GTD+ n\u00E9vjegye"/>
+<attribute NAME="freeplaneGTD.button.refresh" VALUE="Friss\u00EDt\u00E9s"/>
+<attribute NAME="freeplaneGTD.button.print" VALUE="Nyomtat\u00E1s"/>
+<attribute NAME="freeplaneGTD.button.copy" VALUE="V\u00E1g\u00F3lapra"/>
+<attribute NAME="freeplaneGTD.button.cancel" VALUE="Bez&#xe1;r&#xe1;s"/>
+<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Lez&#xe1;rtak sz&#x171;r&#xe9;se"/>
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1413476033234" HGAP="170" VSHIFT="21">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1413673313396">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -406,7 +438,7 @@
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/freeplaneGTD-icon.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/fpgtdLogo.png"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1413476033238" HGAP="90" VSHIFT="-90">
+<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1413673313402">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -556,7 +588,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1413476033254" HGAP="90" VSHIFT="-30">
+<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1413673313408">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -598,7 +630,7 @@
 <node TEXT="icons" ID="ID_1422580718" CREATED="1323094256288" MODIFIED="1413298793053" VSHIFT="-20" LINK="zips/icons/"/>
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1413298787850" LINK="zips/lib/"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1413476033260" HGAP="90" VSHIFT="-120"><richcontent TYPE="NOTE">
+<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1413673313413"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -641,7 +673,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1413476033251"><richcontent TYPE="NOTE">
+<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1413673313418"><richcontent TYPE="NOTE">
 
 <html>
   <head>

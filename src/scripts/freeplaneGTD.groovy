@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
+import org.freeplane.core.util.TextUtils
 import org.freeplane.core.ui.components.UITools;
 import org.freeplane.plugin.script.proxy.ControllerProxy;
 import org.freeplane.plugin.script.proxy.Proxy;
@@ -94,16 +95,19 @@ public class GTDReport {
 	private JLabel reportByContext = new JLabel();
 	private JLabel reportByWho = new JLabel();
 	private JLabel reportByWhen = new JLabel();
-	private JEditorPane htmlByProject = new JEditorPane("text/html", "Project");
-	private JEditorPane htmlByContext = new JEditorPane("text/html", "Context");
-	private JEditorPane htmlByWho = new JEditorPane("text/html", "Who");
-	private JEditorPane htmlByWhen = new JEditorPane("text/html", "When");
+	private JEditorPane htmlByProject;
+	private JEditorPane htmlByWho;
+	private JEditorPane htmlByContext;
+	private JEditorPane htmlByWhen;
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	//--------------------------------------------------------------
 	// private constructor for singleton pattern
 	private GTDReport() {
-
+        htmlByProject = new JEditorPane("text/html", TextUtils.getText('freeplaneGTD_view_project'));
+        htmlByWho = new JEditorPane("text/html", TextUtils.getText('freeplaneGTD_view_who'));
+        htmlByContext = new JEditorPane("text/html", TextUtils.getText('freeplaneGTD_view_context'));
+        htmlByWhen = new JEditorPane("text/html", TextUtils.getText('freeplaneGTD_view_when'));
 	}
 
 	public static synchronized GTDReport getInstance(){
@@ -135,25 +139,25 @@ public class GTDReport {
 		JComponent panel1 = makeTextPanel(htmlByProject);
 		panel1.setBackground(Color.WHITE);
 		JScrollPane scrollpane1 = new JScrollPane(panel1);
-		tabbedPane.addTab("<html><body height=50><b><i>By Project</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountNextActions().toString() + "</h1></body></html>", icon, scrollpane1, "List next actions by project");
+		tabbedPane.addTab("<html><body height=50><b><i>"+TextUtils.getText("freeplaneGTD.tab.project.title")+"</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountNextActions().toString() + "</h1></body></html>", icon, scrollpane1, TextUtils.getText("freeplaneGTD.tab.project.tooltip"));
 
 		// build By Who tab
 		JComponent panel3 = makeTextPanel(htmlByWho);
 		panel3.setBackground(Color.WHITE);
 		JScrollPane scrollpane3 = new JScrollPane(panel3);
-		tabbedPane.addTab("<html><body height=50><b><i>By Who</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountDelegated().toString() + "</h1></body></html>", icon, scrollpane3, "List next actions by owners (who)");
+		tabbedPane.addTab("<html><body height=50><b><i>"+TextUtils.getText("freeplaneGTD.tab.who.title")+"</i></b><br/><h1 style='color:#666666; font-size:24pt; text-align:center;'>" + gtdMapReader.getCountDelegated().toString() + "</h1></body></html>", icon, scrollpane3, TextUtils.getText("freeplaneGTD.tab.who.tooltip"));
 
 		// build By Context tab
 		JComponent panel2 = makeTextPanel(htmlByContext);
 		panel2.setBackground(Color.WHITE);
 		JScrollPane scrollpane2 = new JScrollPane(panel2);
-		tabbedPane.addTab("<html><body height=50><b><i>By Context</i></b></body></html>", icon, scrollpane2, "List next actions by context (Context done)");
+		tabbedPane.addTab("<html><body height=50><b><i>"+TextUtils.getText("freeplaneGTD.tab.context.title")+"</i></b></body></html>", icon, scrollpane2, TextUtils.getText("freeplaneGTD.tab.context.tooltip"));
 
 		// build By When tab
 		JComponent panel4 = makeTextPanel(htmlByWhen);
 		panel4.setBackground(Color.WHITE);
 		JScrollPane scrollpane4 = new JScrollPane(panel4);
-		tabbedPane.addTab("<html><body height=50><b><i>By When</i></b></body></html>", icon, scrollpane4, "List next actions by due date (when)");
+		tabbedPane.addTab("<html><body height=50><b><i>"+TextUtils.getText("freeplaneGTD.tab.when.title")+"</i></b></body></html>", icon, scrollpane4, TextUtils.getText("freeplaneGTD.tab.when.tooltip"));
 
 		// build About tab
 		String txtAbout = "<html><body style='padding-left:25px;'><h1>Freeplane|<span style='color:#ff3300;'>GTD</span></h1><h2>Version " + txtVer + "</h2></body></html>";
@@ -180,7 +184,7 @@ public class GTDReport {
 		panel5.add(linkURL);
 		panel5.setBackground(Color.WHITE);
 		JScrollPane scrollpane5 = new JScrollPane(panel5);
-		tabbedPane.addTab("<html><body height=50><b><i>About</i></b></body></html>", icon, scrollpane5, "About Freeplane|GTD");
+		tabbedPane.addTab("<html><body height=50><b><i>"+TextUtils.getText("freeplaneGTD.tab.about.title")+"</i></b></body></html>", icon, scrollpane5, TextUtils.getText("freeplaneGTD.tab.about.tooltip"));
 
 		// Enable scrolling tabs and set location
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -256,8 +260,8 @@ public class GTDReport {
 
 		// on ESC key close frame
 		frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-		KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
-		frame.getRootPane().getActionMap().put("Cancel", new AbstractAction(){
+		KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"));
+		frame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"), new AbstractAction(){
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
 				frame.dispose();
@@ -280,13 +284,13 @@ public class GTDReport {
 		JPanel cmdPanel = new JPanel();
 		BoxLayout boxH = new BoxLayout(cmdPanel, BoxLayout.X_AXIS);
 		cmdPanel.setLayout(boxH);
-		JButton refreshButton = new JButton("Refresh");
+		JButton refreshButton = new JButton(TextUtils.getText("freeplaneGTD.button.refresh"));
 		refreshButton.addActionListener(new RefreshUIWindow(this));
-		JButton printButton = new JButton("Print");
+		JButton printButton = new JButton(TextUtils.getText("freeplaneGTD.button.print"));
 		printButton.addActionListener(new PrintUIWindow(this));
-		JButton copyButton = new JButton("Copy");
+		JButton copyButton = new JButton(TextUtils.getText("freeplaneGTD.button.copy"));
 		copyButton.addActionListener(new CopyUIWindow(this));
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(TextUtils.getText("freeplaneGTD.button.cancel"));
 		cancelButton.addActionListener(new CloseUIWindow(frame));
 		cmdPanel.add(refreshButton);
 		cmdPanel.add(printButton);
@@ -294,7 +298,7 @@ public class GTDReport {
 		cmdPanel.add(cancelButton);
 
 		// Create filter button for done items
-		JCheckBox cbShowDone = new JCheckBox("Filter done");
+		JCheckBox cbShowDone = new JCheckBox(TextUtils.getText("freeplaneGTD.button.filter_done"));
         cbShowDone.selected=gtdMapReader.filterDone;
 		cbShowDone.addChangeListener(new ChangeListener() {
 			void stateChanged (ChangeEvent event) {
@@ -824,5 +828,5 @@ GTDReport report = new GTDReport();
 report.setUserPath(c.userDirectory.toString());
 report.setController(c);
 report.setMapReader(gtdMapReader);
-report.selTab=config.getIntProperty('freeplaneGTD_default_view')-1;
+report.selTab=config.getIntProperty('freeplaneGTD_default_view');
 report.Show();
