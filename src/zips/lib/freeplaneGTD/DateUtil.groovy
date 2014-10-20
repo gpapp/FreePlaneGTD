@@ -22,13 +22,21 @@
 //
 //=========================================================
 package freeplaneGTD 
+import static java.util.Calendar.YEAR;
 import java.text.SimpleDateFormat;
 
 class DateUtil {	
 	private static final def DATE_FORMAT_REGEXPS = [
+		// System date parsing
 		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"),
 		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
 		'^\\d{8}$': new SimpleDateFormat("yyyyMMdd"),
+		// Short date parsing
+		'^\\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat("MM dd"),
+		'^\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat("MM/dd"),
+		'^\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat("MM.dd"),
+		'^\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat("MM.dd."),
+		// Date parsing
 		'^\\d{1,2}-\\d{1,2}-\\d{4}$':  new SimpleDateFormat("dd-MM-yyyy"),
 		'^\\d{4}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat("yyyy-MM-dd"),
 		'^\\d{1,2}/\\d{1,2}/\\d{4}$':  new SimpleDateFormat("MM/dd/yyyy"),
@@ -37,6 +45,7 @@ class DateUtil {
 		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat("yyyy.MM.dd."),
 		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$':  new SimpleDateFormat("dd MMM yyyy"),
 		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$':  new SimpleDateFormat("dd MMMM yyyy"),
+		// Timestamp parsing
 		'^\\d{12}$':  new SimpleDateFormat("yyyyMMddHHmm"),
 		'^\\d{8}\\s\\d{4}$':  new SimpleDateFormat("yyyyMMdd HHmm"),
 		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd-MM-yyyy HH:mm"),
@@ -69,5 +78,20 @@ class DateUtil {
 			}
 		}
 		return null; // Unknown format.
+	}
+	
+	public static String normalizeDate (String dateString) {
+			String field = dateString.trim();
+			SimpleDateFormat fmt = DateUtil.determineDateFormat(field);
+			if (fmt!=null) {
+				Date date = fmt.parse(field);
+				if (fmt.toPattern().indexOf('y')<0) {
+					Date now = new Date();
+					date[YEAR] = now[YEAR];
+				}
+				return date.format("yyyy-MM-dd");
+			} else {
+				return field
+			}
 	}
 }

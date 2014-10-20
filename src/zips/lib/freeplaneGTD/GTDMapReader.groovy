@@ -135,12 +135,7 @@ class GTDMapReader {
 
 		// parse When
 		if ((posWhen1>0)&&(posWhen2>0)){
-			field[3] = nodeText.substring(posWhen1+1, posWhen2);
-			field[3] = field[3].trim();
-			SimpleDateFormat fmt = DateUtil.determineDateFormat(field[3]);
-			if (fmt!=null) {
-				field[3]=fmt.parse(field[3]).format("yyyy-MM-dd");
-			}
+			field[3] = DateUtil.normalizeDate(nodeText.substring(posWhen1+1, posWhen2));
 		}
 
 		// parse Who

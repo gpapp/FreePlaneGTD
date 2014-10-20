@@ -593,14 +593,12 @@ public class GTDMapReader2 {
 
 		// take care of missing attributes. null or empty string evaluates as boolean false
 		if (!naWho) {naWho = "tbd";}
-		if (!naWhen) {naWhen = "This Week";}
-		else {
-			SimpleDateFormat fmt = DateUtil.determineDateFormat(naWhen);
-			if (fmt!=null) {
-				naWhen = fmt.parse(naWhen).format("yyyy-MM-dd");
+		if (!naWhen) {
+			naWhen = "This Week";
+		} else {
+				naWhen = DateUtil.normalizeDate(naWhen);
 				//TODO: write back value
-				//thisNode['When'] = naWhen;
-			}
+				thisNode['When'] = naWhen;
 		}
 		def result = [];
 
