@@ -158,30 +158,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
-</richcontent>
-</node>
-<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413618042165">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="help"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-</node>
-<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1413618070412">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="help"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-</node>
-<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1413795055176">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1413619341680"><richcontent TYPE="DETAILS" HIDDEN="true">
-=======
 </richcontent>
 </node>
 <node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413673235681">
@@ -199,8 +175,13 @@
 <attribute NAME="When" VALUE="v1.0"/>
 <attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
 </node>
+<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1413841099231">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 <node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1413619341680"><richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -238,21 +219,12 @@
     </ul>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 <node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1413619338464">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-<node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1413619338464">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -272,7 +244,6 @@
     </ul>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 <node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1413619334240">
@@ -280,15 +251,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-<node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1413619334240">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -327,7 +289,6 @@
     </ul>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 </node>
@@ -355,35 +316,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-</node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1413475345041">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
-</node>
-</node>
-<node TEXT="Action view" ID="ID_100212872" CREATED="1413618434079" MODIFIED="1413618500167">
-<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413539806794">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413637550528">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412769690575">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -422,7 +354,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 <node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
@@ -456,41 +387,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-</node>
-<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1412769358667">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-</node>
-<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1413475479726">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
-</node>
-</node>
-</node>
-<node TEXT="Task management" ID="ID_1223056012" CREATED="1413618366915" MODIFIED="1413633214520">
-<icon BUILTIN="list"/>
-<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413635367849">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -529,7 +425,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 <node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1413619861067">
@@ -537,15 +432,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-<node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1413619861067">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -569,7 +455,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 </node>
@@ -592,30 +477,6 @@
 <attribute NAME="When" VALUE="v2.0"/>
 <attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-</node>
-<node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413633214520">
-<icon BUILTIN="list"/>
-<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-</node>
-<node TEXT="Scope management" ID="ID_1606059144" CREATED="1413618728883" MODIFIED="1413633214521">
-<icon BUILTIN="list"/>
-</node>
-<node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413633214521">
-<icon BUILTIN="list"/>
-<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1413620923992">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Idea"/>
-<attribute NAME="When" VALUE="v2.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -674,7 +535,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 </node>
@@ -687,20 +547,6 @@
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-</node>
-<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1413633214521">
-<icon BUILTIN="list"/>
-<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413619444351">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_cancel"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Packaging"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -724,7 +570,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 <node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1413619424764">
@@ -734,17 +579,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1413619424764">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_cancel"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
@@ -762,7 +596,6 @@
     </p>
   </body>
 </html>
-<<<<<<< HEAD
 </richcontent>
 </node>
 <node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413619411710">
@@ -772,17 +605,6 @@
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
-=======
-</richcontent>
-</node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413619411710">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="button_cancel"/>
-<icon BUILTIN="button_ok"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
->>>>>>> 94722266579a94f5238787790999f8d7d5340ae9
 
 <html>
   <head>
