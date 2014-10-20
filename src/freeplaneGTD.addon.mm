@@ -260,6 +260,12 @@
 <attribute NAME="When" VALUE="v1.0"/>
 <attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
 </node>
+<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1413841099231">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 </node>
 </node>
 <node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1413673313365">
@@ -711,5 +717,6 @@
 </html>
 </richcontent>
 </node>
+<node TEXT="" POSITION="right" ID="ID_315054055" CREATED="1413839034906" MODIFIED="1413839034906"/>
 </node>
 </map>

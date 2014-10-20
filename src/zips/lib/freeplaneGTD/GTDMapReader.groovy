@@ -92,7 +92,12 @@ class GTDMapReader {
 		String nodeText = thisNode.text.trim();
 		String[] field;
 
-		if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.contains(IconNextAction))){
+		if (nodeText.length()>0 && nodeText.charAt(0) == "?") {
+            nodeText=nodeText.substring(1).trim();
+            thisNode.text=nodeText;
+            thisNode.icons.add('help');
+        }
+        if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.contains(IconNextAction))){
 			field = parseShorthand(nodeText);
 			thisNode.text = field[0];
 			
