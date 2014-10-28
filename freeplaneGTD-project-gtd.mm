@@ -55,23 +55,23 @@
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1413635324311">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414459469355" VSHIFT="50">
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414520176476" VSHIFT="50">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414459469364">
+<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414520176486">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="email"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414459469373">
+<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414520176495">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414459469383">
+<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414520176504">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.1"/>
@@ -291,19 +291,19 @@
 </node>
 </node>
 <node TEXT="Action view" ID="ID_100212872" CREATED="1413618434079" MODIFIED="1413618500167">
-<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413539806794">
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1414520176519">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413637550528">
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1414520176532">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1412769690575">
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1414520176544">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -324,7 +324,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add config parameter parsing to the map, to change the default view set in preferences" ID="ID_760673545" CREATED="1413618092101" MODIFIED="1413618354335">
+<node TEXT="Add config parameter parsing to the map, to change the default view set in preferences" ID="ID_760673545" CREATED="1413618092101" MODIFIED="1414520176555">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -348,20 +348,25 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1413617665028">
+<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1414520176566">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Update copy to clipboard to support TXT/HTML exports" ID="ID_1773054557" CREATED="1414520129893" MODIFIED="1414520176636">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1414520176648">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
 </node>
-<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1412769358667">
+<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1414520176658">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
-</node>
-<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1413475479726">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
 </node>
 </node>
 </node>
@@ -463,7 +468,7 @@
 </node>
 <node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413633214521">
 <icon BUILTIN="list"/>
-<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1413620923992">
+<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1414464380588">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Idea"/>
 <attribute NAME="When" VALUE="v2.0"/>
