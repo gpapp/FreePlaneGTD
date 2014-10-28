@@ -51,27 +51,27 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="2"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="3"/>
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1413635324311">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1413673204724" VSHIFT="50">
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414459469355" VSHIFT="50">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1413673204744">
+<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414459469364">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="email"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1413673204763">
+<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414459469373">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1413673204780">
+<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414459469383">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.1"/>
@@ -123,13 +123,13 @@
 <node TEXT="UI experience" ID="ID_1229777349" CREATED="1413618360682" MODIFIED="1413633214518">
 <icon BUILTIN="list"/>
 <node TEXT="Map" ID="ID_347499073" CREATED="1413618419902" MODIFIED="1413618433636">
-<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1413251960830">
+<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1414429956424">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413477245834">
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1414429956442">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -160,22 +160,14 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413673235681">
+<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1414429956462">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="help"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
 </node>
-<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1413618070412">
-<icon BUILTIN="yes"/>
-<icon BUILTIN="help"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-</node>
-<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1413841099231">
+<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1414429956477">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -292,7 +284,7 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1413475345041">
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1414429956491">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
@@ -624,6 +616,14 @@
 </html>
 </richcontent>
 </node>
+<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1414429949856">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="help"/>
+<icon BUILTIN="button_cancel"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
 </node>
 </node>
 <node TEXT="Previous releases" POSITION="right" ID="ID_563183329" CREATED="1412769003141" MODIFIED="1413635156569">
@@ -709,49 +709,6 @@
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
 </node>
-</node>
-</node>
-<node TEXT="Tests" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413667839177">
-<edge COLOR="#00ffff"/>
-<richcontent TYPE="NOTE">
-
-<html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      *a
-    </p>
-    <p>
-      *a@b
-    </p>
-    <p>
-      *a@b{v1.0}
-    </p>
-    <p>
-      *a@b[me]{v1.0}
-    </p>
-  </body>
-</html>
-</richcontent>
-<node TEXT="a" ID="ID_1493976556" CREATED="1413667592291" MODIFIED="1413673204812">
-<icon BUILTIN="yes"/>
-</node>
-<node TEXT="a" ID="ID_657770008" CREATED="1413667592291" MODIFIED="1413673204818">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="b"/>
-</node>
-<node TEXT="a" ID="ID_1052024939" CREATED="1413667592291" MODIFIED="1413673204833">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="b"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="a" ID="ID_1771454784" CREATED="1413667592291" MODIFIED="1413673204836">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="b"/>
-<attribute NAME="Who" VALUE="me"/>
-<attribute NAME="When" VALUE="v1.0"/>
 </node>
 </node>
 </node>

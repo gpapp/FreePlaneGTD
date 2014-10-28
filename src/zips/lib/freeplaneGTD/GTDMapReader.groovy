@@ -48,7 +48,7 @@ class GTDMapReader {
 
 	private static String IconNextAction = "yes";
 	private static String IconProject = "list";
-	private static String IconToday = "excellent";
+	private static String IconToday = "bookmark";
 	private static String IconDone = "button_ok";
 
 	GTDMapReader (Proxy.Node rootNode) {
