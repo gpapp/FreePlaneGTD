@@ -37,4 +37,4 @@ import freeplaneGTD.GTDMapReader;
 def mapreader = new GTDMapReader(node.map.root);
 
 // Expand any nodes with next action shorthand
-mapreader.ConvertShorthand(node.map.root);
+mapreader.convertShorthand(node.map.root);

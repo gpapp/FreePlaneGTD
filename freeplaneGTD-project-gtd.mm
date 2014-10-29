@@ -51,27 +51,27 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="3"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="4"/>
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1413635324311">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414520176476" VSHIFT="50">
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414544582657" VSHIFT="50">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414520176486">
+<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414544582683">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="email"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414520176495">
+<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414544582700">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414520176504">
+<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414544582717">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.1"/>
@@ -123,13 +123,13 @@
 <node TEXT="UI experience" ID="ID_1229777349" CREATED="1413618360682" MODIFIED="1413633214518">
 <icon BUILTIN="list"/>
 <node TEXT="Map" ID="ID_347499073" CREATED="1413618419902" MODIFIED="1413618433636">
-<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1414429956424">
+<node TEXT="Add action to parse shorhands" ID="ID_1157433072" CREATED="1412768944514" MODIFIED="1414544582744">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1414429956442">
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1414544582766">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -160,14 +160,14 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1414429956462">
+<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1414544582790">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="help"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1414429956477">
+<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1414544582810">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -212,11 +212,12 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1413619338464">
+<node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1414544582874">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
-<richcontent TYPE="DETAILS" HIDDEN="true">
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS">
 
 <html>
   <head>
@@ -238,10 +239,11 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1413619334240">
+<node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1414544582982">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.1"/>
+<attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
 
 <html>
@@ -284,27 +286,40 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1414429956491">
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1414544583006">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
 </node>
 </node>
 <node TEXT="Action view" ID="ID_100212872" CREATED="1413618434079" MODIFIED="1413618500167">
-<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1414520176519">
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1414520983143">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1414520176532">
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1414520983163">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1414520176544">
+<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1414520997533">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Update copy to clipboard to support TXT/HTML exports" ID="ID_1773054557" CREATED="1414520129893" MODIFIED="1414520992053">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1414536786519">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -324,7 +339,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add config parameter parsing to the map, to change the default view set in preferences" ID="ID_760673545" CREATED="1413618092101" MODIFIED="1414520176555">
+<node TEXT="Add config parameter parsing to the map, to change the default view set in preferences" ID="ID_760673545" CREATED="1413618092101" MODIFIED="1414520983214">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -348,22 +363,17 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1414520176566">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Update copy to clipboard to support TXT/HTML exports" ID="ID_1773054557" CREATED="1414520129893" MODIFIED="1414520176636">
-<icon BUILTIN="yes"/>
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1414520176648">
+<node TEXT="Add checkbox to mark an item completed to the list" ID="ID_252461090" CREATED="1413617605008" MODIFIED="1414520983271">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
 </node>
-<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1414520176658">
+<node TEXT="Add popup for mouseover, to display node notes/node extensions for the actions" ID="ID_1282778473" CREATED="1412769283015" MODIFIED="1414520983293">
+<icon BUILTIN="yes"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.1"/>
+</node>
+<node TEXT="Remove map links from clipboard HTML export" ID="ID_1319059003" CREATED="1414520946206" MODIFIED="1414520983413">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.1"/>
@@ -457,7 +467,7 @@
 </node>
 <node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413633214520">
 <icon BUILTIN="list"/>
-<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1412332240584">
+<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1414544583036">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>

@@ -50,7 +50,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="6"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="8"/>
 <node TEXT="Action tests" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
@@ -140,6 +140,25 @@
 <node TEXT="?*aa" ID="ID_1994160377" CREATED="1413840527302" MODIFIED="1413840527302"/>
 <node TEXT="? * aa {10 9}" ID="ID_965612994" CREATED="1413840527338" MODIFIED="1413840527338"/>
 </node>
+<node TEXT="Context icon tests" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
+<edge COLOR="#7c0000"/>
+<node TEXT="* doit @Home" ID="ID_1683724110" CREATED="1414538189836" MODIFIED="1414538207409"/>
+<node TEXT="doit" ID="ID_1820217533" CREATED="1414538208273" MODIFIED="1414538278587">
+<icon BUILTIN="gohome"/>
+<icon BUILTIN="help"/>
+<icon BUILTIN="yes"/>
+</node>
+<node TEXT="" ID="ID_394864049" CREATED="1414538256765" MODIFIED="1414538264744">
+<icon BUILTIN="button_cancel"/>
+<node TEXT="doit" ID="ID_787199979" CREATED="1414538208273" MODIFIED="1414538229521">
+<icon BUILTIN="gohome"/>
+</node>
+<node TEXT="doit" ID="ID_355625033" CREATED="1414538208273" MODIFIED="1414538246664">
+<icon BUILTIN="gohome"/>
+<icon BUILTIN="help"/>
+</node>
+</node>
+</node>
 <node TEXT="Date tests" POSITION="left" ID="ID_1944568774" CREATED="1413839100071" MODIFIED="1413839912092">
 <edge COLOR="#00ff00"/>
 <richcontent TYPE="NOTE">
@@ -198,6 +217,52 @@
 </node>
 <node TEXT="= &quot;Icons: &quot; + node.icons.icons" ID="ID_965338511" CREATED="1413841030747" MODIFIED="1413841065197">
 <icon BUILTIN="clanbomber"/>
+</node>
+</node>
+<node TEXT="Config" POSITION="left" ID="ID_1683616886" CREATED="1412442290868" MODIFIED="1412442749954">
+<edge COLOR="#ffff00"/>
+<richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      You can set up your icons as specified below.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      The examples are the default values, that are used when the icons are not otherwise specified.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      The configuration nodes can be placed anywhere in the map.
+    </p>
+  </body>
+</html>
+</richcontent>
+<node TEXT="Icon: Project" ID="ID_868847204" CREATED="1412442368874" MODIFIED="1412442387680">
+<icon BUILTIN="list"/>
+</node>
+<node TEXT="Icon: Next action" ID="ID_1578963095" CREATED="1412442389622" MODIFIED="1412442424997">
+<icon BUILTIN="yes"/>
+</node>
+<node TEXT="Icon: Today" ID="ID_112477574" CREATED="1412442340273" MODIFIED="1412442355119">
+<icon BUILTIN="bookmark"/>
+</node>
+<node TEXT="Icon: Done" ID="ID_349470145" CREATED="1412442302416" MODIFIED="1412442314458">
+<icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="Icon: @Home" ID="ID_1284521253" CREATED="1414538159916" MODIFIED="1414538172358">
+<icon BUILTIN="gohome"/>
+</node>
+<node TEXT="Icon: @bde" ID="ID_1962555405" CREATED="1414539088151" MODIFIED="1414539102638">
+<icon BUILTIN="launch"/>
 </node>
 </node>
 </node>

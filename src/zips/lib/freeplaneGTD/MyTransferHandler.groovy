@@ -61,6 +61,7 @@ class MyTransferHandler extends TransferHandler {
 
     protected Transferable createTransferable(JComponent c) {
         final JEditorPane pane = (JEditorPane) c;
+        // TODO remove map links from html
         final String htmlText = pane.getText();
         final String plainText = extractText(new StringReader(htmlText));
         return new MyTransferable(plainText, htmlText);

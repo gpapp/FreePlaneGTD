@@ -95,7 +95,7 @@ class Report {
     }
 
 	public def getNAList(){
-		NAList = findNextActions(rootNode, mapreader.IconProject, mapreader.IconNextAction, mapreader.IconToday, mapreader.IconDone);
+		NAList = findNextActions(rootNode, mapreader.iconProject, mapreader.iconNextAction, mapreader.iconToday, mapreader.iconDone);
 		return NAList;
 	}
 
@@ -163,7 +163,7 @@ class Report {
 	// parse the GTD mind map
 	void parseMap(){
 		// Expand any nodes with next action shorthand
-		mapreader.ConvertShorthand(rootNode);
+		mapreader.convertShorthand(rootNode);
 
 		// Get next action lists
 		NAList = getNAList();
@@ -364,12 +364,14 @@ def swing = new SwingBuilder().edt {
                            case 0: curPane = projectPane; break;
                            case 1: curPane = delegatePane; break;
                            case 2: curPane = contextPane; break;
-                           case 3: curPane = timeLinePane; break;
+                           case 3: curPane = timelinePane; break;
                            default: curPane = projectPane; break;
                        }
+                       int caretPos = curPane.getCaretPosition()
                        curPane.selectAll();
                        curPane.copy();
                        curPane.select(0,0);
+                       curPane.setCaretPosition(caretPos)
                    })
             button(text:TextUtils.getText("freeplaneGTD.button.cancel"),
                    actionPerformed: {
@@ -489,5 +491,9 @@ styleSheet.addRule("a {text-decoration: none; color:#990000;}");
 report.selPane=config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone=config.getBooleanProperty('freeplaneGTD_filter_done')
 refresh()
+projectPane.setCaretPosition(0)
+delegatePane.setCaretPosition(0)
+contextPane.setCaretPosition(0)
+timelinePane.setCaretPosition(0)
 mainFrame.setLocationRelativeTo(UITools.frame)
 mainFrame.show()

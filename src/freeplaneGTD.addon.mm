@@ -94,7 +94,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 <edge COLOR="#999999"/>
 <node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1414520219527">
@@ -117,7 +116,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1412235539130" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
 
@@ -166,7 +164,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="v0.6" ID="ID_47409214" CREATED="1323059645367" MODIFIED="1324325847122" VSHIFT="-10">
 <edge COLOR="#999999"/>
@@ -191,10 +188,21 @@
 <node TEXT="Parsed and reformatted set dates to use uniform, locale specific date format (NB. truncates time from items)" ID="ID_875471127" CREATED="0" MODIFIED="0"/>
 </node>
 <node TEXT="v1.0" ID="ID_550285274" CREATED="0" MODIFIED="0">
-<node TEXT="Added global preference to filter completed tasks" ID="ID_272767125" CREATED="0" MODIFIED="0"/>
-<node TEXT="Added Hungarian translation" ID="ID_921527886" CREATED="0" MODIFIED="0"/>
-<node TEXT="Allow to re-parse items by placing an * in the front" ID="ID_512682227" CREATED="1413477280860" MODIFIED="1413477302986"/>
-<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1413673272666">
+<node TEXT="Added global preference to filter completed tasks" ID="ID_272767125" CREATED="0" MODIFIED="1414531756261">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="Added Hungarian translation" ID="ID_921527886" CREATED="0" MODIFIED="1414531756259">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="in the front" ID="ID_512682227" CREATED="1413477280860" MODIFIED="1414531756258">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="Don&apos;t allow multiple instances of decoration icons to come from shorthand" ID="ID_334479175" CREATED="1413475260651" MODIFIED="1414544620706">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -223,15 +231,21 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1413673272675">
+<node TEXT="Add preference to select default view" ID="ID_992161123" CREATED="1413201081977" MODIFIED="1414544620777">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413673272679">
+<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1414544620837">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413673272683">
+<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1414544620944">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -254,20 +268,171 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1413673272698">
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-</node>
-<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1413673272703">
-<attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.0"/>
-<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
-</node>
-<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1413841099231">
+<node TEXT="Close window when selecting an item from the list" ID="ID_1447284219" CREATED="1413617558996" MODIFIED="1414544621028">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Re-parse shorthand for items with task icon (to update the attributes)" ID="ID_412919850" CREATED="1413617759413" MODIFIED="1414544621105">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<attribute NAME="Who" VALUE="Kup&#xe1;s Tibor"/>
+</node>
+<node TEXT="Add shortcut parser option to convert ? to marker" ID="ID_657496091" CREATED="1413794950783" MODIFIED="1414544621131">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Rework ui to use groovy&apos;s SwingBuilder" ID="ID_1662989174" CREATED="1413475441440" MODIFIED="1414544621170">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Update copy to clipboard to support TXT/HTML exports" ID="ID_1773054557" CREATED="1414520129893" MODIFIED="1414544621212">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+</node>
+<node TEXT="Scroll open panes up on the overview" ID="ID_138027227" CREATED="1412588960016" MODIFIED="1414544621265">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      http://www.coderanch.com/t/342584/GUI/java/JScrollPane-Set-Scroll-Position
+    </p>
+    <p>
+      http://www.coderanch.com/t/336161/GUI/java/set-initial-position-vertical-scrollbar
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node TEXT="Marker to scope" ID="ID_1632271861" CREATED="1412322213819" MODIFIED="1413619341680"><richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow definition of markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Look for scope marker definition nodes like <b>Icon: @Home</b>
+      </li>
+      <li>
+        Update scope attribute from marker in nodes
+      </li>
+      <li>
+        Add markers for scope from shorthands
+      </li>
+      <li>
+        Add markers for scope from attibute
+      </li>
+      <li>
+        Scope marker should take precedence.
+      </li>
+      <li>
+        Only the first scope should be considered.
+      </li>
+      <li>
+        The scope attribute should always be overwritten by the scope defined by the icon.
+      </li>
+      <li>
+        The parser should issue a warning if any icon is reused in the config.
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+<node TEXT="Marker to scope configuration" ID="ID_1024363427" CREATED="1412322213819" MODIFIED="1414544621339">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow definition of markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Look for scope marker definition nodes like <b>Icon: @Home</b>
+      </li>
+      <li>
+        The parser should issue a warning if any icon is reused in the config
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+<node TEXT="Marker to scope map parsing" ID="ID_1856466294" CREATED="1412322213819" MODIFIED="1414544621383">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
+<richcontent TYPE="DETAILS" HIDDEN="true">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Allow markers to be converted to scope and backwards.
+    </p>
+    <ul>
+      <li>
+        Update scope attribute from marker in nodes
+      </li>
+      <li>
+        Add markers for scope from attibute
+
+        <ul>
+          <li>
+            Only the first scope marker should be considered.
+          </li>
+          <li>
+            The scope attribute should always be <b>overwritten</b>&#160;by the scope defined by the marker, not only on the initial parsing
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          Add markers for scope from shorthands
+        </p>
+        <ul>
+          <li>
+            Scope marker should take precedence.
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
 </node>
 </node>
 </node>
@@ -291,7 +456,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 3 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xa;GNU General Public License for more details." ID="ID_1763974336" CREATED="1323057303679" MODIFIED="1323093766804" HGAP="90">
 <edge COLOR="#999999"/>
@@ -314,7 +478,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413659673642"/>
 </node>
@@ -332,7 +495,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <attribute_layout NAME_WIDTH="170" VALUE_WIDTH="173"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
@@ -363,7 +525,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1414459287843" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
@@ -445,7 +606,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <attribute_layout NAME_WIDTH="60" VALUE_WIDTH="483"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
@@ -580,7 +740,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="freeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1412441574918" HGAP="30">
 <attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>

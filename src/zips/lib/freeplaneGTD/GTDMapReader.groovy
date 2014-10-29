@@ -41,42 +41,68 @@ import freeplaneGTD.DateUtil;
 // GTDMapReader: reads and parses GTD map for next actions
 //---------------------------------------------------------
 class GTDMapReader {
-	private static final String NodeNextActionIcon ="Icon: Next action";
-	private static final String NodeProjectIcon ="Icon: Project";
-	private static final String NodeTodayIcon ="Icon: Today";
-	private static final String NodeDoneIcon ="Icon: Done";
 
-	private static String IconNextAction = "yes";
-	private static String IconProject = "list";
-	private static String IconToday = "bookmark";
-	private static String IconDone = "button_ok";
+	private String iconNextAction
+	private String iconProject
+	private String iconToday
+	private String iconDone
+    private Map contextIcons
 
 	GTDMapReader (Proxy.Node rootNode) {
 		// Get icon keys for next actions and projects
-		IconNextAction = findIconKey(rootNode,NodeNextActionIcon,IconNextAction);
-		IconProject = findIconKey(rootNode,NodeProjectIcon,IconProject);
-		IconToday = findIconKey(rootNode,NodeTodayIcon,IconToday);
-		IconDone = findIconKey(rootNode,NodeDoneIcon,IconDone);
+        iconNextAction = "yes"
+        iconProject = "list"
+        iconToday = "bookmark"
+        iconDone = "button_ok"
+        contextIcons = [:]
+
+		findIcons(rootNode)
 	}
 	
-	String getIconNextAction () {
-		return IconNextAction;
-	}
-	//--------------------------------------------------------------
+    //--------------------------------------------------------------
 	//Get icon key names from Settings/Icons nodes
-	private static String findIconKey(Proxy.Node thisNode, String nodeLabel, String iconLast){
-		def icons = thisNode.icons.icons;
-		String nodeText = thisNode.text;
-		String iconFound = iconLast;
+    private void findIcons(Proxy.Node thisNode){
+		String firstIcon = thisNode.icons[0];
+		String nodeText = thisNode.text.trim();
 
-		if (nodeText.trim() == nodeLabel){
-			iconFound = icons[0];
-		}
+        if (nodeText=~'^Icon:') {
+            if (nodeText=='Icon: Next action') {
+                if (['help', iconProject,iconToday,iconDone].contains(firstIcon)
+                    || contextIcons.values().contains(firstIcon)) {
+                    throw new Exception('Trying to reuse icon:'+firstIcon + ' on node ' + nodeText)
+                }
+                iconNextAction = firstIcon
+            } else if (nodeText=='Icon: Project') {
+                if (['help', iconNextAction,iconToday,iconDone].contains(firstIcon)
+                    || contextIcons.values().contains(firstIcon)) {
+                    throw new Exception('Trying to reuse icon:'+firstIcon + ' on node ' + nodeText)
+                }
+                iconProject = firstIcon
+            } else if (nodeText=='Icon: Today') {
+                if (['help', iconNextAction,iconProject,iconDone].contains(firstIcon)
+                    || contextIcons.values().contains(firstIcon)) {
+                    throw new Exception('Trying to reuse icon:'+firstIcon + ' on node ' + nodeText)
+                }
+                iconToday = firstIcon
+            } else if (nodeText=='Icon: Done') {
+                if (['help', iconNextAction,iconProject,iconToday].contains(firstIcon)
+                    || contextIcons.values().contains(firstIcon)) {
+                    throw new Exception('Trying to reuse icon:'+firstIcon + ' on node ' + nodeText)
+                }
+ 	            iconDone = firstIcon
+            } else if (nodeText=~'^Icon: @') {
+                String context = nodeText.replaceAll('^Icon: @([^\\s]*)','$1');
+                if (['help', iconNextAction,iconProject,iconToday,iconDone].contains(firstIcon)
+                    || contextIcons.values().contains(firstIcon)) {
+                    throw new Exception('Trying to reuse icon:'+firstIcon + ' on node ' + nodeText)
+                }
+                contextIcons[context] = firstIcon
+            }
+        }
 
 		thisNode.children.each {
-			iconFound = findIconKey(it, nodeLabel, iconFound);
+			findIcons(it);
 		}
-		return iconFound;
 	}
 
 	//--------------------------------------------------------------
@@ -88,7 +114,7 @@ class GTDMapReader {
 	// node['Who']   = <who>
 	// node['When']  = <when>
 	//
-	public static void ConvertShorthand(Proxy.Node thisNode){
+	public void convertShorthand(Proxy.Node thisNode){
 		String nodeText = thisNode.text.trim();
 		String[] field;
 
@@ -97,25 +123,39 @@ class GTDMapReader {
             thisNode.text=nodeText;
             thisNode.icons.add('help');
         }
-        if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.contains(IconNextAction))){
+        if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.icons.contains(iconNextAction))){
 			field = parseShorthand(nodeText);
 			thisNode.text = field[0];
 			
 			def nodeAttr = [:];
 			thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name]=thisNode.attributes.get(i)}			
 			
-			if (field[1]){nodeAttr["Where"]=field[1];}
-			if (field[2]){nodeAttr["Who"]=field[2];}
-			if (field[3]){nodeAttr["When"]=field[3];}
+			if (field[1]){nodeAttr['Where']=field[1];}
+			if (field[2]){nodeAttr['Who']=field[2];}
+			if (field[3]){nodeAttr['When']=field[3];}
+
+            contextIcons.each {
+                context, icon ->
+                if (thisNode.icons.icons.contains(icon)) {
+                    nodeAttr['Where']=context;
+                }
+            }
 			thisNode.attributes = nodeAttr;
+
 			boolean hasNextAction
-			if (!thisNode.icons.contains(IconNextAction)) {
-				thisNode.icons.add(IconNextAction);
+			if (!thisNode.icons.icons.contains(iconNextAction)) {
+				thisNode.icons.add(iconNextAction);
 			}
+            if (contextIcons.keySet().contains(nodeAttr['Where'])) {
+                String contextIcon = contextIcons[nodeAttr['Where']];
+                if (!thisNode.icons.icons.contains(contextIcon)) {
+                    thisNode.icons.add(contextIcon);
+                }
+            }
 		}
 
 		thisNode.children.each {
-			ConvertShorthand(it);
+			convertShorthand(it);
 		}
 	}
 
@@ -127,43 +167,22 @@ class GTDMapReader {
 	// field[3] = <when>
 	//
 	private static String[] parseShorthand(String nodeText){
-		String[] field
-		int posWho1 = nodeText.indexOf("[");
-		int posWho2 = nodeText.indexOf("]");
-		int posWhen1 = nodeText.indexOf("{");
-		int posWhen2 = nodeText.indexOf("}");
-		int posContext = nodeText.indexOf("@");
-		int posAction = nodeText.indexOf("*");
-		int posFirst;
-		int posMax;
-		field = new String[4];
+		String[] field = new String[4];
 
-		// parse When
-		if ((posWhen1>0)&&(posWhen2>0)){
-			field[3] = DateUtil.normalizeDate(nodeText.substring(posWhen1+1, posWhen2));
-		}
-
-		// parse Who
-		if ((posWho1>0)&&(posWho2>0)){
-			field[2] = nodeText.substring(posWho1+1, posWho2);
-			field[2] = field[2].trim();
-		}
-
-		// parse Action
-		posMax = nodeText.length();
-		if (posWhen1==-1){posWhen1 = posMax;}
-		if (posWho1==-1){posWho1 = posMax;}
-		if (posContext==-1){posContext = posMax;}
-		posFirst = Math.min(posWhen1, posWho1);
-		posFirst = Math.min(posFirst, posContext);
-		field[0] = nodeText.substring(posAction+1,posFirst);
-		field[0] = field[0].trim();
-
-		// parse Context
-		if (posContext!=nodeText.length()){
-		    posFirst = nodeText.substring(posContext+1).findIndexOf { it == ' ' ||  it == '[' || it == '{' };
-		    field[1] = posFirst>0?nodeText.substring(posContext+1,posContext+1+posFirst):nodeText.substring(posContext+1)
-		}
+        String toParse = nodeText
+        if (toParse.indexOf ('[')>=0) {
+            field[2]=toParse.replaceAll('^.*\\[(.*)\\].*$','$1').trim()
+            toParse=toParse.replaceAll('\\s*\\[.*\\]\\s*',' ').trim()
+        }
+        if (toParse.indexOf ('{')>=0) {
+			field[3] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$','$1').trim());
+            toParse=toParse.replaceAll('\\s*\\{.*\\}\\s*',' ').trim()
+        }
+        if (toParse.indexOf ('@')>=0) {
+            field[1]=toParse.replaceAll('^.*@([^\\s\\*]+).*$','$1').trim()
+            toParse=toParse.replaceAll('\\s*@[^\\s\\*]+\\s*',' ').trim()
+        }
+        field[0]=toParse.replaceAll('^\\s*\\*\\s*','').trim()
 		return field;
 	}
 }
