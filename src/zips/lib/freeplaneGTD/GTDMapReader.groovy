@@ -28,10 +28,11 @@ package freeplaneGTD
 // references
 //=========================================================
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 
+import org.freeplane.core.util.TextUtils;
 import org.freeplane.plugin.script.proxy.Proxy;
+
 import freeplaneGTD.DateUtil;
 //=========================================================
 // classes
@@ -41,28 +42,52 @@ import freeplaneGTD.DateUtil;
 // GTDMapReader: reads and parses GTD map for next actions
 //---------------------------------------------------------
 class GTDMapReader {
-
+	private static GTDMapReader instance = new GTDMapReader()
+	
 	private String iconNextAction
 	private String iconProject
 	private String iconToday
 	private String iconDone
     private Map contextIcons
 
-	GTDMapReader (Proxy.Node rootNode) {
+	static GTDMapReader getInstance () {
+		return instance
+	}
+
+	//--------------------------------------------------------------
+	// Convert next action shorthand notation with recursive walk:
+	// shorthand: *<next action> @<Context> [<who>] {<when>}
+	// becomes:
+	// node.text     = <next action>
+	// node['Where'] = <where>
+	// node['Who']   = <who>
+	// node['When']  = <when>
+	//
+	public void convertShorthand(Proxy.Node rootNode){
 		// Get icon keys for next actions and projects
-        iconNextAction = "yes"
-        iconProject = "list"
-        iconToday = "bookmark"
-        iconDone = "button_ok"
-        contextIcons = [:]
+		iconNextAction = "yes"
+		iconProject = "list"
+		iconToday = "bookmark"
+		iconDone = "button_ok"
+		contextIcons = [:]
 
 		findIcons(rootNode)
+		internalConvertShorthand(rootNode)
+	}
+
+	
+	public List getActionList(Proxy.Node rootNode, boolean filterDone){
+		return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
+	}
+
+
+	private GTDMapReader () {
 	}
 	
     //--------------------------------------------------------------
 	//Get icon key names from Settings/Icons nodes
     private void findIcons(Proxy.Node thisNode){
-		String firstIcon = thisNode.icons[0];
+		String firstIcon = thisNode.icons.first;
 		String nodeText = thisNode.text.trim();
 
         if (nodeText=~'^Icon:') {
@@ -114,9 +139,8 @@ class GTDMapReader {
 	// node['Who']   = <who>
 	// node['When']  = <when>
 	//
-	public void convertShorthand(Proxy.Node thisNode){
+	private void internalConvertShorthand(Proxy.Node thisNode){
 		String nodeText = thisNode.text.trim();
-		String[] field;
 
 		if (nodeText.length()>0 && nodeText.charAt(0) == "?") {
             nodeText=nodeText.substring(1).trim();
@@ -124,15 +148,15 @@ class GTDMapReader {
             thisNode.icons.add('help');
         }
         if ((nodeText.length()>0 && nodeText.charAt(0) == "*") || (thisNode.icons.icons.contains(iconNextAction))){
-			field = parseShorthand(nodeText);
-			thisNode.text = field[0];
+			Map fields = parseShorthand(nodeText);
+			thisNode.text = fields['action'];
 			
 			def nodeAttr = [:];
-			thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name]=thisNode.attributes.get(i)}			
+			thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name]=thisNode.attributes.get(i)}
 			
-			if (field[1]){nodeAttr['Where']=field[1];}
-			if (field[2]){nodeAttr['Who']=field[2];}
-			if (field[3]){nodeAttr['When']=field[3];}
+			if(fields['context']) nodeAttr['Where']=fields['context']
+			if(fields['delegate']) nodeAttr['Who']=fields['delegate']
+			if(fields['when']) nodeAttr['When']=fields['when']
 
             contextIcons.each {
                 context, icon ->
@@ -155,34 +179,87 @@ class GTDMapReader {
 		}
 
 		thisNode.children.each {
-			convertShorthand(it);
+			internalConvertShorthand(it);
 		}
+	}
+	//--------------------------------------------------------------
+	// find parent for the next action, either direct (task) or indirect (project)
+	private String findNextActionProject(Proxy.Node thisNode, String iconProject){
+		Proxy.Node parentNode = thisNode.getParent();
+		def retval;
+		if (parentNode!=null && thisNode.isDescendantOf(parentNode)){
+			Proxy.Node walker = parentNode;
+			while (walker) {
+				if(walker.icons.contains(iconProject)) {
+					retval=walker.text+(retval?'/'+retval:'');
+				}
+				walker = walker.parent;
+			}
+		}
+		return retval?retval:parentNode.text;
+	}
+
+	//--------------------------------------------------------------
+	// recursive walk through nodes to find Next Actions
+	private def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone){
+		def icons = thisNode.icons.icons;
+		def naAction = thisNode.text;
+		def naNodeID = thisNode.id;
+
+		// use index method to get attributes
+		String naContext = thisNode['Where'].toString();
+		String naWho = thisNode['Who'].toString();
+		String naWhen = thisNode['When'].toString();
+
+		// take care of missing attributes. null or empty string evaluates as boolean false
+		if (!naWhen) {
+			naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week");
+		} else {
+				naWhen = DateUtil.normalizeDate(naWhen);
+				//TODO: write back value
+				thisNode['When'] = naWhen;
+		}
+		
+		def result = [];
+		// include result if it has next action icon and its not the icon setting node for next actions
+		if (icons.contains(iconNextAction)){
+			if (!(naAction =~ /Icon:/)){
+				def naProject = findNextActionProject(thisNode, iconProject);
+				if (icons.contains(iconToday)) {
+					naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
+				}
+				boolean done = icons.contains(iconDone)
+				if (!(filterDone && done)) {
+					result = [action:naAction, project:naProject, context:naContext, who:naWho, when:naWhen, nodeID:naNodeID, done:done]
+				}
+			}
+		}
+
+		thisNode.children.each {
+			result += findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone);
+		}
+		return result;
 	}
 
 	//--------------------------------------------------------------
 	// Parse next action shorthand notation
-	// field[0] = <next action>
-	// field[1] = <where>
-	// field[2] = <who>
-	// field[3] = <when>
-	//
-	private static String[] parseShorthand(String nodeText){
-		String[] field = new String[4];
+	private static Map parseShorthand(String nodeText){
+		Map fields = [:];
 
         String toParse = nodeText
         if (toParse.indexOf ('[')>=0) {
-            field[2]=toParse.replaceAll('^.*\\[(.*)\\].*$','$1').trim()
+            fields['delegate']=toParse.replaceAll('^.*\\[(.*)\\].*$','$1').trim()
             toParse=toParse.replaceAll('\\s*\\[.*\\]\\s*',' ').trim()
         }
         if (toParse.indexOf ('{')>=0) {
-			field[3] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$','$1').trim());
+			fields['when'] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$','$1').trim());
             toParse=toParse.replaceAll('\\s*\\{.*\\}\\s*',' ').trim()
         }
         if (toParse.indexOf ('@')>=0) {
-            field[1]=toParse.replaceAll('^.*@([^\\s\\*]+).*$','$1').trim()
+            fields['context']=toParse.replaceAll('^.*@([^\\s\\*]+).*$','$1').trim()
             toParse=toParse.replaceAll('\\s*@[^\\s\\*]+\\s*',' ').trim()
         }
-        field[0]=toParse.replaceAll('^\\s*\\*\\s*','').trim()
-		return field;
+        fields['action']=toParse.replaceAll('^\\s*\\*\\s*','').trim()
+		return fields;
 	}
 }

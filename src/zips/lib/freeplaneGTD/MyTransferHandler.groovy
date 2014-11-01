@@ -12,7 +12,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
     
 class MyTransferHandler extends TransferHandler {
 
-    class MyTransferable implements Transferable {
+    static class MyTransferable implements Transferable {
 
         private static final DataFlavor[] supportedFlavors;
 

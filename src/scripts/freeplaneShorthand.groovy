@@ -27,14 +27,11 @@
 //=========================================================
 // references
 //=========================================================
-import org.freeplane.plugin.script.proxy.Proxy;
-import freeplaneGTD.GTDMapReader;
+import freeplaneGTD.GTDMapReader
 
 //=========================================================
 // script
 //=========================================================
 // Get icon keys for next actions and projects
-def mapreader = new GTDMapReader(node.map.root);
-
 // Expand any nodes with next action shorthand
-mapreader.convertShorthand(node.map.root);
+GTDMapReader.instance.convertShorthand(node.map.root);

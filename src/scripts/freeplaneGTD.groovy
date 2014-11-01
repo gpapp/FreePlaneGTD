@@ -18,6 +18,7 @@ import groovy.swing.SwingBuilder
 
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
+import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Proxy
 
 import freeplaneGTD.DateUtil
@@ -67,7 +68,6 @@ class Tag {
         return tag
     }
     
-        
     String toString () {
         String retval = '<' + tagName
         params.each {
@@ -86,78 +86,13 @@ class Report {
     boolean filterDone
     int selPane
 	Proxy.Node rootNode;
-	def NAList;
+	def actionList;
 	GTDMapReader mapreader;
 
     Report (Proxy.Node rootNode) {
         this.rootNode = rootNode
-		this.mapreader = new GTDMapReader(rootNode)
+		this.mapreader = GTDMapReader.instance
     }
-
-	public def getNAList(){
-		NAList = findNextActions(rootNode, mapreader.iconProject, mapreader.iconNextAction, mapreader.iconToday, mapreader.iconDone);
-		return NAList;
-	}
-
-
-	//--------------------------------------------------------------
-	// find parent for the next action, either direct (task) or indirect (project)
-	private def findNextActionProject(Proxy.Node thisNode, String iconProject){
-		Proxy.Node parentNode = thisNode.getParent();
-		def retval;
-		if (parentNode!=null && thisNode.isDescendantOf(parentNode)){
-			Proxy.Node walker = parentNode;
-			while (walker) {
-				if(walker.icons.contains(iconProject)) {
-					retval=walker.text+(retval?'/'+retval:'');
-				}
-				walker = walker.parent;
-			}
-		}		
-		return retval?retval:parentNode.text;
-	}
-
-	//--------------------------------------------------------------
-	// recursive walk through nodes to find Next Actions
-	def findNextActions(Proxy.Node thisNode, String iconProject, String iconNextAction, String iconToday, String iconDone){
-		def icons = thisNode.icons.icons;
-		def naAction = thisNode.text;
-		def naNodeID = thisNode.nodeID;
-
-		// use index method to get attributes
-		String naContext = thisNode['Where'].toString();
-		String naWho = thisNode['Who'].toString();
-		String naWhen = thisNode['When'].toString();
-
-		// take care of missing attributes. null or empty string evaluates as boolean false
-		if (!naWhen) {
-			naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week");
-		} else {
-				naWhen = DateUtil.normalizeDate(naWhen);
-				//TODO: write back value
-				thisNode['When'] = naWhen;
-		}
-		
-		def result = [];
-		// include result if it has next action icon and its not the icon setting node for next actions
-		if (icons.contains(iconNextAction)){
-			if (!(naAction =~ /Icon:/)){
-				def naProject = findNextActionProject(thisNode, iconProject);
-				if (icons.contains(iconToday)) {
-				    naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
-                }
-				boolean done = icons.contains(iconDone)
-				if (!(filterDone && done)) {
-					result = [action:naAction, project:naProject, context:naContext, who:naWho, when:naWhen, nodeID:naNodeID, done:done];
-				}
-			}
-		}
-
-		thisNode.children.each {
-			result += findNextActions(it, iconProject, iconNextAction, iconToday, iconDone);
-		}
-		return result;
-	}
 
 	//--------------------------------------------------------------
 	// parse the GTD mind map
@@ -166,23 +101,23 @@ class Report {
 		mapreader.convertShorthand(rootNode);
 
 		// Get next action lists
-		NAList = getNAList();
+		actionList = mapreader.getActionList(rootNode, filterDone);
 	}
 
     int projectCount () {
-        return NAList.size()
+        return actionList.size()
     }
     
     int delegateCount () {
         //Filter the missing delegates
-        return NAList.groupBy({it['who']}).keySet().findAll{it}.size()
+        return actionList.groupBy({it['who']}).keySet().findAll{it}.size()
     }
 
     String projectText() {
         Tag retval = new Tag ('body').
             addContent('h1', TextUtils.getText("freeplaneGTD_view_project"), [height:'50px', width:'100%'] ) 
-        def naByGroup = NAList.groupBy{it['project']}
-		naByGroup = naByGroup.sort{it.toString().toLowerCase()}
+        def naByGroup = actionList.groupBy{it['project']}
+	naByGroup = naByGroup.sort{it.toString().toLowerCase()}
         naByGroup.each {
             key, value -> 
             Tag curItem = retval.addChild('h2').addContent(key).addChild('ul')
@@ -201,8 +136,8 @@ class Report {
     String delegateText() {
         Tag retval = new Tag ('body').
             addContent('h1', TextUtils.getText("freeplaneGTD_view_who"), [height:'50px', width:'100%'] ) 
-        def naByGroup = NAList.groupBy{it['who']}
-		naByGroup = naByGroup.sort{it.toString().toLowerCase()}
+        def naByGroup = actionList.groupBy{it['who']}
+	naByGroup = naByGroup.sort{it.toString().toLowerCase()}
         naByGroup.each {
             key, value -> 
             if(key){
@@ -211,7 +146,7 @@ class Report {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap=wrap.addChild('strike')
                     wrap.addContent('a',it['action'],[href:it['nodeID']]).addContent( 
-                                                           (it['when']?' {'+it['when']+'}':'') +
+                                               (it['when']?' {'+it['when']+'}':'') +
                                                            (it['context']?' @'+it['context']:'') +
                                                             ' for '+it['project'])
                 }
@@ -223,8 +158,8 @@ class Report {
     String contextText() {
         Tag retval = new Tag ('body').
             addContent('h1', TextUtils.getText("freeplaneGTD_view_context"), [height:'50px', width:'100%'] ) 
-        def naByGroup = NAList.groupBy{it['context']}
-		naByGroup = naByGroup.sort{it.toString().toLowerCase()}
+        def naByGroup = actionList.groupBy{it['context']}
+	naByGroup = naByGroup.sort{it.toString().toLowerCase()}
         naByGroup.each {
             key, value -> 
             Tag curItem = retval.addChild('h2').
@@ -244,8 +179,23 @@ class Report {
     String timelineText() {
         Tag retval = new Tag ('body').
             addContent('h1', TextUtils.getText("freeplaneGTD_view_when"), [height:'50px', width:'100%'] ) 
-        def naByGroup = NAList.groupBy{it['when']}
-		naByGroup = naByGroup.sort{it.toString().toLowerCase()}
+        def naByGroup = actionList.groupBy{it['when']}.sort{it.toString().toLowerCase()}
+        /* TODO: implement timeline sorting
+        first overdue, then today, than this week, then future elements, then String keys
+        
+	def today = naByGroup.remove(TextUtils.getText("freeplaneGTD.view.when.today"))
+	if (today) {
+	    int lastindex=0
+	    naByGroup.keys.eachWithIndex { it, i -> if (! it instanceof String) { lastindex=i} }
+	    naByGroup.insert(today,lastindex)
+	}
+	def week = naByGroup.remove(TextUtils.getText("freeplaneGTD.view.when.this_week"))
+	if (week) {
+	    int lastindex=0
+	    naByGroup.keys.eachWithIndex { it, i -> if (! it instanceof String) { lastindex=i} }
+	    naByGroup.addAll(lastindex,[week])
+	}
+	*/
         naByGroup.each {
             key, value -> 
             Tag curItem = retval.addChild('h2').addContent(key).addChild('ul')

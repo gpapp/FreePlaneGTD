@@ -1,1 +1,5 @@
 /src/freeplaneGTD.addon.mm.bak
+/bin/
+.project
+.classpath
+.groovy

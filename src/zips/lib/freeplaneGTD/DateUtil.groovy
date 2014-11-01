@@ -24,44 +24,51 @@
 package freeplaneGTD 
 import static java.util.Calendar.YEAR;
 import java.text.SimpleDateFormat;
+import org.freeplane.features.format.FormattedDate
 
 class DateUtil {	
 	private static final def DATE_FORMAT_REGEXPS = [
 		// System date parsing
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
-		'^\\d{8}$': new SimpleDateFormat("yyyyMMdd"),
+		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mmZ'),
+		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mm:ssZ'),
+		'^\\d{8}$': new SimpleDateFormat('yyyyMMdd'),
 		// Short date parsing
-		'^\\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat("MM dd"),
-		'^\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat("MM/dd"),
-		'^\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat("MM.dd"),
-		'^\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat("MM.dd."),
+		'^\\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat('MM dd'),
+		'^\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat('MM/dd'),
+		'^\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('MM.dd'),
+		'^\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('MM.dd.'),
+		// Medium date parsing
+		'^\\d{1,2}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat('yy-MM-dd'),
+		'^\\d{1,2}\\ \\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat('yy MM dd'),
+		'^\\d{1,2}\\/\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat('MM/dd/yy'),
+		'^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('yy.MM.dd'),
+		'^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('yy.MM.dd.'),
 		// Date parsing
-		'^\\d{1,2}-\\d{1,2}-\\d{4}$':  new SimpleDateFormat("dd-MM-yyyy"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat("yyyy-MM-dd"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}$':  new SimpleDateFormat("MM/dd/yyyy"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}$':  new SimpleDateFormat("yyyy/MM/dd"),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat("yyyy.MM.dd"),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat("yyyy.MM.dd."),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$':  new SimpleDateFormat("dd MMM yyyy"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$':  new SimpleDateFormat("dd MMMM yyyy"),
+		'^\\d{1,2}-\\d{1,2}-\\d{4}$':  new SimpleDateFormat('dd-MM-yyyy'),
+		'^\\d{4}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat('yyyy-MM-dd'),
+		'^\\d{1,2}/\\d{1,2}/\\d{4}$':  new SimpleDateFormat('MM/dd/yyyy'),
+		'^\\d{4}/\\d{1,2}/\\d{1,2}$':  new SimpleDateFormat('yyyy/MM/dd'),
+		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('yyyy.MM.dd'),
+		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('yyyy.MM.dd.'),
+		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$':  new SimpleDateFormat('dd MMM yyyy'),
+		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$':  new SimpleDateFormat('dd MMMM yyyy'),
 		// Timestamp parsing
-		'^\\d{12}$':  new SimpleDateFormat("yyyyMMddHHmm"),
-		'^\\d{8}\\s\\d{4}$':  new SimpleDateFormat("yyyyMMdd HHmm"),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd-MM-yyyy HH:mm"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("yyyy-MM-dd HH:mm"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("MM/dd/yyyy HH:mm"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("yyyy/MM/dd HH:mm"),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd MMM yyyy HH:mm"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat("dd MMMM yyyy HH:mm"),
-		'^\\d{14}$':  new SimpleDateFormat("yyyyMMddHHmmss"),
-		'^\\d{8}\\s\\d{6}$':  new SimpleDateFormat("yyyyMMdd HHmmss"),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat("dd MMMM yyyy HH:mm:ss"),
+		'^\\d{12}$':  new SimpleDateFormat('yyyyMMddHHmm'),
+		'^\\d{8}\\s\\d{4}$':  new SimpleDateFormat('yyyyMMdd HHmm'),
+		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd-MM-yyyy HH:mm'),
+		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('yyyy-MM-dd HH:mm'),
+		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('MM/dd/yyyy HH:mm'),
+		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('yyyy/MM/dd HH:mm'),
+		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd MMM yyyy HH:mm'),
+		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd MMMM yyyy HH:mm'),
+		'^\\d{14}$':  new SimpleDateFormat('yyyyMMddHHmmss'),
+		'^\\d{8}\\s\\d{6}$':  new SimpleDateFormat('yyyyMMdd HHmmss'),
+		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd-MM-yyyy HH:mm:ss'),
+		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('yyyy-MM-dd HH:mm:ss'),
+		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('MM/dd/yyyy HH:mm:ss'),
+		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('yyyy/MM/dd HH:mm:ss'),
+		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd MMM yyyy HH:mm:ss'),
+		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd MMMM yyyy HH:mm:ss'),
 	];
 
 	/**
@@ -80,7 +87,7 @@ class DateUtil {
 		return null; // Unknown format.
 	}
 	
-	public static String normalizeDate (String dateString) {
+	public static Object normalizeDate (String dateString) {
 			String field = dateString.trim();
 			SimpleDateFormat fmt = DateUtil.determineDateFormat(field);
 			if (fmt!=null) {
@@ -89,7 +96,10 @@ class DateUtil {
 					Date now = new Date();
 					date[YEAR] = now[YEAR];
 				}
-				return date.format("yyyy-MM-dd");
+				if (date[YEAR]<1970) {
+					date[YEAR]+=2000;
+				}
+				return new FormattedDate(date,'yyyy-MM-dd')
 			} else {
 				return field
 			}
