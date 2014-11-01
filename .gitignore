@@ -1,4 +1,5 @@
 /src/freeplaneGTD.addon.mm.bak
+/src/freeplaneGTD-*.addon.mm
 /bin/
 .project
 .classpath
