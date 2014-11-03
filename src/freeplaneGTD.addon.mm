@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1415045512133" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd/">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1415058164164" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-releases/">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -58,7 +58,7 @@
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.2.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
-<attribute NAME="updateUrl" VALUE=""/>
+<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-releases/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-releases/"/>
 <richcontent TYPE="NOTE">
 
 <html>
@@ -117,35 +117,47 @@
   </body>
 </html>
 </richcontent>
-<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1412235539130" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
+<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1415057406446" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
 
 <html>
-            <head>
+  <head>
     
   </head>
-            <body>
-              <p>
+  <body>
+    <p>
       Freeplane|GTD creates views of GTD-style Next Action lists extracted from a mind map, providing views:
     </p>
-              <ul>
-                <li>
+    <ul>
+      <li>
         By Project
       </li>
-                <li>
+      <li>
         By Context (where the next action gets done)
       </li>
-                <li>
+      <li>
         By Owner (who owns it, if not you)
       </li>
-                <li>
+      <li>
         By Due Date (when)
       </li>
-              </ul>
-              <p>
-      The completed tasks can be filtered.
+    </ul>
+    <p>
+      The completed actions can be marked and filtered.
     </p>
-            </body>
-          </html>
+    <p>
+      
+    </p>
+    <p>
+      Markers (icons) can be configured to correspond to contexts
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Simple action editor is provided.
+    </p>
+  </body>
+</html>
 </richcontent>
 <edge COLOR="#999999"/>
 </node>
@@ -433,6 +445,12 @@
 </html>
 </richcontent>
 </node>
+</node>
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1415057112663">
+<icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
+<attribute NAME="Where" VALUE="Coding"/>
+<attribute NAME="When" VALUE="v1.0"/>
 </node>
 </node>
 </node>
