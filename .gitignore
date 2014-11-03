@@ -1,4 +1,5 @@
 /bin
 .project
 .classpath
+.settings
 .groovy

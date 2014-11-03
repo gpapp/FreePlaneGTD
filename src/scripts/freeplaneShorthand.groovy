@@ -1,11 +1,6 @@
 // @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.parseShorthand]"})
 //=========================================================
-// Freeplane GTD
-//
-// Groovy script to process shorthand notation fo GTD
-// from a Freeplane mind map
-//
-// Version 1.0-beta
+// Freeplane GTD+
 //
 // Copyright (c)2014 Gergely Papp
 //

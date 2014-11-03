@@ -21,87 +21,88 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-package freeplaneGTD 
+package freeplaneGTD
+
 import static java.util.Calendar.YEAR;
 import java.text.SimpleDateFormat;
 import org.freeplane.features.format.FormattedDate
 
-class DateUtil {	
-	private static final def DATE_FORMAT_REGEXPS = [
-		// System date parsing
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mmZ'),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$':  new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mm:ssZ'),
-		'^\\d{8}$': new SimpleDateFormat('yyyyMMdd'),
-		// Short date parsing
-		'^\\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat('MM dd'),
-		'^\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat('MM/dd'),
-		'^\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('MM.dd'),
-		'^\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('MM.dd.'),
-		// Medium date parsing
-		'^\\d{1,2}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat('yy-MM-dd'),
-		'^\\d{1,2}\\ \\d{1,2}\\ \\d{1,2}$':  new SimpleDateFormat('yy MM dd'),
-		'^\\d{1,2}\\/\\d{1,2}\\/\\d{1,2}$':  new SimpleDateFormat('MM/dd/yy'),
-		'^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('yy.MM.dd'),
-		'^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('yy.MM.dd.'),
-		// Date parsing
-		'^\\d{1,2}-\\d{1,2}-\\d{4}$':  new SimpleDateFormat('dd-MM-yyyy'),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}$':  new SimpleDateFormat('yyyy-MM-dd'),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}$':  new SimpleDateFormat('MM/dd/yyyy'),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}$':  new SimpleDateFormat('yyyy/MM/dd'),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$':  new SimpleDateFormat('yyyy.MM.dd'),
-		'^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$':  new SimpleDateFormat('yyyy.MM.dd.'),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$':  new SimpleDateFormat('dd MMM yyyy'),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$':  new SimpleDateFormat('dd MMMM yyyy'),
-		// Timestamp parsing
-		'^\\d{12}$':  new SimpleDateFormat('yyyyMMddHHmm'),
-		'^\\d{8}\\s\\d{4}$':  new SimpleDateFormat('yyyyMMdd HHmm'),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd-MM-yyyy HH:mm'),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('yyyy-MM-dd HH:mm'),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('MM/dd/yyyy HH:mm'),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('yyyy/MM/dd HH:mm'),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd MMM yyyy HH:mm'),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}$':  new SimpleDateFormat('dd MMMM yyyy HH:mm'),
-		'^\\d{14}$':  new SimpleDateFormat('yyyyMMddHHmmss'),
-		'^\\d{8}\\s\\d{6}$':  new SimpleDateFormat('yyyyMMdd HHmmss'),
-		'^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd-MM-yyyy HH:mm:ss'),
-		'^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('yyyy-MM-dd HH:mm:ss'),
-		'^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('MM/dd/yyyy HH:mm:ss'),
-		'^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('yyyy/MM/dd HH:mm:ss'),
-		'^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd MMM yyyy HH:mm:ss'),
-		'^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$':  new SimpleDateFormat('dd MMMM yyyy HH:mm:ss'),
-	];
+class DateUtil {
+    private static final def DATE_FORMAT_REGEXPS = [
+            // System date parsing
+            '^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$'       : new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mmZ'),
+            '^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}:\\d{2}\\+\\d{4}$': new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mm:ssZ'),
+            '^\\d{8}$'                                                  : new SimpleDateFormat('yyyyMMdd'),
+            // Short date parsing
+            '^\\d{1,2}\\ \\d{1,2}$'                                     : new SimpleDateFormat('MM dd'),
+            '^\\d{1,2}\\/\\d{1,2}$'                                     : new SimpleDateFormat('MM/dd'),
+            '^\\d{1,2}\\.\\d{1,2}$'                                     : new SimpleDateFormat('MM.dd'),
+            '^\\d{1,2}\\.\\d{1,2}\\.$'                                  : new SimpleDateFormat('MM.dd.'),
+            // Medium date parsing
+            '^\\d{1,2}-\\d{1,2}-\\d{1,2}$'                              : new SimpleDateFormat('yy-MM-dd'),
+            '^\\d{1,2}\\ \\d{1,2}\\ \\d{1,2}$'                          : new SimpleDateFormat('yy MM dd'),
+            '^\\d{1,2}\\/\\d{1,2}\\/\\d{1,2}$'                          : new SimpleDateFormat('MM/dd/yy'),
+            '^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}$'                          : new SimpleDateFormat('yy.MM.dd'),
+            '^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}\\.$'                       : new SimpleDateFormat('yy.MM.dd.'),
+            // Date parsing
+            '^\\d{1,2}-\\d{1,2}-\\d{4}$'                                : new SimpleDateFormat('dd-MM-yyyy'),
+            '^\\d{4}-\\d{1,2}-\\d{1,2}$'                                : new SimpleDateFormat('yyyy-MM-dd'),
+            '^\\d{1,2}/\\d{1,2}/\\d{4}$'                                : new SimpleDateFormat('MM/dd/yyyy'),
+            '^\\d{4}/\\d{1,2}/\\d{1,2}$'                                : new SimpleDateFormat('yyyy/MM/dd'),
+            '^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$'                            : new SimpleDateFormat('yyyy.MM.dd'),
+            '^\\d{4}\\.\\d{1,2}\\.\\d{1,2}\\.$'                         : new SimpleDateFormat('yyyy.MM.dd.'),
+            '^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$'                            : new SimpleDateFormat('dd MMM yyyy'),
+            '^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$'                           : new SimpleDateFormat('dd MMMM yyyy'),
+            // Timestamp parsing
+            '^\\d{12}$'                                                 : new SimpleDateFormat('yyyyMMddHHmm'),
+            '^\\d{8}\\s\\d{4}$'                                         : new SimpleDateFormat('yyyyMMdd HHmm'),
+            '^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}$'              : new SimpleDateFormat('dd-MM-yyyy HH:mm'),
+            '^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}$'              : new SimpleDateFormat('yyyy-MM-dd HH:mm'),
+            '^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}$'              : new SimpleDateFormat('MM/dd/yyyy HH:mm'),
+            '^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}$'              : new SimpleDateFormat('yyyy/MM/dd HH:mm'),
+            '^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}$'          : new SimpleDateFormat('dd MMM yyyy HH:mm'),
+            '^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}$'         : new SimpleDateFormat('dd MMMM yyyy HH:mm'),
+            '^\\d{14}$'                                                 : new SimpleDateFormat('yyyyMMddHHmmss'),
+            '^\\d{8}\\s\\d{6}$'                                         : new SimpleDateFormat('yyyyMMdd HHmmss'),
+            '^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'       : new SimpleDateFormat('dd-MM-yyyy HH:mm:ss'),
+            '^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$'       : new SimpleDateFormat('yyyy-MM-dd HH:mm:ss'),
+            '^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'       : new SimpleDateFormat('MM/dd/yyyy HH:mm:ss'),
+            '^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$'       : new SimpleDateFormat('yyyy/MM/dd HH:mm:ss'),
+            '^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'   : new SimpleDateFormat('dd MMM yyyy HH:mm:ss'),
+            '^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'  : new SimpleDateFormat('dd MMMM yyyy HH:mm:ss'),
+    ];
 
-	/**
-	* Determine SimpleDateFormat pattern matching with the given date string. Returns null if
-	* format is unknown. You can simply extend DateUtil with more formats if needed.
-	* @param dateString The date string to determine the SimpleDateFormat pattern for.
-	* @return The matching SimpleDateFormat pattern, or null if format is unknown.
-	* @see SimpleDateFormat
-	*/
-	public static SimpleDateFormat determineDateFormat(String dateString) {
-		for (key in DATE_FORMAT_REGEXPS.keySet()) {
-			if (dateString.toLowerCase().matches(key)) {
-			return DATE_FORMAT_REGEXPS[key];
-			}
-		}
-		return null; // Unknown format.
-	}
-	
-	public static Object normalizeDate (String dateString) {
-			String field = dateString.trim();
-			SimpleDateFormat fmt = DateUtil.determineDateFormat(field);
-			if (fmt!=null) {
-				Date date = fmt.parse(field);
-				if (fmt.toPattern().indexOf('y')<0) {
-					Date now = new Date();
-					date[YEAR] = now[YEAR];
-				}
-				if (date[YEAR]<1970) {
-					date[YEAR]+=2000;
-				}
-				return new FormattedDate(date,'yyyy-MM-dd')
-			} else {
-				return field
-			}
-	}
+    /**
+     * Determine SimpleDateFormat pattern matching with the given date string. Returns null if
+     * format is unknown. You can simply extend DateUtil with more formats if needed.
+     * @param dateString The date string to determine the SimpleDateFormat pattern for.
+     * @return The matching SimpleDateFormat pattern, or null if format is unknown.
+     * @see SimpleDateFormat
+     */
+    public static SimpleDateFormat determineDateFormat(String dateString) {
+        for (key in DATE_FORMAT_REGEXPS.keySet()) {
+            if (dateString.toLowerCase().matches(key)) {
+                return DATE_FORMAT_REGEXPS[key];
+            }
+        }
+        return null; // Unknown format.
+    }
+
+    public static Object normalizeDate(String dateString) {
+        String field = dateString.trim();
+        SimpleDateFormat fmt = DateUtil.determineDateFormat(field);
+        if (fmt != null) {
+            Date date = fmt.parse(field);
+            if (fmt.toPattern().indexOf('y') < 0) {
+                Date now = new Date();
+                date[YEAR] = now[YEAR];
+            }
+            if (date[YEAR] < 1970) {
+                date[YEAR] += 2000;
+            }
+            return new FormattedDate(date, 'yyyy-MM-dd')
+        } else {
+            return field
+        }
+    }
 }

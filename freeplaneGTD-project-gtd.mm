@@ -55,24 +55,27 @@
 <node TEXT="Administration" POSITION="left" ID="ID_424226512" CREATED="1412322328415" MODIFIED="1413635324311">
 <icon BUILTIN="list"/>
 <edge COLOR="#0000ff"/>
-<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1414798784389" VSHIFT="50">
+<node TEXT="Page for features planned for next release" ID="ID_518264125" CREATED="1412444227320" MODIFIED="1415057166641" VSHIFT="50">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
+<icon BUILTIN="edit"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1414798784470">
+<node TEXT="Announce plugin availability" ID="ID_1500090508" CREATED="1412322505424" MODIFIED="1415057166651">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="email"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1414798784551">
+<node TEXT="Release page v1.0" ID="ID_1926303511" CREATED="1412322491868" MODIFIED="1415057166661">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="edit"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1414798784593">
+<node TEXT="Release page v1.1" ID="ID_888899950" CREATED="1412322491868" MODIFIED="1415057166671">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="edit"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v1.1"/>
 </node>
@@ -113,8 +116,11 @@
 <node TEXT="Icon: Today" ID="ID_112477574" CREATED="1412442340273" MODIFIED="1412442355119">
 <icon BUILTIN="bookmark"/>
 </node>
-<node TEXT="Icon: Done" ID="ID_349470145" CREATED="1412442302416" MODIFIED="1412442314458">
+<node TEXT="Icon: Done" ID="ID_349470145" CREATED="1412442302416" MODIFIED="1415055535494">
 <icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="Icon: @WordPress" ID="ID_1137031602" CREATED="1415054848213" MODIFIED="1415057062896">
+<icon BUILTIN="edit"/>
 </node>
 </node>
 <node TEXT="Features" POSITION="right" ID="ID_1859115734" CREATED="1412322157318" MODIFIED="1413635243906">
@@ -286,10 +292,11 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1414544583006">
+<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1415057112663">
 <icon BUILTIN="yes"/>
+<icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
-<attribute NAME="When" VALUE="v1.2"/>
+<attribute NAME="When" VALUE="v1.0"/>
 </node>
 </node>
 <node TEXT="Action view" ID="ID_100212872" CREATED="1413618434079" MODIFIED="1413618500167">
@@ -382,13 +389,13 @@
 </node>
 <node TEXT="Task management" ID="ID_1223056012" CREATED="1413618366915" MODIFIED="1413633214520">
 <icon BUILTIN="list"/>
-<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1413237947693">
+<node TEXT="Add preference to show/hide done items per default" ID="ID_831003287" CREATED="1413201048622" MODIFIED="1415057166692">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Packaging"/>
 <attribute NAME="When" VALUE="v1.0"/>
 </node>
-<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1413635367849">
+<node TEXT="Multi-level projects" ID="ID_684898285" CREATED="1412322165283" MODIFIED="1415057166704">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -413,7 +420,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add priority handling to actions" ID="ID_1848651146" CREATED="1413619475951" MODIFIED="1413619776525">
+<node TEXT="Add priority handling to actions" ID="ID_1848651146" CREATED="1413619475951" MODIFIED="1415057166715">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
@@ -434,7 +441,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1413619861067">
+<node TEXT="Add completeness handling to actions" ID="ID_1398055650" CREATED="1413619600003" MODIFIED="1415057166753">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.2"/>
@@ -467,7 +474,7 @@
 </node>
 <node TEXT="Time management" ID="ID_1065985032" CREATED="1413618370803" MODIFIED="1413633214520">
 <icon BUILTIN="list"/>
-<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1414544583036">
+<node TEXT="Overdue handling" ID="ID_1374629210" CREATED="1412332185530" MODIFIED="1415057166766">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Coding"/>
 <attribute NAME="When" VALUE="v1.0"/>
@@ -478,7 +485,7 @@
 </node>
 <node TEXT="Aspect management" ID="ID_1314956442" CREATED="1413619876781" MODIFIED="1413633214521">
 <icon BUILTIN="list"/>
-<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1414464380588">
+<node TEXT="Use the attributes to rotate the map around aspects" ID="ID_935562847" CREATED="1413619884444" MODIFIED="1415057166784">
 <icon BUILTIN="yes"/>
 <attribute NAME="Where" VALUE="Idea"/>
 <attribute NAME="When" VALUE="v2.0"/>
@@ -545,9 +552,9 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1413633214521">
+<node TEXT="Scrapped ideas" ID="ID_1278650076" CREATED="1413618698721" MODIFIED="1415055911261">
 <icon BUILTIN="list"/>
-<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1413619444351">
+<node TEXT="Add shortcuts for adding icons" ID="ID_898822197" CREATED="1413200978889" MODIFIED="1415057166801">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_cancel"/>
 <icon BUILTIN="button_ok"/>
@@ -579,7 +586,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1413619424764">
+<node TEXT="Multi-scope actions" ID="ID_1805653228" CREATED="1412322198260" MODIFIED="1415057166820">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_cancel"/>
 <icon BUILTIN="button_ok"/>
@@ -605,7 +612,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1413619411710">
+<node TEXT="Use stylesheets to render the viewers" ID="ID_1834974196" CREATED="1412600493524" MODIFIED="1415057166840">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_cancel"/>
 <icon BUILTIN="button_ok"/>
@@ -631,7 +638,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1414429949856">
+<node TEXT="Toggle shorthand/action format on parse shorthand, and only apply to currently selected node" ID="ID_365112581" CREATED="1413617811238" MODIFIED="1415057166858">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="help"/>
 <icon BUILTIN="button_cancel"/>
@@ -711,15 +718,17 @@
 <attribute NAME="Where" VALUE="Browser"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1412769023925">
+<node TEXT="Project page" ID="ID_916926404" CREATED="1412322349228" MODIFIED="1415057064720">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
+<icon BUILTIN="edit"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>
-<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1412769023939">
+<node TEXT="Release page v0.9" ID="ID_1522073442" CREATED="1412322491868" MODIFIED="1415057064721">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
+<icon BUILTIN="edit"/>
 <attribute NAME="Where" VALUE="WordPress"/>
 <attribute NAME="When" VALUE="v0.9"/>
 </node>

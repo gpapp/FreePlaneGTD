@@ -9,7 +9,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-    
+
 class MyTransferHandler extends TransferHandler {
 
     static class MyTransferable implements Transferable {
@@ -82,7 +82,7 @@ class MyTransferHandler extends TransferHandler {
             }
 
             public void handleEndTag(HTML.Tag t, final int pos) {
-                if (t.equals(HTML.Tag.DIV) || t.equals(HTML.Tag.H1) || t.equals(HTML.Tag.H2) || t.equals(HTML.Tag.LI) ) {
+                if (t.equals(HTML.Tag.DIV) || t.equals(HTML.Tag.H1) || t.equals(HTML.Tag.H2) || t.equals(HTML.Tag.LI)) {
                     list.add("\n");
                 }
             }
