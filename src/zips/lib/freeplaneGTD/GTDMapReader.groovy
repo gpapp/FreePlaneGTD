@@ -228,13 +228,13 @@ class GTDMapReader {
                 }
                 boolean done = icons.contains(iconDone)
                 if (!(filterDone && done)) {
-                    result = [action: naAction, project: naProject, context: naContext, who: naWho, when: naWhen, nodeID: naNodeID, done: done]
+                    result << [action: naAction, project: naProject, context: naContext, who: naWho, when: naWhen, nodeID: naNodeID, done: done]
                 }
             }
         }
 
         thisNode.children.each {
-            result += findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone);
+            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone));
         }
         return result;
     }
