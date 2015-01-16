@@ -233,8 +233,7 @@ class GTDMapReader {
                 }
                 boolean done = icons.contains(iconDone)
                 if (!(filterDone && done)) {
-<<<<<<< HEAD
-                    result = [action: naAction, 
+                    result << [action: naAction, 
 						project: naProject,
 						context: naContext,
 						who: naWho,
@@ -242,9 +241,6 @@ class GTDMapReader {
 						priority: naPriority,
 						nodeID: naNodeID,
 						done: done]
-=======
-                    result << [action: naAction, project: naProject, context: naContext, who: naWho, when: naWhen, nodeID: naNodeID, done: done]
->>>>>>> 01d5de8df4b4e11c72a9553c970c95e101e790a1
                 }
             }
         }

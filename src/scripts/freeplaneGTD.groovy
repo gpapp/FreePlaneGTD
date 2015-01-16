@@ -102,7 +102,8 @@ class ReportModel {
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
-                                    (it['context'] ? ' @' + it['context'] : ''))
+                                    (it['context'] ? ' @' + it['context'] : '') +
+									(it['priority'] ? ' #' + it['priority'] : ''))
                 }
         }
         return retval.toString()
@@ -120,6 +121,7 @@ class ReportModel {
                     naByGroup[key].each {
                         Tag wrap = curItem.addChild('li')
                         if (it['done']) wrap = wrap.addChild('strike')
+						// TODO: add priority display
                         wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                                 (it['when'] ? ' {' + it['when'] + '}' : '') +
                                         (it['context'] ? ' @' + it['context'] : '') +
@@ -142,6 +144,7 @@ class ReportModel {
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
+					// TODO: add priority display
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
@@ -177,6 +180,7 @@ class ReportModel {
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
+					// TODO: add priority display
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['context'] ? ' @' + it['context'] : '') +
@@ -186,6 +190,7 @@ class ReportModel {
         return retval.toString()
     }
 }
+// TODO: Add text by priority
 
 ReportModel report = new ReportModel(node.map.root)
 
@@ -195,6 +200,7 @@ def refresh = {
     delegatePane.text = report.delegateText()
     contextPane.text = report.contextText()
     timelinePane.text = report.timelineText()
+	// TODO: Add priority pane context
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -246,6 +252,7 @@ def swing = SwingBuilder.edtBuilder {
                         timelinePane = editorPane(contentType: 'text/html', editable: false)
                     }
                 }
+				// TODO: add priority panel
                 panel(name: panelTitle(TextUtils.getText("freeplaneGTD.tab.about.title")),
                         toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip")) {
                     panel() {
@@ -278,6 +285,7 @@ def swing = SwingBuilder.edtBuilder {
                             case 1: strReport = report.delegateText(); break;
                             case 2: strReport = report.contextText(); break;
                             case 3: strReport = report.timeLineText(); break;
+							// TODO: Add priority list
                             default: strReport = "(no report)"; break;
                         }
                     })
@@ -290,6 +298,7 @@ def swing = SwingBuilder.edtBuilder {
                             case 1: curPane = delegatePane; break;
                             case 2: curPane = contextPane; break;
                             case 3: curPane = timelinePane; break;
+							// TODO: Add priority list
                             default: curPane = projectPane; break;
                         }
                         int caretPos = curPane.getCaretPosition()
@@ -391,6 +400,7 @@ projectPane.addHyperlinkListener(nl);
 delegatePane.addHyperlinkListener(nl);
 contextPane.addHyperlinkListener(nl);
 timelinePane.addHyperlinkListener(nl);
+// TODO: Add priority hyperlink listener
 
 // on ESC key close frame
 mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
