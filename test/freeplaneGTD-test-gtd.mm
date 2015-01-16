@@ -50,7 +50,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="8"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="9"/>
 <node TEXT="Action tests" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
@@ -141,6 +141,9 @@
 <node TEXT="? * aa {10 9}" ID="ID_965612994" CREATED="1413840527338" MODIFIED="1414803712429">
 <attribute NAME="dateClass" VALUE="= node.attributes[&apos;When&apos;].class"/>
 </node>
+<node TEXT="* aa #3" ID="ID_743874059" CREATED="1421399779261" MODIFIED="1421399790869"/>
+<node TEXT="* #43 dodo" ID="ID_973470716" CREATED="1421399792202" MODIFIED="1421399807938"/>
+<node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1421399820367"/>
 </node>
 <node TEXT="Context icon tests" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
 <edge COLOR="#7c0000"/>
@@ -158,6 +161,19 @@
 <node TEXT="doit" ID="ID_355625033" CREATED="1414538208273" MODIFIED="1414538246664">
 <icon BUILTIN="gohome"/>
 <icon BUILTIN="help"/>
+</node>
+</node>
+</node>
+<node TEXT="Priority icon tests" POSITION="right" ID="ID_1127701216" CREATED="1421401059533" MODIFIED="1421401066512">
+<edge COLOR="#007c00"/>
+<node TEXT="ny&#xfa;l" ID="ID_7975647" CREATED="1421400996628" MODIFIED="1421401036596">
+<icon BUILTIN="full-1"/>
+<icon BUILTIN="yes"/>
+</node>
+<node TEXT="" ID="ID_790305926" CREATED="1414538256765" MODIFIED="1414538264744">
+<icon BUILTIN="button_cancel"/>
+<node TEXT="ny&#xfa;l" ID="ID_867782640" CREATED="1421400996628" MODIFIED="1421401053162">
+<icon BUILTIN="full-1"/>
 </node>
 </node>
 </node>
@@ -267,6 +283,7 @@
 <icon BUILTIN="launch"/>
 </node>
 <node TEXT="GTD View: Who" ID="ID_1343410379" CREATED="1414798826010" MODIFIED="1414798869909"/>
+<node TEXT="Icon: @ShouldFail" ID="ID_507523636" CREATED="1421399720909" MODIFIED="1421400499163"/>
 </node>
 </node>
 </map>

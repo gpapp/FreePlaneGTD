@@ -89,6 +89,9 @@ class GTDMapReader {
         String nodeText = thisNode.text.trim();
 
         if (nodeText =~ '^Icon:') {
+			if (firstIcon =~ /^full\-/) {
+                    throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
+			}
             if (nodeText == 'Icon: Next action') {
                 if (['help', iconProject, iconToday, iconDone].contains(firstIcon)
                         || contextIcons.values().contains(firstIcon)) {
@@ -164,20 +167,32 @@ class GTDMapReader {
                         nodeAttr['Where'] = context;
                     }
             }
-			// TODO: add priority icon to property here
             thisNode.attributes = nodeAttr;
 
 			boolean hasNextAction
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
+
+			thisNode.icons.icons.each {
+				if (it =~ /'^full\-\d$'/) {
+					nodeAttr['Priority'] = it[6]
+				}
+			}
+            			
             if (contextIcons.keySet().contains(nodeAttr['Where'])) {
                 String contextIcon = contextIcons[nodeAttr['Where']];
                 if (!thisNode.icons.icons.contains(contextIcon)) {
                     thisNode.icons.add(contextIcon);
                 }
             }
-			// TODO: add priority property to icon here
+
+			if (nodeAttr['Priority'] >= '0' && nodeAttr['Priority'] >= '9') {
+				String priorityIcon = 'full-' + nodeAttr['Priority'];
+                if (!thisNode.icons.icons.contains(priorityIcon)) {
+                    thisNode.icons.add(priorityIcon);
+                }
+			}
         }
 
         thisNode.children.each {
@@ -213,7 +228,7 @@ class GTDMapReader {
         String naContext = thisNode['Where'].toString()
         String naWho = thisNode['Who'].toString()
         String naWhen = thisNode['When'].toString()
-		String naPriority = thisNode['Priority'].toInt()
+		String naPriority = thisNode['Priority'].toString()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
         if (!naWhen) {
@@ -246,7 +261,7 @@ class GTDMapReader {
         }
 
         thisNode.children.each {
-            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone));
+            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone))
         }
         return result;
     }
@@ -269,9 +284,9 @@ class GTDMapReader {
             fields['context'] = toParse.replaceAll('^.*@([^\\s\\*]+).*$', '$1').trim()
             toParse = toParse.replaceAll('\\s*@[^\\s\\*]+\\s*', ' ').trim()
         }
-        if (toParse.indexOf('#') >= 0) {
-            fields['priority'] = toParse.replaceAll('^.*#([0-9])[~0-9].*$', '$1').trim()
-            toParse = toParse.replaceAll('#([0-9])([~0-9])', '$1').trim()
+        if (toParse =~ /#\d[~\d]/ ) {
+            fields['priority'] = toParse.replaceAll('^.*#(\\d)[~\\d].*$', '$1').trim()
+            toParse = toParse.replaceAll('#\\d', '').trim()
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()
         return fields;
