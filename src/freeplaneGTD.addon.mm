@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1415058164164" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-releases/">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1419882344862" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -54,11 +54,13 @@
 </hook>
 <attribute_layout NAME_WIDTH="133" VALUE_WIDTH="161"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.0-beta2"/>
+<attribute NAME="version" VALUE="v1.0.1"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.2.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
-<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-releases/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-releases/"/>
+<attribute NAME="updateUrl" VALUE=""/>
+<attribute NAME="downloadUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/"/>
+<attribute NAME="changelogUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/"/>
 <richcontent TYPE="NOTE">
 
 <html>
@@ -544,7 +546,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1415049131038" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1416152443007" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -582,10 +584,11 @@
 <attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Who"/>
 <attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Context"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="When"/>
+<attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Today"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Done"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1414460165850" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1416152467870" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend\u0151k"/>
@@ -622,6 +625,7 @@
 <attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="V\u00E9grehajt\u00F3"/>
 <attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Kontextus"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Id\u0151pont"/>
+<attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Ma"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="K\u00E9sz"/>
 <edge COLOR="#999999"/>
 </node>
@@ -778,10 +782,10 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="freeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1415043972076" HGAP="30">
+<node TEXT="freeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1416152744616" HGAP="30">
 <attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.listActions"/>
-<attribute NAME="menuLocation" VALUE="main_menu_scripting/freeplaneGTD"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
 <attribute NAME="keyboardShortcut" VALUE="control H"/>
 <attribute NAME="execute_scripts_without_asking" VALUE="true"/>
@@ -791,10 +795,10 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="freeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1415043942529" HGAP="30">
+<node TEXT="freeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1416152732755" HGAP="30">
 <attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.parseShorthand"/>
-<attribute NAME="menuLocation" VALUE="main_menu_scripting/freeplaneGTD"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
 <attribute NAME="keyboardShortcut" VALUE="alt H"/>
 <attribute NAME="execute_scripts_without_asking" VALUE="true"/>
@@ -804,10 +808,10 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="GTDActionEditor.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1415044391319">
+<node TEXT="GTDActionEditor.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1416152738063">
 <attribute_layout NAME_WIDTH="287" VALUE_WIDTH="208"/>
-<attribute NAME="menuTitleKey" VALUE="addon.${name}.editAction"/>
-<attribute NAME="menuLocation" VALUE="main_menu_scripting"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.editAction"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
 <attribute NAME="keyboardShortcut" VALUE="F4" OBJECT="org.freeplane.features.format.FormattedObject|F4|number:decimal:#0.####"/>
 <attribute NAME="execute_scripts_without_asking" VALUE="true"/>

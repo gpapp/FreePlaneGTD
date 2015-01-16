@@ -44,6 +44,7 @@ class ActionEditorModel {
     String action
     String delegate
     String context
+    boolean today
     String when
     boolean done
 
@@ -61,6 +62,7 @@ class ActionEditorModel {
         action=node.text
         delegate=node.attributes['Who']
         context=node.attributes['Where']
+        today=node.icons.contains(GTDMapReader.instance.iconToday)
         when=node.attributes['When']
         done=node.icons.contains(GTDMapReader.instance.iconDone)
         return true
@@ -78,11 +80,27 @@ class ActionEditorModel {
         GTDMapReader mapReader = GTDMapReader.instance
         mapReader.convertShorthand(node)
         mapReader.findIcons(node.map.rootNode)
+
+        if (node.icons.contains(GTDMapReader.instance.iconToday)!=today) {
+            if(!today){
+                node.icons.remove(GTDMapReader.instance.iconToday)
+            } else {
+        	   node.icons.add(GTDMapReader.instance.iconToday)
+            }
+        }
         if (node.icons.contains(GTDMapReader.instance.iconDone)!=done) {
             if(!done){
-        	node.icons.remove(GTDMapReader.instance.iconDone)
+                node.icons.remove(GTDMapReader.instance.iconDone)
             } else {
-        	node.icons.add(GTDMapReader.instance.iconDone)
+                node.icons.add(GTDMapReader.instance.iconDone)
+            }
+        }
+        GTDMapReader.instance.contextIcons.each {
+            key, value ->
+            if(context!=key) {
+                node.icons.remove(value)
+            } else if (!node.icons.contains(value)) {
+                node.icons.add(value)
             }
         }
     }
@@ -95,6 +113,7 @@ class ActionEditor {
     JTextField actionField
     JTextField delegateField
     JTextField contextField
+    JCheckBox  todayField
     JTextField whenField
     JCheckBox  doneField
 
@@ -126,8 +145,11 @@ class ActionEditor {
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
                         constraints: gbc(gridx:0,gridy:3,ipadx:5,fill:HORIZONTAL))
-                    whenField = textField(preferredSize:new Dimension(300,25),
-                        constraints:gbc(gridx:1,gridy:3,gridwidth:REMAINDER,fill:HORIZONTAL))
+                    todayField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
+                        preferredSize:new Dimension(150,25),
+                        constraints:gbc(gridx:1,gridy:3))
+                    whenField = textField(preferredSize:new Dimension(250,25),
+                        constraints:gbc(gridx:2,gridy:3,gridwidth:REMAINDER,fill:HORIZONTAL))
 
                     doneField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                         preferredSize:new Dimension(300,20),
@@ -145,6 +167,7 @@ class ActionEditor {
                                 model.action=actionField.text
                                 model.delegate=delegateField.text
                                 model.context=contextField.text
+                                model.today=todayField.selected
                                 model.when=whenField.text
                                 model.done=doneField.selected
                                 model.updateNode()
@@ -174,6 +197,7 @@ class ActionEditor {
         actionField.text=model.action
         delegateField.text=model.delegate
         contextField.text=model.context
+        todayField.selected=model.today
         whenField.text=model.when
         doneField.selected=model.done
         mainFrame.pack()
