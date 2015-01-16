@@ -53,12 +53,13 @@ class GTDMapReader {
 
     //--------------------------------------------------------------
     // Convert next action shorthand notation with recursive walk:
-    // shorthand: *<next action> @<Context> [<who>] {<when>}
+    // shorthand: *<next action> @<Context> [<who>] {<when>} #<priority>
     // becomes:
     // node.text     = <next action>
     // node['Where'] = <where>
     // node['Who']   = <who>
     // node['When']  = <when>
+    // node['Priority']  = <priority>
     //
     public void convertShorthand(Proxy.Node rootNode) {
         // Get icon keys for next actions and projects
@@ -129,12 +130,13 @@ class GTDMapReader {
 
     //--------------------------------------------------------------
     // Convert next action shorthand notation with recursive walk:
-    // shorthand: *<next action> @<Context> [<who>] {<when>}
+    // shorthand: *<next action> @<Context> [<who>] {<when>} #<priority>
     // becomes:
     // node.text     = <next action>
     // node['Where'] = <where>
     // node['Who']   = <who>
     // node['When']  = <when>
+    // node['Priority']  = <priority>
     //
     private void internalConvertShorthand(Proxy.Node thisNode) {
         String nodeText = thisNode.text.trim();
@@ -154,6 +156,7 @@ class GTDMapReader {
             if (fields['context']) nodeAttr['Where'] = fields['context']
             if (fields['delegate']) nodeAttr['Who'] = fields['delegate']
             if (fields['when']) nodeAttr['When'] = fields['when']
+            if (fields['priority']) nodeAttr['Priority'] = fields['priority']
 
             contextIcons.each {
                 context, icon ->
@@ -161,9 +164,10 @@ class GTDMapReader {
                         nodeAttr['Where'] = context;
                     }
             }
+			// TODO: add priority icon to property here
             thisNode.attributes = nodeAttr;
 
-            boolean hasNextAction
+			boolean hasNextAction
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
@@ -173,6 +177,7 @@ class GTDMapReader {
                     thisNode.icons.add(contextIcon);
                 }
             }
+			// TODO: add priority property to icon here
         }
 
         thisNode.children.each {
@@ -205,17 +210,17 @@ class GTDMapReader {
         def naNodeID = thisNode.id;
 
         // use index method to get attributes
-        String naContext = thisNode['Where'].toString();
-        String naWho = thisNode['Who'].toString();
-        String naWhen = thisNode['When'].toString();
+        String naContext = thisNode['Where'].toString()
+        String naWho = thisNode['Who'].toString()
+        String naWhen = thisNode['When'].toString()
+		String naPriority = thisNode['Priority'].toInt()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
         if (!naWhen) {
-            naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week");
+            naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
         } else {
-            naWhen = DateUtil.normalizeDate(naWhen);
-            //TODO: write back value
-            thisNode['When'] = naWhen;
+            naWhen = DateUtil.normalizeDate(naWhen)
+            thisNode['When'] = naWhen
         }
 
         def result = [];
@@ -228,7 +233,14 @@ class GTDMapReader {
                 }
                 boolean done = icons.contains(iconDone)
                 if (!(filterDone && done)) {
-                    result = [action: naAction, project: naProject, context: naContext, who: naWho, when: naWhen, nodeID: naNodeID, done: done]
+                    result = [action: naAction, 
+						project: naProject,
+						context: naContext,
+						who: naWho,
+						when: naWhen,
+						priority: naPriority,
+						nodeID: naNodeID,
+						done: done]
                 }
             }
         }
@@ -256,6 +268,10 @@ class GTDMapReader {
         if (toParse.indexOf('@') >= 0) {
             fields['context'] = toParse.replaceAll('^.*@([^\\s\\*]+).*$', '$1').trim()
             toParse = toParse.replaceAll('\\s*@[^\\s\\*]+\\s*', ' ').trim()
+        }
+        if (toParse.indexOf('#') >= 0) {
+            fields['priority'] = toParse.replaceAll('^.*#([0-9])[~0-9].*$', '$1').trim()
+            toParse = toParse.replaceAll('#([0-9])([~0-9])', '$1').trim()
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()
         return fields;
