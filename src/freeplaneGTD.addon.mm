@@ -546,7 +546,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1416152443007" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1421508644376" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -585,10 +585,11 @@
 <attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Context"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="When"/>
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Today"/>
+<attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Done"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1416152467870" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1421508664425" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend\u0151k"/>
@@ -626,6 +627,7 @@
 <attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Kontextus"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Id\u0151pont"/>
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Ma"/>
+<attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe1;s"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="K\u00E9sz"/>
 <edge COLOR="#999999"/>
 </node>

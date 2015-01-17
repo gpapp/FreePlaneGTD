@@ -99,13 +99,16 @@ class ReportModel {
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
+                    if (it['priority']) {
+                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                    }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
-                                    (it['context'] ? ' @' + it['context'] : '') +
-									(it['priority'] ? ' #' + it['priority'] : ''))
+                                    (it['context'] ? ' @' + it['context'] : ''))
                 }
         }
+        println(retval)
         return retval.toString()
     }
 
@@ -121,7 +124,9 @@ class ReportModel {
                     naByGroup[key].each {
                         Tag wrap = curItem.addChild('li')
                         if (it['done']) wrap = wrap.addChild('strike')
-						// TODO: add priority display
+                        if (it['priority']) {
+                            wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                        }
                         wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                                 (it['when'] ? ' {' + it['when'] + '}' : '') +
                                         (it['context'] ? ' @' + it['context'] : '') +
@@ -129,6 +134,7 @@ class ReportModel {
                     }
                 }
         }
+        println(retval)
         return retval.toString()
     }
 
@@ -144,7 +150,9 @@ class ReportModel {
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
-					// TODO: add priority display
+                    if (it['priority']) {
+                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                    }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
@@ -180,7 +188,9 @@ class ReportModel {
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
-					// TODO: add priority display
+                    if (it['priority']) {
+                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                    }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['context'] ? ' @' + it['context'] : '') +
@@ -423,10 +433,20 @@ class CloseAction extends AbstractAction {
 
 // set up the default stylesheet for all HTMLEditorKit instances
 HTMLEditorKit kit = (HTMLEditorKit) projectPane.getEditorKit();
-StyleSheet styleSheet = kit.getStyleSheet();
-styleSheet.addRule("body {color:#000000; font-family:Verdana, Arial; font-size:12pt; padding: 10px 25px 0px 25px; }");
-styleSheet.addRule("h1 {font-size:20pt; font-weight:bold}");
-styleSheet.addRule("a {text-decoration: none; color:#990000;}");
+StyleSheet styleSheet = kit.getStyleSheet()
+styleSheet.addRule("body {color:#000000; font-family:Verdana, Arial; font-size:12pt; padding: 10px 25px 0px 25px; }")
+styleSheet.addRule("h1 {font-size:20pt; font-weight:bold}")
+styleSheet.addRule("a {text-decoration: none; color:#990000;}")
+styleSheet.addRule(".priority-0 {padding: 5px; color: #FFFFFF; background-color: #FF0000;}\n" +
+                   ".priority-1 {padding: 3pt; color: #FFFFFF; background-color: #FF00FF;}\n" +
+                   ".priority-2 {padding: 30px; color: #FFFFFF; background-color: #FFFF00;}\n" +
+                   ".priority-3 {padding: 30pt; color: #FFFFFF; background-color: #FF0077;}\n" +
+                   ".priority-4 {padding: 30; color: #FFFFFF; background-color: #770000;}\n" +
+                   ".priority-5 {padding: 3; color: #FFFFFF; background-color: #FF7700;}\n" +
+                   ".priority-6 {padding: 3px; color: #FFFFFF; background-color: #FF0077;}\n" +
+                   ".priority-7 {padding: 3px; color: #FFFFFF; background-color: #770000;}\n" +
+                   ".priority-8 {padding: 3px; color: #FFFFFF; background-color: #FF7777;}\n" +
+                   ".priority-9 {padding: 3px; color: #FFFFFF; background-color: #777777;}")
 
 report.selPane = config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')

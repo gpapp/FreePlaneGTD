@@ -62,8 +62,8 @@ class MyTransferHandler extends TransferHandler {
     protected Transferable createTransferable(JComponent c) {
         final JEditorPane pane = (JEditorPane) c;
         // TODO remove map links from html
-        final String htmlText = pane.getText();
-        final String plainText = extractText(new StringReader(htmlText));
+        final String htmlText =  extractHtml(pane.getText())
+        final String plainText = extractText(new StringReader(pane.getText()))
         return new MyTransferable(plainText, htmlText);
     }
 
@@ -111,6 +111,10 @@ class MyTransferHandler extends TransferHandler {
         return result;
     }
 
+    public String extractHtml(String source) {
+        String result = source.replaceAll ('<a [^>]*>(.*)</a>','$1')
+        return result
+    }
 
     @Override
     public void exportToClipboard(JComponent comp, Clipboard clip, int action) throws IllegalStateException {

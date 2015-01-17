@@ -51,6 +51,9 @@ class GTDMapReader {
         return instance
     }
 
+    private GTDMapReader() {
+    }
+
     //--------------------------------------------------------------
     // Convert next action shorthand notation with recursive walk:
     // shorthand: *<next action> @<Context> [<who>] {<when>} #<priority>
@@ -62,6 +65,14 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     public void convertShorthand(Proxy.Node rootNode) {
+        findIcons(rootNode)
+        internalConvertShorthand(rootNode)
+    }
+
+
+    //--------------------------------------------------------------
+    //Get icon key names from Settings/Icons nodes
+    private void findIcons(Proxy.Node thisNode) {
         // Get icon keys for next actions and projects
         iconNextAction = "yes"
         iconProject = "list"
@@ -69,27 +80,21 @@ class GTDMapReader {
         iconDone = "button_ok"
         contextIcons = [:]
 
-        findIcons(rootNode)
-        internalConvertShorthand(rootNode)
+        internalFindIcons(thisNode)
     }
-
 
     public List getActionList(Proxy.Node rootNode, boolean filterDone) {
         return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
     }
 
 
-    private GTDMapReader() {
-    }
-
-    //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
-    private void findIcons(Proxy.Node thisNode) {
+    private void internalFindIcons(Proxy.Node thisNode) {
         String firstIcon = thisNode.icons.first;
         String nodeText = thisNode.text.trim();
 
         if (nodeText =~ '^Icon:') {
-			if (firstIcon =~ /^full\-/) {
+			if (firstIcon ==~ /^full\-\d$/) {
                     throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
 			}
             if (nodeText == 'Icon: Next action') {
@@ -127,7 +132,7 @@ class GTDMapReader {
         }
 
         thisNode.children.each {
-            findIcons(it);
+            internalFindIcons(it);
         }
     }
 
@@ -167,18 +172,19 @@ class GTDMapReader {
                         nodeAttr['Where'] = context;
                     }
             }
+
+            thisNode.icons.each {
+				if (it ==~ /^full\-\d$/) {
+					nodeAttr['Priority'] = it[5]
+				}
+			}
+
             thisNode.attributes = nodeAttr;
 
 			boolean hasNextAction
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
-
-			thisNode.icons.icons.each {
-				if (it =~ /'^full\-\d$'/) {
-					nodeAttr['Priority'] = it[6]
-				}
-			}
             			
             if (contextIcons.keySet().contains(nodeAttr['Where'])) {
                 String contextIcon = contextIcons[nodeAttr['Where']];
@@ -187,11 +193,14 @@ class GTDMapReader {
                 }
             }
 
-			if (nodeAttr['Priority'] >= '0' && nodeAttr['Priority'] >= '9') {
-				String priorityIcon = 'full-' + nodeAttr['Priority'];
-                if (!thisNode.icons.icons.contains(priorityIcon)) {
-                    thisNode.icons.add(priorityIcon);
+            thisNode.icons.each {
+                if (it ==~ /^full\-\d$/) {
+                    thisNode.icons.remove(it)
                 }
+            }
+			if (nodeAttr['Priority']) {
+				String priorityIcon = 'full-' + nodeAttr['Priority'];
+                thisNode.icons.add(priorityIcon);
 			}
         }
 
@@ -284,8 +293,8 @@ class GTDMapReader {
             fields['context'] = toParse.replaceAll('^.*@([^\\s\\*]+).*$', '$1').trim()
             toParse = toParse.replaceAll('\\s*@[^\\s\\*]+\\s*', ' ').trim()
         }
-        if (toParse =~ /#\d[~\d]/ ) {
-            fields['priority'] = toParse.replaceAll('^.*#(\\d)[~\\d].*$', '$1').trim()
+        if (toParse =~ /#\d/ ) {
+            fields['priority'] = toParse.replaceAll('^.*#(\\d).*$', '$1').trim()
             toParse = toParse.replaceAll('#\\d', '').trim()
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()

@@ -46,6 +46,7 @@ class ActionEditorModel {
     String context
     boolean today
     String when
+    String priority
     boolean done
 
     Proxy.Node node
@@ -53,8 +54,8 @@ class ActionEditorModel {
     boolean setNode(Proxy.Node node) {
         this.node=node
         GTDMapReader mapReader = GTDMapReader.instance
-        mapReader.convertShorthand(node)
         mapReader.findIcons(node.map.rootNode)
+        mapReader.internalConvertShorthand(node)
         if(!node.icons.contains(mapReader.iconNextAction)){
             UITools.errorMessage ('Selected node is not a task')
             return false
@@ -64,6 +65,7 @@ class ActionEditorModel {
         context=node.attributes['Where']
         today=node.icons.contains(GTDMapReader.instance.iconToday)
         when=node.attributes['When']
+        priority=node.attributes['Priority']
         done=node.icons.contains(GTDMapReader.instance.iconDone)
         return true
     }
@@ -72,37 +74,38 @@ class ActionEditorModel {
         node.text = "* $action " +
                 (context?.trim() ? "@$context" : '') +
                 (delegate?.trim() ? "[$delegate]" : '') +
-                (when?.trim() ? "{$when}" : '')
+                (when?.trim() ? "{$when}" : '') +
+                (priority?.trim() ? "#$priority" : '')
         !delegate?node.attributes.remove('Who'):false
         !context?node.attributes.remove('Where'):false
         !when?node.attributes.remove('When'):false
-        
-        GTDMapReader mapReader = GTDMapReader.instance
-        mapReader.convertShorthand(node)
-        mapReader.findIcons(node.map.rootNode)
+        !priority?node.attributes.remove('Priority'):false
 
-        if (node.icons.contains(GTDMapReader.instance.iconToday)!=today) {
+        GTDMapReader mapReader = GTDMapReader.instance
+        if (node.icons.contains(mapReader.iconToday)!=today) {
             if(!today){
-                node.icons.remove(GTDMapReader.instance.iconToday)
+                node.icons.remove(mapReader.iconToday)
             } else {
-        	   node.icons.add(GTDMapReader.instance.iconToday)
+        	   node.icons.add(mapReader.iconToday)
             }
         }
-        if (node.icons.contains(GTDMapReader.instance.iconDone)!=done) {
+        if (node.icons.contains(mapReader.iconDone)!=done) {
             if(!done){
-                node.icons.remove(GTDMapReader.instance.iconDone)
+                node.icons.remove(mapReader.iconDone)
             } else {
-                node.icons.add(GTDMapReader.instance.iconDone)
+                node.icons.add(mapReader.iconDone)
             }
         }
-        GTDMapReader.instance.contextIcons.each {
-            key, value ->
-            if(context!=key) {
-                node.icons.remove(value)
-            } else if (!node.icons.contains(value)) {
-                node.icons.add(value)
+        // Remove priority icons that are to be re-added by the shorthand conversion
+        node.icons.each {
+            if (it ==~ /^full\-\d$/) {
+                node.icons.remove(it)
             }
         }
+        // Find icons in the entire map
+        mapReader.findIcons(node.map.rootNode)
+        // Only re-parse the current node
+        mapReader.internalConvertShorthand(node)
     }
 }
 
@@ -115,6 +118,7 @@ class ActionEditor {
     JTextField contextField
     JCheckBox  todayField
     JTextField whenField
+    JTextField priorityField
     JCheckBox  doneField
 
     ActionEditor() {
@@ -151,6 +155,11 @@ class ActionEditor {
                     whenField = textField(preferredSize:new Dimension(250,25),
                         constraints:gbc(gridx:2,gridy:3,gridwidth:REMAINDER,fill:HORIZONTAL))
 
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
+                        constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
+                    priorityField = textField(preferredSize:new Dimension(300,25),
+                        constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
+
                     doneField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                         preferredSize:new Dimension(300,20),
                         constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
@@ -169,6 +178,7 @@ class ActionEditor {
                                 model.context=contextField.text
                                 model.today=todayField.selected
                                 model.when=whenField.text
+                                model.priority=priorityField.text
                                 model.done=doneField.selected
                                 model.updateNode()
                                 mainFrame.setVisible(false)
@@ -199,6 +209,7 @@ class ActionEditor {
         contextField.text=model.context
         todayField.selected=model.today
         whenField.text=model.when
+        priorityField.text=model.priority
         doneField.selected=model.done
         mainFrame.pack()
         mainFrame.setLocationRelativeTo(UITools.frame)
