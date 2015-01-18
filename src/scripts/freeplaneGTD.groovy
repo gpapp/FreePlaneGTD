@@ -33,6 +33,9 @@ import javax.swing.event.HyperlinkListener
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
+import org.xhtmlrenderer.simple.XHTMLPanel
+import org.xhtmlrenderer.simple.FSScrollPane
+import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler
 
 import groovy.swing.SwingBuilder
 
@@ -88,19 +91,42 @@ class ReportModel {
         return actionList.groupBy({ it['who'] }).keySet().findAll { it }.size()
     }
 
+    Tag getStyleSheet () {
+	Tag style = new Tag('style', 'body {color:#000000; font-family:Verdana, Arial; font-size:10pt; padding: 10px 25px 0px 25px; }\n'+
+		    'h1 {font-size:20pt; font-weight:bold;}\n'+
+		    'a {text-decoration: none; color:#990000;}\n'+
+		    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: #FFFFFF;}\n'+
+		    '.priority-0 {background-color: #FF0000;}\n'+
+		    '.priority-1 {background-color: #FF00FF;}\n' +
+                    '.priority-2 {background-color: #FFFF00;}\n' +
+                    '.priority-3 {background-color: #FF0077;}\n' +
+                    '.priority-4 {background-color: #770000;}\n' +
+                    '.priority-5 {background-color: #FF7700;}\n' +
+                    '.priority-6 {background-color: #FF0077;}\n' +
+                    '.priority-7 {background-color: #770000;}\n' +
+                    '.priority-8 {background-color: #FF7777;}\n' +
+                    '.priority-9 {background-color: #777777;}', [type: 'text/css'])
+	return style
+    }
+
     String projectText() {
-        Tag retval = new Tag('body').
-                addContent('h1', TextUtils.getText("freeplaneGTD_view_project"), [height: '50px', width: '100%'])
+        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag head = html.addChild('head')
+        head.addContent(getStyleSheet())
+        head.addChild('title')
+        Tag body = html.addChild('body')
+        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_project"), [height: '50px', width: '100%'])
         def naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                Tag curItem = retval.addChild('h2').addContent(key).addChild('ul')
+                body.addContent('h2', key)
+                Tag curItem = body.addChild('ul')
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {
-                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
@@ -108,24 +134,28 @@ class ReportModel {
                                     (it['context'] ? ' @' + it['context'] : ''))
                 }
         }
-        println(retval)
-        return retval.toString()
+        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString()
     }
 
     String delegateText() {
-        Tag retval = new Tag('body').
-                addContent('h1', TextUtils.getText("freeplaneGTD_view_who"), [height: '50px', width: '100%'])
+        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag head = html.addChild('head')
+        head.addContent(getStyleSheet())
+        head.addChild('title')
+        Tag body = html.addChild('body')
+        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_who"), [height: '50px', width: '100%'])
         def naByGroup = actionList.groupBy { it['who'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
                 if (key) {
-                    Tag curItem = retval.addChild('h2').addContent(key).addChild('ul')
+                    body.addContent('h2',key)
+                    Tag curItem = body.addChild('ul')
                     naByGroup[key].each {
                         Tag wrap = curItem.addChild('li')
                         if (it['done']) wrap = wrap.addChild('strike')
                         if (it['priority']) {
-                            wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                            wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                         }
                         wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                                 (it['when'] ? ' {' + it['when'] + '}' : '') +
@@ -134,24 +164,27 @@ class ReportModel {
                     }
                 }
         }
-        println(retval)
-        return retval.toString()
+        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString()
     }
 
     String contextText() {
-        Tag retval = new Tag('body').
-                addContent('h1', TextUtils.getText("freeplaneGTD_view_context"), [height: '50px', width: '100%'])
+        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag head = html.addChild('head')
+        head.addContent(getStyleSheet())
+        head.addChild('title')
+        Tag body = html.addChild('body')
+        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_context"), [height: '50px', width: '100%'])
         def naByGroup = actionList.groupBy { it['context'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                Tag curItem = retval.addChild('h2').
-                        addContent(key ? key : TextUtils.getText("freeplaneGTD.view.context.unassigned")).addChild('ul')
+                body.addContent('h2', key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
+                Tag curItem = body.addChild('ul')
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {
-                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
@@ -159,12 +192,16 @@ class ReportModel {
                                     ' for ' + it['project'])
                 }
         }
-        return retval.toString()
+        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString()
     }
 
     String timelineText() {
-        Tag retval = new Tag('body').
-                addContent('h1', TextUtils.getText("freeplaneGTD_view_when"), [height: '50px', width: '100%'])
+        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag head = html.addChild('head')
+        head.addContent(getStyleSheet())
+        head.addChild('title')
+        Tag body = html.addChild('body')
+        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"), [height: '50px', width: '100%'])
         def naByGroup = actionList.groupBy { it['when'] }.sort { it.toString().toLowerCase() }
         /* TODO: implement timeline sorting
         first overdue, then today, than this week, then future elements, then String keys
@@ -184,12 +221,14 @@ class ReportModel {
 	*/
         naByGroup.each {
             key, value ->
-                Tag curItem = retval.addChild('h2').addContent(key).addChild('ul')
+
+                body.addContent('h2',key)
+                Tag curItem = body.addChild('ul')
                 naByGroup[key].each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {
-                        wrap = wrap.addContent('b', it['priority'], [class: 'priority-' + it['priority']])
+                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
                     wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
@@ -197,7 +236,7 @@ class ReportModel {
                                     ' for ' + it['project'])
                 }
         }
-        return retval.toString()
+        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString()
     }
 }
 // TODO: Add text by priority
@@ -206,10 +245,10 @@ ReportModel report = new ReportModel(node.map.root)
 
 def refresh = {
     report.parseMap()
-    projectPane.text = report.projectText()
-    delegatePane.text = report.delegateText()
-    contextPane.text = report.contextText()
-    timelinePane.text = report.timelineText()
+    projectPane.setDocumentFromString(report.projectText(),null,new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(report.delegateText(),null,new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(report.contextText(),null,new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(report.timelineText(),null,new XhtmlNamespaceHandler())
 	// TODO: Add priority pane context
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
@@ -217,7 +256,6 @@ def refresh = {
     tabbedPane.selectedIndex = report.selPane;
     cbFilterDone.selected = report.filterDone
 }
-
 def swing = SwingBuilder.edtBuilder {
     // make the frame half the height and width
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize()
@@ -236,33 +274,21 @@ def swing = SwingBuilder.edtBuilder {
             gridLayout(cols: 1, rows: 1)
             tabbedPane = tabbedPane(tabPlacement: JTabbedPane.RIGHT, selectedIndex: report.selPane) {
                 MyTransferHandler myTransferHandler = new MyTransferHandler();
+
                 projectPanel = panel(toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
-                    projectScroll = scrollPane() {
-                        projectPane = editorPane(contentType: 'text/html', editable: false, transferHandler: myTransferHandler)
-                    }
                 }
                 delegatePanel = panel(toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
-                    delegateScroll = scrollPane() {
-                        delegatePane = editorPane(contentType: 'text/html', editable: false)
-                    }
                 }
                 contextPanel = panel(name: panelTitle(TextUtils.getText("freeplaneGTD.tab.context.title")),
                         toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
-                    contextScroll = scrollPane() {
-                        contextPane = editorPane(contentType: 'text/html', editable: false)
-                    }
                 }
                 timelinePanel = panel(name: panelTitle(TextUtils.getText("freeplaneGTD.tab.when.title")),
                         toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
-                    timelineScroll = scrollPane() {
-                        timelinePane = editorPane(contentType: 'text/html', editable: false)
-                    }
                 }
-				// TODO: add priority panel
                 panel(name: panelTitle(TextUtils.getText("freeplaneGTD.tab.about.title")),
                         toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip")) {
                     panel() {
@@ -280,6 +306,14 @@ def swing = SwingBuilder.edtBuilder {
                             cursor: new Cursor(Cursor.HAND_CURSOR));
                 }
             }
+            projectPane = new XHTMLPanel()
+            projectPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(projectPane))
+            delegatePane = new XHTMLPanel()
+            delegatePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(delegatePane))
+            contextPane = new XHTMLPanel()
+            contextPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(contextPane))
+            timelinePane = new XHTMLPanel()
+            timelinePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(timelinePane))
         }
         panel(constraints: BorderLayout.SOUTH) {
             boxLayout(axis: BoxLayout.X_AXIS)
@@ -406,10 +440,10 @@ class NodeLink implements HyperlinkListener {
 }
 
 NodeLink nl = new NodeLink(c, mainFrame)
-projectPane.addHyperlinkListener(nl);
-delegatePane.addHyperlinkListener(nl);
-contextPane.addHyperlinkListener(nl);
-timelinePane.addHyperlinkListener(nl);
+//projectPane.addHyperlinkListener(nl);
+//delegatePane.addHyperlinkListener(nl);
+//contextPane.addHyperlinkListener(nl);
+//timelinePane.addHyperlinkListener(nl);
 // TODO: Add priority hyperlink listener
 
 // on ESC key close frame
@@ -432,7 +466,8 @@ class CloseAction extends AbstractAction {
 }
 
 // set up the default stylesheet for all HTMLEditorKit instances
-HTMLEditorKit kit = (HTMLEditorKit) projectPane.getEditorKit();
+/*
+HTMLEditorKit kit = (HTMLEditorKit) delegatePane.getEditorKit();
 StyleSheet styleSheet = kit.getStyleSheet()
 styleSheet.addRule("body {color:#000000; font-family:Verdana, Arial; font-size:12pt; padding: 10px 25px 0px 25px; }")
 styleSheet.addRule("h1 {font-size:20pt; font-weight:bold}")
@@ -447,13 +482,13 @@ styleSheet.addRule(".priority-0 {padding: 5px; color: #FFFFFF; background-color:
                    ".priority-7 {padding: 3px; color: #FFFFFF; background-color: #770000;}\n" +
                    ".priority-8 {padding: 3px; color: #FFFFFF; background-color: #FF7777;}\n" +
                    ".priority-9 {padding: 3px; color: #FFFFFF; background-color: #777777;}")
-
+*/
 report.selPane = config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 refresh()
-projectPane.setCaretPosition(0)
-delegatePane.setCaretPosition(0)
-contextPane.setCaretPosition(0)
-timelinePane.setCaretPosition(0)
+projectPane.scrollTo(new Point(0,0))
+delegatePane.scrollTo(new Point(0,0))
+contextPane.scrollTo(new Point(0,0))
+timelinePane.scrollTo(new Point(0,0))
 mainFrame.setLocationRelativeTo(UITools.frame)
 mainFrame.show()
