@@ -179,6 +179,8 @@ class GTDMapReader {
 				}
 			}
 
+            System.out.println(nodeAttr)
+
             thisNode.attributes = nodeAttr;
 
 			boolean hasNextAction

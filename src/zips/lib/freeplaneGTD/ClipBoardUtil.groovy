@@ -5,12 +5,15 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
+
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
-class MyTransferHandler extends TransferHandler {
+import java.io.StringWriter;
+
+class ClipBoardUtil {
 
     static class MyTransferable implements Transferable {
 
@@ -59,15 +62,13 @@ class MyTransferHandler extends TransferHandler {
         }
     }
 
-    protected Transferable createTransferable(JComponent c) {
-        final JEditorPane pane = (JEditorPane) c;
-        // TODO remove map links from html
-        final String htmlText =  extractHtml(pane.getText())
-        final String plainText = extractText(new StringReader(pane.getText()))
+    static Transferable createTransferable(String content) {
+        final String htmlText =  extractHtml(content)
+        final String plainText = extractText(new StringReader(content))
         return new MyTransferable(plainText, htmlText);
     }
 
-    public String extractText(Reader reader) {
+    static String extractText(Reader reader) {
         final ArrayList<String> list = new ArrayList<String>();
 
         HTMLEditorKit.ParserCallback parserCallback = new HTMLEditorKit.ParserCallback() {
@@ -111,20 +112,8 @@ class MyTransferHandler extends TransferHandler {
         return result;
     }
 
-    public String extractHtml(String source) {
+    static String extractHtml(String source) {
         String result = source.replaceAll ('<a [^>]*>(.*)</a>','$1')
         return result
-    }
-
-    @Override
-    public void exportToClipboard(JComponent comp, Clipboard clip, int action) throws IllegalStateException {
-        if (action == COPY) {
-            clip.setContents(this.createTransferable(comp), null);
-        }
-    }
-
-    @Override
-    public int getSourceActions(JComponent c) {
-        return COPY;
     }
 }

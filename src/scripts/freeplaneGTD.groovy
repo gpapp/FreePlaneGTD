@@ -24,7 +24,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.datatransfer.StringSelection
+
+import java.awt.datatransfer.Clipboard
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
@@ -46,7 +47,7 @@ import org.freeplane.plugin.script.proxy.Proxy
 
 import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
-import freeplaneGTD.MyTransferHandler
+import freeplaneGTD.ClipBoardUtil
 import freeplaneGTD.Tag
 
 String title = "GTD Next Actions"
@@ -95,17 +96,18 @@ class ReportModel {
 	Tag style = new Tag('style', 'body {color:#000000; font-family:Verdana, Arial; font-size:10pt; padding: 10px 25px 0px 25px; }\n'+
 		    'h1 {font-size:20pt; font-weight:bold;}\n'+
 		    'a {text-decoration: none; color:#990000;}\n'+
-		    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: #FFFFFF;}\n'+
-		    '.priority-0 {background-color: #FF0000;}\n'+
-		    '.priority-1 {background-color: #FF00FF;}\n' +
-                    '.priority-2 {background-color: #FFFF00;}\n' +
-                    '.priority-3 {background-color: #FF0077;}\n' +
-                    '.priority-4 {background-color: #770000;}\n' +
-                    '.priority-5 {background-color: #FF7700;}\n' +
-                    '.priority-6 {background-color: #FF0077;}\n' +
-                    '.priority-7 {background-color: #770000;}\n' +
-                    '.priority-8 {background-color: #FF7777;}\n' +
-                    '.priority-9 {background-color: #777777;}', [type: 'text/css'])
+		    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}\n'+
+		    '.priority-0 {background-color: rgb(215,48,39);}\n'+
+		    '.priority-1 {background-color: rgb(244,109,67);}\n' +
+                    '.priority-2 {background-color: rgb(253,174,97);}\n' +
+                    '.priority-3 {background-color: rgb(204,174,89)}\n' +
+                    '.priority-4 {background-color: rgb(255,255,191);}\n' +
+                    '.priority-5 {background-color: rgb(217,239,139);}\n' +
+                    '.priority-6 {background-color: rgb(166,217,106);}\n' +
+                    '.priority-7 {background-color: rgb(102,189,99);}\n' +
+                    '.priority-8 {background-color: rgb(26,152,80);}\n' +
+                    '.priority-9 {background-color: rgb(16,82,50);}', [type: 'text/css'])
+
 	return style
     }
 
@@ -273,7 +275,6 @@ def swing = SwingBuilder.edtBuilder {
         reportPanel = panel(constraints: BorderLayout.CENTER) {
             gridLayout(cols: 1, rows: 1)
             tabbedPane = tabbedPane(tabPlacement: JTabbedPane.RIGHT, selectedIndex: report.selPane) {
-                MyTransferHandler myTransferHandler = new MyTransferHandler();
 
                 projectPanel = panel(toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
@@ -308,10 +309,13 @@ def swing = SwingBuilder.edtBuilder {
             }
             projectPane = new XHTMLPanel()
             projectPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(projectPane))
+
             delegatePane = new XHTMLPanel()
             delegatePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(delegatePane))
+
             contextPane = new XHTMLPanel()
             contextPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(contextPane))
+
             timelinePane = new XHTMLPanel()
             timelinePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"),new FSScrollPane(timelinePane))
         }
@@ -321,35 +325,20 @@ def swing = SwingBuilder.edtBuilder {
                     actionPerformed: {
                         refresh(mainFrame)
                     })
-            button(text: TextUtils.getText("freeplaneGTD.button.print"),
-                    actionPerformed: {
-                        // get report
-                        switch (report.selPane) {
-                            case 0: strReport = report.projectText(); break;
-                            case 1: strReport = report.delegateText(); break;
-                            case 2: strReport = report.contextText(); break;
-                            case 3: strReport = report.timeLineText(); break;
-							// TODO: Add priority list
-                            default: strReport = "(no report)"; break;
-                        }
-                    })
             button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                     actionPerformed: {
-                        JEditorPane curPane;
-                        // get report
-                        switch (report.selPane) {
-                            case 0: curPane = projectPane; break;
-                            case 1: curPane = delegatePane; break;
-                            case 2: curPane = contextPane; break;
-                            case 3: curPane = timelinePane; break;
-							// TODO: Add priority list
-                            default: curPane = projectPane; break;
+                        Clipboard clip = projectPanel.getToolkit().getSystemClipboard();
+                        if (clip != null) {
+                            switch (report.selPane) {
+                                case 0: curContent = report.projectText(); break;
+                                case 1: curContent = report.delegateText(); break;
+                                case 2: curContent = report.contextText(); break;
+                                case 3: curContent = report.timelineText(); break;
+                                // TODO: Add priority list
+                                default: curContent = report.projectText(); break;
+                            }
+                            clip.setContents(ClipBoardUtil.createTransferable(curContent),null)
                         }
-                        int caretPos = curPane.getCaretPosition()
-                        curPane.selectAll();
-                        curPane.copy();
-                        curPane.select(0, 0);
-                        curPane.setCaretPosition(caretPos)
                     })
             button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                     actionPerformed: {
@@ -361,6 +350,8 @@ def swing = SwingBuilder.edtBuilder {
                     actionPerformed: { report.filterDone = it.source.selected; refresh(mainFrame) })
         }
     }
+
+
     // Register a change listener to track selected tab
     tabbedPane.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent evt) {
@@ -465,24 +456,6 @@ class CloseAction extends AbstractAction {
     }
 }
 
-// set up the default stylesheet for all HTMLEditorKit instances
-/*
-HTMLEditorKit kit = (HTMLEditorKit) delegatePane.getEditorKit();
-StyleSheet styleSheet = kit.getStyleSheet()
-styleSheet.addRule("body {color:#000000; font-family:Verdana, Arial; font-size:12pt; padding: 10px 25px 0px 25px; }")
-styleSheet.addRule("h1 {font-size:20pt; font-weight:bold}")
-styleSheet.addRule("a {text-decoration: none; color:#990000;}")
-styleSheet.addRule(".priority-0 {padding: 5px; color: #FFFFFF; background-color: #FF0000;}\n" +
-                   ".priority-1 {padding: 3pt; color: #FFFFFF; background-color: #FF00FF;}\n" +
-                   ".priority-2 {padding: 30px; color: #FFFFFF; background-color: #FFFF00;}\n" +
-                   ".priority-3 {padding: 30pt; color: #FFFFFF; background-color: #FF0077;}\n" +
-                   ".priority-4 {padding: 30; color: #FFFFFF; background-color: #770000;}\n" +
-                   ".priority-5 {padding: 3; color: #FFFFFF; background-color: #FF7700;}\n" +
-                   ".priority-6 {padding: 3px; color: #FFFFFF; background-color: #FF0077;}\n" +
-                   ".priority-7 {padding: 3px; color: #FFFFFF; background-color: #770000;}\n" +
-                   ".priority-8 {padding: 3px; color: #FFFFFF; background-color: #FF7777;}\n" +
-                   ".priority-9 {padding: 3px; color: #FFFFFF; background-color: #777777;}")
-*/
 report.selPane = config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 refresh()
