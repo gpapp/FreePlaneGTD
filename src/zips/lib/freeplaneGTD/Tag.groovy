@@ -65,11 +65,11 @@ class Tag {
         params.each {
             retval += ' ' + it.key + '=\'' + it.value + '\''
         }
-        retval += '>'
+        retval += '>\n'
         content.each {
             retval += it
         }
-        retval += '</' + tagName + '>'
+        retval += '</' + tagName + '>\n'
         return retval
     }
 }

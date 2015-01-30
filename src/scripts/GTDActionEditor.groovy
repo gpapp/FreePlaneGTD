@@ -18,27 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
+import freeplaneGTD.GTDMapReader
 import groovy.swing.SwingBuilder
-
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import javax.swing.AbstractAction
-import javax.swing.BorderFactory
-import javax.swing.BoxLayout
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.JCheckBox
-import javax.swing.JDialog
-import javax.swing.JFrame
-import javax.swing.JTextField
-import javax.swing.KeyStroke
-
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 
-import freeplaneGTD.GTDMapReader
+import javax.swing.*
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 
 class ActionEditorModel {
     String action
@@ -54,7 +43,7 @@ class ActionEditorModel {
     boolean setNode(Proxy.Node node) {
         this.node=node
         GTDMapReader mapReader = GTDMapReader.instance
-        mapReader.findIcons(node.map.rootNode)
+        mapReader.findIcons(node.map.root)
         mapReader.internalConvertShorthand(node)
         if(!node.icons.contains(mapReader.iconNextAction)){
             UITools.errorMessage ('Selected node is not a task')
@@ -76,10 +65,10 @@ class ActionEditorModel {
                 (delegate?.trim() ? "[$delegate]" : '') +
                 (when?.trim() ? "{$when}" : '') +
                 (priority?.trim() ? "#$priority" : '')
-        !delegate?node.attributes.remove('Who'):false
-        !context?node.attributes.remove('Where'):false
-        !when?node.attributes.remove('When'):false
-        !priority?node.attributes.remove('Priority'):false
+        !delegate?node.attributes.delete('Who'):false
+        !context?node.attributes.delete('Where'):false
+        !when?node.attributes.delete('When'):false
+        !priority?node.attributes.delete('Priority'):false
 
         GTDMapReader mapReader = GTDMapReader.instance
         if (node.icons.contains(mapReader.iconToday)!=today) {
@@ -103,7 +92,7 @@ class ActionEditorModel {
             }
         }
         // Find icons in the entire map
-        mapReader.findIcons(node.map.rootNode)
+        mapReader.findIcons(node.map.root)
         // Only re-parse the current node
         mapReader.internalConvertShorthand(node)
     }
@@ -166,12 +155,12 @@ class ActionEditor {
                 }
                 panel() {
                     boxLayout(axis: BoxLayout.X_AXIS)
-                    JButton cancelButton = button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
+                    cancelButton = button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                             actionPerformed: {
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
                             })
-                    JButton doneButton = button(id:'doneButton', text: TextUtils.getText("freeplaneGTD.button.done"),
+                    doneButton = button(id:'doneButton', text: TextUtils.getText("freeplaneGTD.button.done"),
                             actionPerformed: {
                                 model.action=actionField.text
                                 model.delegate=delegateField.text
@@ -184,9 +173,9 @@ class ActionEditor {
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
                             })
+                    mainFrame.getRootPane().setDefaultButton(doneButton)
                 }
             }
-            mainFrame.getRootPane().setDefaultButton(doneButton)
         }
         // on ESC key close frame
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(

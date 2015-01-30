@@ -23,13 +23,8 @@ package freeplaneGTD
 //=========================================================
 // references
 //=========================================================
-import java.text.SimpleDateFormat
-import java.util.Date
-
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
-
-import freeplaneGTD.DateUtil
 
 //=========================================================
 // classes
@@ -41,11 +36,11 @@ import freeplaneGTD.DateUtil
 class GTDMapReader {
     private static GTDMapReader instance = new GTDMapReader()
 
-    private String iconNextAction
-    private String iconProject
-    private String iconToday
-    private String iconDone
-    private Map contextIcons
+    public String iconNextAction
+    public String iconProject
+    public String iconToday
+    public String iconDone
+    public Map contextIcons
 
     static GTDMapReader getInstance() {
         return instance
@@ -72,7 +67,7 @@ class GTDMapReader {
 
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
-    private void findIcons(Proxy.Node thisNode) {
+    void findIcons(Proxy.Node thisNode) {
         // Get icon keys for next actions and projects
         iconNextAction = "yes"
         iconProject = "list"
@@ -146,7 +141,7 @@ class GTDMapReader {
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
-    private void internalConvertShorthand(Proxy.Node thisNode) {
+    public void internalConvertShorthand(Proxy.Node thisNode) {
         String nodeText = thisNode.text.trim();
 
         if (nodeText.length() > 0 && nodeText.charAt(0) == "?") {
@@ -183,7 +178,6 @@ class GTDMapReader {
 
             thisNode.attributes = nodeAttr;
 
-			boolean hasNextAction
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
@@ -212,9 +206,9 @@ class GTDMapReader {
     }
     //--------------------------------------------------------------
     // find parent for the next action, either direct (task) or indirect (project)
-    private String findNextActionProject(Proxy.Node thisNode, String iconProject) {
+    private static String findNextActionProject(Proxy.Node thisNode, String iconProject) {
         Proxy.Node parentNode = thisNode.getParent();
-        def retval;
+        String retval = ''
         if (parentNode != null && thisNode.isDescendantOf(parentNode)) {
             Proxy.Node walker = parentNode;
             while (walker) {

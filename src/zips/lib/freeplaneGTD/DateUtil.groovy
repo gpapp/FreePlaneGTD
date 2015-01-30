@@ -23,9 +23,11 @@
 //=========================================================
 package freeplaneGTD
 
-import static java.util.Calendar.YEAR;
-import java.text.SimpleDateFormat;
 import org.freeplane.features.format.FormattedDate
+
+import java.text.SimpleDateFormat
+
+import static java.util.Calendar.YEAR
 
 class DateUtil {
     private static final def DATE_FORMAT_REGEXPS = [
@@ -90,7 +92,7 @@ class DateUtil {
 
     public static Object normalizeDate(String dateString) {
         String field = dateString.trim();
-        SimpleDateFormat fmt = DateUtil.determineDateFormat(field);
+        SimpleDateFormat fmt = determineDateFormat(field);
         if (fmt != null) {
             Date date = fmt.parse(field);
             if (fmt.toPattern().indexOf('y') < 0) {
