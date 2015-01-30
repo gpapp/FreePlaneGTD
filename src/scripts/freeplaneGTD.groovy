@@ -29,14 +29,15 @@ import java.awt.datatransfer.Clipboard
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
-import javax.swing.event.HyperlinkEvent
-import javax.swing.event.HyperlinkListener
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
 import org.xhtmlrenderer.simple.XHTMLPanel
 import org.xhtmlrenderer.simple.FSScrollPane
 import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler
+import org.xhtmlrenderer.swing.LinkListener
+import org.xhtmlrenderer.swing.FSMouseListener
+import org.xhtmlrenderer.render.Box
 
 import groovy.swing.SwingBuilder
 
@@ -136,6 +137,7 @@ class ReportModel {
                                     (it['context'] ? ' @' + it['context'] : ''))
                 }
         }
+        System.out.println('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString())
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n'+html.toString()
     }
 
@@ -381,7 +383,7 @@ def swing = SwingBuilder.edtBuilder {
 //---------------------------------------------------------
 // Process hyperlink to map node
 //---------------------------------------------------------
-class NodeLink implements HyperlinkListener {
+class NodeLink extends LinkListener {
     Proxy.Controller ctrl
     JFrame frame
 
@@ -391,21 +393,23 @@ class NodeLink implements HyperlinkListener {
 
     }
 
-    public void hyperlinkUpdate(HyperlinkEvent e) {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            String linkNodeID = e.getDescription();
-            def nodesFound = ctrl.find { it.nodeID == linkNodeID };
+    void onMouseUp(XHTMLPanel panel, Box box) {
+        System.err.println("Nyekk:"+box)
+    }
 
-            if (nodesFound[0] != null) {
-                FoldToTop(nodesFound[0]);
-                UnfoldBranch(nodesFound[0]);
-                ctrl.select(nodesFound[0]);
-                ctrl.centerOnNode(nodesFound[0]);
-                frame.dispose()
-                frame.hide()
-            } else {
-                UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
-            }
+    public void linkClicked(XHTMLPanel panel, String uri) {
+        String linkNodeID = uri;
+        def nodesFound = ctrl.find { it.nodeID == linkNodeID };
+
+        if (nodesFound[0] != null) {
+            FoldToTop(nodesFound[0]);
+            UnfoldBranch(nodesFound[0]);
+            ctrl.select(nodesFound[0]);
+            ctrl.centerOnNode(nodesFound[0]);
+            frame.dispose()
+            frame.hide()
+        } else {
+            UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
         }
     }
 
@@ -431,10 +435,15 @@ class NodeLink implements HyperlinkListener {
 }
 
 NodeLink nl = new NodeLink(c, mainFrame)
-//projectPane.addHyperlinkListener(nl);
-//delegatePane.addHyperlinkListener(nl);
-//contextPane.addHyperlinkListener(nl);
-//timelinePane.addHyperlinkListener(nl);
+System.out.println(projectPane.getMouseTrackingListeners())
+projectPane.getMouseTrackingListeners().each {
+    projectPane.removeMouseTrackingListener(it)
+}
+projectPane.addMouseTrackingListener(nl);
+delegatePane.addMouseTrackingListener(nl);
+contextPane.addMouseTrackingListener(nl);
+timelinePane.addMouseTrackingListener(nl);
+System.out.println(projectPane.getMouseTrackingListeners())
 // TODO: Add priority hyperlink listener
 
 // on ESC key close frame
