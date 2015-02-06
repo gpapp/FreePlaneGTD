@@ -143,7 +143,11 @@
 </node>
 <node TEXT="* aa #3" ID="ID_743874059" CREATED="1421399779261" MODIFIED="1421399790869"/>
 <node TEXT="* #43 dodo" ID="ID_973470716" CREATED="1421399792202" MODIFIED="1421399807938"/>
-<node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1421399820367"/>
+<node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1421403498651">
+<attribute_layout VALUE_WIDTH="435"/>
+<attribute NAME="i" VALUE="=(node.text.matches(&apos;#\\d&apos;)"/>
+<attribute NAME="j" VALUE="=node.text"/>
+</node>
 </node>
 <node TEXT="Context icon tests" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
 <edge COLOR="#7c0000"/>
