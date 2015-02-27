@@ -19,9 +19,10 @@
 //
 //=========================================================
 
-import freeplaneGTD.ClipBoardUtil
-import freeplaneGTD.GTDMapReader
-import freeplaneGTD.Tag
+import FreeplaneGTD.ClipBoardUtil
+import FreeplaneGTD.GTDMapReader
+import FreeplaneGTD.Tag
+import FreeplaneGTD.DateUtil
 import groovy.swing.SwingBuilder
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
@@ -44,7 +45,7 @@ import java.awt.event.MouseEvent
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.1.2'
+String txtVer = '1.2'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 
@@ -60,6 +61,44 @@ class ReportModel {
     Proxy.Node rootNode;
     def actionList;
     GTDMapReader mapreader;
+    String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
+    String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
+
+    def taskDateComparator = { a,b ->
+        def aw = a['when']
+        def bw = b['when']
+        if ((!aw && !bw) || aw.equals(bw)) {
+            return 0
+        }
+        Date ad
+        Date bd
+        if (aw==todayText) ad=new Date()
+        else if (aw==thisWeekText) ad=new Date()
+        else if (aw instanceof Date) ad=aw
+        else if (aw instanceof String) {
+            ad = DateUtil.stdFormat.parse(aw)
+        }
+        if (bw==todayText) bd=new Date()
+        else if (bw==thisWeekText) bd = new Date()
+        else if (bw instanceof Date) bd=bw
+        else if (aw instanceof String) {
+            bd = DateUtil.stdFormat.parse(bw)
+        }
+        if (!ad && !bd) {
+            return aw<bw?1:-1
+        }
+        if (ad && !bd ) return 1
+        if (!ad && bd ) return -1
+        return ad<bd?-1:1
+    }
+    def taskSortComparator = { a,b ->
+        if ((!a['priority'] && !b['priority']) || a['priority'].equals(b['priority'])) {
+            return taskDateComparator (a,b)
+        }
+        if (!a['priority']) return 1
+        if (!b['priority']) return -1
+        return a['priority']<b['priority']?-1:1
+    }
 
     ReportModel(Proxy.Node rootNode) {
         this.rootNode = rootNode
@@ -121,7 +160,7 @@ class ReportModel {
             key, value ->
                 body.addContent('h2', key)
                 Tag curItem = body.addChild('ul')
-                Map curGroup = naByGroup[key].sort { it['priority'] }
+                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
@@ -151,7 +190,8 @@ class ReportModel {
                 if (key) {
                     body.addContent('h2', key)
                     Tag curItem = body.addChild('ul')
-                    naByGroup[key].each {
+                    def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                    curGroup.each {
                         Tag wrap = curItem.addChild('li')
                         if (it['done']) wrap = wrap.addChild('strike')
                         if (it['priority']) {
@@ -180,7 +220,8 @@ class ReportModel {
             key, value ->
                 body.addContent('h2', key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
                 Tag curItem = body.addChild('ul')
-                naByGroup[key].each {
+                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {
@@ -202,29 +243,14 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"))
-        Map naByGroup = actionList.groupBy { it['when'] }.sort { it.toString().toLowerCase() }
-        /* TODO: implement timeline sorting
-        first overdue, then today, than this week, then future elements, then String keys
-        
-	def today = naByGroup.remove(TextUtils.getText("freeplaneGTD.view.when.today"))
-	if (today) {
-	    int lastindex=0
-	    naByGroup.keys.eachWithIndex { it, i -> if (! it instanceof String) { lastindex=i} }
-	    naByGroup.insert(today,lastindex)
-	}
-	def week = naByGroup.remove(TextUtils.getText("freeplaneGTD.view.when.this_week"))
-	if (week) {
-	    int lastindex=0
-	    naByGroup.keys.eachWithIndex { it, i -> if (! it instanceof String) { lastindex=i} }
-	    naByGroup.addAll(lastindex,[week])
-	}
-	*/
+        def sortedList = actionList.sort { a,b -> taskDateComparator(a,b) }
+        def naByGroup = sortedList.groupBy { it['when'] }
         naByGroup.each {
             key, value ->
-
                 body.addContent('h2', key)
                 Tag curItem = body.addChild('ul')
-                naByGroup[key].each {
+                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {
@@ -479,4 +505,4 @@ delegatePane.scrollTo(new Point(0, 0))
 contextPane.scrollTo(new Point(0, 0))
 timelinePane.scrollTo(new Point(0, 0))
 mainFrame.setLocationRelativeTo(UITools.frame)
-mainFrame.visible = false
+mainFrame.visible = true
