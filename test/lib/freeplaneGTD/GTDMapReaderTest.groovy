@@ -1,13 +1,6 @@
-package freeplaneGTD;
+package freeplaneGTD
 
-import static org.junit.Assert.*
-import groovy.lang.Closure;
-
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
+import com.thoughtworks.xstream.core.util.ArrayIterator
 import org.freeplane.features.filter.condition.ICondition
 import org.freeplane.plugin.script.proxy.Convertible
 import org.freeplane.plugin.script.proxy.Proxy
@@ -15,7 +8,6 @@ import org.freeplane.plugin.script.proxy.Proxy.Attributes
 import org.freeplane.plugin.script.proxy.Proxy.Cloud
 import org.freeplane.plugin.script.proxy.Proxy.Connector
 import org.freeplane.plugin.script.proxy.Proxy.ExternalObject
-import org.freeplane.plugin.script.proxy.Proxy.Icons
 import org.freeplane.plugin.script.proxy.Proxy.Link
 import org.freeplane.plugin.script.proxy.Proxy.Map
 import org.freeplane.plugin.script.proxy.Proxy.Node
@@ -24,6 +16,7 @@ import org.freeplane.plugin.script.proxy.Proxy.NodeStyle
 import org.freeplane.plugin.script.proxy.Proxy.Reminder
 import org.junit.Test
 
+import java.util.Map.Entry
 
 class MyAttributes implements Proxy.Attributes {
     java.util.Map<String, Object> attributes = [:]
@@ -188,8 +181,7 @@ class MyIcons implements Proxy.Icons {
 
     @Override
     public Iterator<String> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayIterator(icons.toArray());
     }
 
     @Override
@@ -791,26 +783,53 @@ class MyNode implements Proxy.Node {
 class GTDMapReaderTest {
 
     @Test
-    public void testParseShortHand() {
+    public void testParseShortHandSimple() {
         assert ([action: 'a b c'] == GTDMapReader.parseShorthand('*a b c'));
         assert ([action: 'a b c'] == GTDMapReader.parseShorthand(' *a b c'));
         assert ([action: 'a b c'] == GTDMapReader.parseShorthand(' * a b c'));
+    }
 
+    @Test
+    public void testParseShortHandNow() {
         assert ([action: 'a b c', when: 'now'] == GTDMapReader.parseShorthand('*a b c {now}'));
         assert ([action: 'a b c', when: 'now'] == GTDMapReader.parseShorthand(' { now }*a b c'));
         assert ([action: 'a b c', when: 'now'] == GTDMapReader.parseShorthand('*a  {now} b c'));
+    }
 
+    @Test
+    public void testParseShortHandDate() {
         assert ([action: 'a b c', when: Date.parse('yyyy-MM-dd', '2003-01-02')] == GTDMapReader.parseShorthand('*a b c {1/2/3}'));
         assert ([action: 'a b c', when: Date.parse('yyyy-MM-dd', '2014-11-24')] == GTDMapReader.parseShorthand(' { 14-11-24 }*a b c'));
         assert ([action: 'a b c', when: Date.parse('yyyy-MM-dd', '2014-11-24')] == GTDMapReader.parseShorthand('*a  {2014-11-24} b c'));
+    }
 
+    @Test
+    public void testParseShortSingleDelegate() {
         assert ([action: 'a b c', when: 'now', delegate: 'Joe'] == GTDMapReader.parseShorthand('*a b c {now} [Joe]'));
         assert ([action: 'a b c', when: 'now', delegate: 'Joe'] == GTDMapReader.parseShorthand(' [Joe]{ now }*a b c'));
         assert ([action: 'a b c', when: 'now', delegate: 'Joe'] == GTDMapReader.parseShorthand('*a  {now}[ Joe ] b c'));
+    }
 
+    @Test
+    public void testParseShortHandSingleContext() {
         assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home'] == GTDMapReader.parseShorthand('*a b c {now}@Home [Joe]'));
         assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home'] == GTDMapReader.parseShorthand(' [Joe]{ now }*a b @Home c'));
         assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home'] == GTDMapReader.parseShorthand('@Home*a  {now}[ Joe ] b c'));
+    }
+
+    @Test
+    public void testParseShortHandSinglePriority() {
+        assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home', priority: '2'] == GTDMapReader.parseShorthand('*a b c {now}@Home#2 [Joe]'));
+        assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home', priority: '4'] == GTDMapReader.parseShorthand(' [Joe]{ now }*a b #4@Home c'));
+        assert ([action: 'a b c', when: 'now', delegate: 'Joe', context: 'Home', priority: '6'] == GTDMapReader.parseShorthand('#6 @Home*a  {now}[ Joe ] b c'));
+    }
+
+    @Test
+    public void testParseShortHandMultiContext() {
+        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('*a b c {now}@Home,Office [John,Ringo,George]'));
+        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Barn,Office'] == GTDMapReader.parseShorthand(' [John][ Ringo ][ George]{ now }*a b @Home@Barn @Office c'));
+        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('@Home[John]*a  {now}[ John ,Ringo] b c@Office[George]'));
+
     }
 
     @Test
@@ -863,6 +882,7 @@ class GTDMapReaderTest {
                         [orig: '*a  {2014-11-24} b c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24')]],
                         [orig: '*a  {2014-11-24} [Joe]b c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe']],
                         [orig: '*a  {2014-11-24} [Joe]b @Home c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe', Where: 'Home'], icon: ['home']],
+                        [orig: '*@Home[John]a  {now}[ John ,Ringo] b c@Office[George]', action: 'a b c', attr: [When: 'now', Who: 'Ringo,John,George', Where: 'Home,Office']],
                 ]
 
         testvalues.each {

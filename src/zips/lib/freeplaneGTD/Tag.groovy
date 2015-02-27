@@ -56,6 +56,7 @@ class Tag {
 
     Tag addChild(tagName, params = null) {
         Tag tag = new Tag(tagName)
+        tag.params = params
         this.content.push(tag)
         return tag
     }
@@ -67,6 +68,7 @@ class Tag {
         }
         retval += '>\n'
         content.each {
+            // TODO: should sanitize HTML entities <> here!
             retval += it
         }
         retval += '</' + tagName + '>\n'

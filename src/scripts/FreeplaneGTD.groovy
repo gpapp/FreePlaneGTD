@@ -46,15 +46,9 @@ import java.text.ParseException
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.2'
+String txtVer = '1.3'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
-
-def panelTitle = { panelT, count = null ->
-    new Tag('html', new Tag('body',
-            new Tag('div', panelT, [style: 'font-weight:bold;font-style:italic']), [height: '50']).
-            addContent(count != null ? new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']).toString() : ''))
-}
 
 class ReportModel {
     boolean filterDone
@@ -130,14 +124,20 @@ class ReportModel {
 
     int delegateCount() {
         //Filter the missing delegates
-        return actionList.groupBy({ it['who'] }).keySet().findAll { it }.size()
+        Set delegateGroups = actionList.groupBy({ it['who'] }).keySet()
+        Set delegates = []
+        delegateGroups.each {
+            def individuals = it?.split(',')
+            if (individuals) delegates.addAll(individuals)
+        }
+        return delegates.size()
     }
 
     static Tag getStyleSheet() {
         Tag style = new Tag('style',
                 '/*<![CDATA[*/' +
-                        'body {color:#000000; font-family:Verdana, Arial; font-size:10pt; padding: 10px 25px 0px 25px; }\n' +
-                        'h1 {font-size:20pt; font-weight:bold;}\n' +
+                        'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }\n' +
+                        'h1 {font-size:24pt; font-weight:bold;}\n' +
                         'a {text-decoration: none; color:#990000;}\n' +
                         '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}\n' +
                         '.priority-0 {background-color: rgb(215,48,39);}\n' +
@@ -150,11 +150,22 @@ class ReportModel {
                         '.priority-7 {background-color: rgb(102,189,99);}\n' +
                         '.priority-8 {background-color: rgb(26,152,80);}\n' +
                         '.priority-9 {background-color: rgb(16,82,50);}' +
+                        '.note {background-color: rgb(240,250,240);font-size:10pt}' +
                         '/*]]>*/',
                 [type: 'text/css'])
 
         return style
     }
+
+    Tag displayNote(Proxy.Node n) {
+        /*       if (n.noteText) {
+                   Tag tag = new Tag('div',null,[class: 'note'])
+                   tag.addContent(n.displayedText)
+                   return tag
+               }*/
+        return null
+    }
+
 
     String projectText() {
         Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
@@ -172,7 +183,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('strike')
+                    if (it['done']) wrap = wrap.addChild('del')
                     if (it['priority']) {
                         wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
@@ -180,6 +191,7 @@ class ReportModel {
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
                                     (it['context'] ? ' @' + it['context'] : ''))
+                    wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' + html.toString()
@@ -192,7 +204,15 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_who"))
-        Map naByGroup = actionList.groupBy { it['who'] }
+        Map naByGroupFull = actionList.groupBy { it['who'] }
+        Map naByGroup = [:]
+        naByGroupFull.each {
+            key, value ->
+                def keyList = key?.split(',')
+                keyList.each {
+                    naByGroup.put(it, value)
+                }
+        }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -202,7 +222,7 @@ class ReportModel {
                     def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                     curGroup.each {
                         Tag wrap = curItem.addChild('li')
-                        if (it['done']) wrap = wrap.addChild('strike')
+                        if (it['done']) wrap = wrap.addChild('del')
                         if (it['priority']) {
                             wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                         }
@@ -210,6 +230,7 @@ class ReportModel {
                                 (it['when'] ? ' {' + it['when'] + '}' : '') +
                                         (it['context'] ? ' @' + it['context'] : '') +
                                         ' for ' + it['project'])
+                        wrap.addContent(displayNote(it['node']) ?: '')
                     }
                 }
         }
@@ -223,7 +244,16 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_context"))
-        Map naByGroup = actionList.groupBy { it['context'] }
+        Map naByGroupFull = actionList.groupBy { it['context'] }
+
+        Map naByGroup = [:]
+        naByGroupFull.each {
+            key, value ->
+                def keyList = key?.split(',')
+                keyList.each {
+                    naByGroup.put(it, value)
+                }
+        }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -232,7 +262,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('strike')
+                    if (it['done']) wrap = wrap.addChild('del')
                     if (it['priority']) {
                         wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
@@ -240,6 +270,7 @@ class ReportModel {
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['when'] ? ' {' + it['when'] + '}' : '') +
                                     ' for ' + it['project'])
+                    wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n' + html.toString()
@@ -261,7 +292,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('strike')
+                    if (it['done']) wrap = wrap.addChild('del')
                     if (it['priority']) {
                         wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
                     }
@@ -269,22 +300,30 @@ class ReportModel {
                             (it['who'] ? ' [' + it['who'] + ']' : '') +
                                     (it['context'] ? ' @' + it['context'] : '') +
                                     ' for ' + it['project'])
+                    wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n' + html.toString()
     }
 }
-// TODO: Add text by priority
 
+def panelTitle = { panelT, count = null ->
+    new Tag('html', new Tag('body',
+            new Tag('div', panelT, [style: 'font-weight:bold;font-style:italic']), [height: '50']).
+            addContent(count != null ? new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']).toString() : ''))
+}
 ReportModel report = new ReportModel(node.map.root)
 
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(report.projectText(), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(report.delegateText(), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(report.contextText(), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(report.timelineText(), null, new XhtmlNamespaceHandler())
-    // TODO: Add priority pane context
+    try {
+        projectPane.setDocumentFromString(report.projectText(), null, new XhtmlNamespaceHandler())
+        delegatePane.setDocumentFromString(report.delegateText(), null, new XhtmlNamespaceHandler())
+        contextPane.setDocumentFromString(report.contextText(), null, new XhtmlNamespaceHandler())
+        timelinePane.setDocumentFromString(report.timelineText(), null, new XhtmlNamespaceHandler())
+    } catch (e) {
+        println(report.projectText())
+    }
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -367,7 +406,6 @@ SwingBuilder.edtBuilder {
                                 case 1: curContent = report.delegateText(); break;
                                 case 2: curContent = report.contextText(); break;
                                 case 3: curContent = report.timelineText(); break;
-                            // TODO: Add priority list
                                 default: curContent = report.projectText(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent), null)
@@ -432,6 +470,7 @@ class NodeLink extends LinkListener {
             UnfoldBranch(nodesFound[0]);
             ctrl.select(nodesFound[0]);
             ctrl.centerOnNode(nodesFound[0]);
+            ctrl.centerOnNode(nodesFound[0]);
             frame.dispose()
             frame.visible=false
         } else {
@@ -485,7 +524,6 @@ timelinePane.getMouseTrackingListeners().each {
     }
 }
 timelinePane.addMouseTrackingListener(nl);
-// TODO: Add priority hyperlink listener
 
 // on ESC key close frame
 mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -505,6 +543,10 @@ class CloseAction extends AbstractAction {
         this.frame.dispose();
     }
 }
+
+System.setProperty("xr.text.aa-smoothing-level", "1")
+System.setProperty("xr.text.aa-fontsize-threshhold", "1")
+System.setProperty("xr.text.aa-rendering-hint", "RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT")
 
 report.selPane = config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')

@@ -103,9 +103,37 @@
 </html>
 </richcontent>
 <node TEXT="*a" ID="ID_950991618" CREATED="1413839958293" MODIFIED="1413839958293"/>
-<node TEXT="*a@b" ID="ID_1565576495" CREATED="1413839958295" MODIFIED="1413839991827"/>
+<node TEXT="*a @b @c@d @EEE" ID="ID_1565576495" CREATED="1413839958295" MODIFIED="1425054070223"/>
 <node TEXT="*a@b{v1.0}" ID="ID_1277023639" CREATED="1413839958296" MODIFIED="1413839990166"/>
-<node TEXT="*a@b[me]{v1.0}" ID="ID_86267830" CREATED="1413839958298" MODIFIED="1413839988224"/>
+<node TEXT="*a@b[me,john, paul , george, ringo]{v1.0}" ID="ID_86267830" CREATED="1413839958298" MODIFIED="1425067764484"><richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Here is a long stuff
+    </p>
+    <p>
+      ...
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      about long stuff
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 <node TEXT="*{v1.0}a" ID="ID_175577920" CREATED="1413839958299" MODIFIED="1413839958299"/>
 <node TEXT="*[me]{v1.0}a" ID="ID_1525654385" CREATED="1413839958300" MODIFIED="1413839958300"/>
 <node TEXT="*@b[me]{v1.0}a" ID="ID_1936872034" CREATED="1413839958302" MODIFIED="1413839958302"/>
@@ -114,6 +142,7 @@
 <node TEXT="*abc@bde{v1.0}" ID="ID_1086645094" CREATED="1413839958309" MODIFIED="1413839982765"/>
 <node TEXT="*abc@bde[me]{v1.0}" ID="ID_1449169181" CREATED="1413839958311" MODIFIED="1413839980105"/>
 <node TEXT="* abc @bde [me] {v1.0}" ID="ID_591419351" CREATED="1413839958312" MODIFIED="1413839972030"/>
+<node TEXT="* KILLER &lt;&gt;" ID="ID_1764118338" CREATED="1425073942429" MODIFIED="1425073952727"/>
 </node>
 <node TEXT="Shorthand tests" POSITION="right" ID="ID_1488226184" CREATED="1413840469105" MODIFIED="1413840511178">
 <edge COLOR="#ff00ff"/>

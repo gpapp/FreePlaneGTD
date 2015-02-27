@@ -1,22 +1,21 @@
-package freeplaneGTD;
+package freeplaneGTD
 
-import org.junit.Test;
+import org.junit.Test
 
-import freeplaneGTD.DateUtil
 import java.text.SimpleDateFormat
 
 class DateUtilTest {
 
     Map goodresults = [
             ['v1.1', 'v1.1']                  : null,
-            ['11 23', '2014-11-23']           : 'MM dd',
-            ['11/23', '2014-11-23']           : 'MM/dd',
-            ['11.23', '2014-11-23']           : 'MM.dd',
-            ['11.23.', '2014-11-23']          : 'MM.dd.',
+            ['11 23', '2015-11-23'] : 'MM dd',
+            ['11/23', '2015-11-23'] : 'MM/dd',
+            ['11.23', '2015-11-23'] : 'MM.dd',
+            ['11.23.', '2015-11-23']: 'MM.dd.',
 
             ['14-11-23', '2014-11-23']        : 'yy-MM-dd',
             ['14 11 23', '2014-11-23']        : 'yy MM dd',
-            ['1/2/3', '2003-1-2']             : 'MM/dd/yy',
+            ['1/2/3', '2003-01-02'] : 'MM/dd/yy',
             ['11/23/14', '2014-11-23']        : 'MM/dd/yy',
             ['14.11.23', '2014-11-23']        : 'yy.MM.dd',
             ['14.11.23.', '2014-11-23']       : 'yy.MM.dd.',
@@ -51,8 +50,8 @@ class DateUtilTest {
             if (result == null) {
                 assert (value[1] == DateUtil.normalizeDate(value[0]))
             } else {
-                Date tocheck = Date.parse('yyyy-MM-dd', value[1])
-                assert (tocheck == DateUtil.normalizeDate(value[0])): 'Error parsing: ' + value + ' normalizedDate: ' + DateUtil.normalizeDate(value)
+                Date tocheck = DateUtil.stdFormat.parse(value[1])
+                assert (tocheck.equals(DateUtil.normalizeDate(value[0]))): 'Error parsing: ' + value[1] + ' normalizedDate: ' + DateUtil.normalizeDate(value[0])
             }
         }
     }

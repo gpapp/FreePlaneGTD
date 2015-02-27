@@ -174,8 +174,6 @@ class GTDMapReader {
 				}
 			}
 
-            System.out.println(nodeAttr)
-
             thisNode.attributes = nodeAttr;
 
             if (!thisNode.icons.icons.contains(iconNextAction)) {
@@ -253,14 +251,15 @@ class GTDMapReader {
                 }
                 boolean done = icons.contains(iconDone)
                 if (!(filterDone && done)) {
-                    result << [action: naAction, 
-						project: naProject,
-						context: naContext,
-						who: naWho,
-						when: naWhen,
-						priority: naPriority,
-						nodeID: naNodeID,
-						done: done]
+                    result << [node    : thisNode,
+                               action  : naAction,
+                               project : naProject,
+                               context : naContext,
+                               who     : naWho,
+                               when    : naWhen,
+                               priority: naPriority,
+                               nodeID  : naNodeID,
+                               done    : done]
                 }
             }
         }
@@ -277,21 +276,32 @@ class GTDMapReader {
         Map fields = [:];
 
         String toParse = nodeText
-        if (toParse.indexOf('[') >= 0) {
-            fields['delegate'] = toParse.replaceAll('^.*\\[(.*)\\].*$', '$1').trim()
-            toParse = toParse.replaceAll('\\s*\\[.*\\]\\s*', ' ').trim()
+        Set delegates = []
+        while (toParse.matches('^.*\\[([^\\]]*)\\].*$')) {
+            def strings = toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').split(',')
+            strings.each {
+                delegates << it.trim()
+            }
+            toParse = toParse.replaceFirst('\\s*\\[[^\\]]*\\]\\s*', ' ').trim()
+        }
+        if (delegates) {
+            fields['delegate'] = delegates.join(',')
         }
         if (toParse.indexOf('{') >= 0) {
             fields['when'] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$', '$1').trim());
             toParse = toParse.replaceAll('\\s*\\{.*\\}\\s*', ' ').trim()
         }
-        if (toParse.indexOf('@') >= 0) {
-            fields['context'] = toParse.replaceAll('^.*@([^\\s\\*]+).*$', '$1').trim()
-            toParse = toParse.replaceAll('\\s*@[^\\s\\*]+\\s*', ' ').trim()
-        }
-        if (toParse =~ /#\d/ ) {
+        if (toParse =~ /#\d/) {
             fields['priority'] = toParse.replaceAll('^.*#(\\d).*$', '$1').trim()
             toParse = toParse.replaceAll('#\\d', '').trim()
+        }
+        Set contexts = []
+        while (toParse.indexOf('@') >= 0) {
+            contexts << toParse.replaceFirst('^[^@]*@([^@\\s\\*]+).*', '$1').trim()
+            toParse = toParse.replaceFirst('\\s*@[^@\\s\\*]+\\s*', ' ').trim()
+        }
+        if (contexts) {
+            fields['context'] = contexts.join(',')
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()
         return fields;

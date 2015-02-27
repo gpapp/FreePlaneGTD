@@ -23,6 +23,8 @@
 //=========================================================
 package freeplaneGTD
 
+import org.freeplane.features.format.FormattedDate
+
 import java.text.SimpleDateFormat
 
 import static java.util.Calendar.YEAR
@@ -102,7 +104,7 @@ class DateUtil {
             if (date[YEAR] < 1970) {
                 date[YEAR] += 2000;
             }
-            return stdFormat.format(date)
+            return new FormattedDate(date.getTime(), stdFormat)
         } else {
             return field
         }
