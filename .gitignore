@@ -2,5 +2,7 @@
 .project
 .classpath
 .settings
+.idea
 .groovy
 /update.sh
+FreePlaneGTD.iml

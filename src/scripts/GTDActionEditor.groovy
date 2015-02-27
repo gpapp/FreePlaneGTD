@@ -150,8 +150,8 @@ class ActionEditor {
                         constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
 
                     doneField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                        preferredSize:new Dimension(300,20),
-                        constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
+                        preferredSize:new Dimension(150,20),
+                        constraints:gbc(gridx:2,gridy:4,fill:HORIZONTAL))
                 }
                 panel() {
                     boxLayout(axis: BoxLayout.X_AXIS)
