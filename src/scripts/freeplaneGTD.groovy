@@ -121,7 +121,8 @@ class ReportModel {
             key, value ->
                 body.addContent('h2', key)
                 Tag curItem = body.addChild('ul')
-                naByGroup[key].each {
+                Map curGroup = naByGroup[key].sort { it['priority'] }
+                curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
                     if (it['priority']) {

@@ -139,19 +139,18 @@ class ActionEditor {
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
                         constraints: gbc(gridx:0,gridy:3,ipadx:5,fill:HORIZONTAL))
                     todayField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
-                        preferredSize:new Dimension(150,25),
-                        constraints:gbc(gridx:1,gridy:3))
+//                        preferredSize:new Dimension(50,25),
+                        constraints:gbc(gridx:1,gridy:3,ipadx:5))
                     whenField = textField(preferredSize:new Dimension(250,25),
-                        constraints:gbc(gridx:2,gridy:3,gridwidth:REMAINDER,fill:HORIZONTAL))
+                        constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
+                    doneField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
+                            constraints:gbc(gridx:3,gridy:3,fill:HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
                         constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
-                    priorityField = textField(preferredSize:new Dimension(300,25),
+                    priorityField = textField(preferredSize:new Dimension(20,25),
                         constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
 
-                    doneField=checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                        preferredSize:new Dimension(150,20),
-                        constraints:gbc(gridx:2,gridy:4,fill:HORIZONTAL))
                 }
                 panel() {
                     boxLayout(axis: BoxLayout.X_AXIS)
