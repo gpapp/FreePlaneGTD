@@ -44,14 +44,14 @@ import java.awt.event.MouseEvent
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.1'
+String txtVer = '1.1.2'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 
 def panelTitle = { panelT, count = null ->
     new Tag('html', new Tag('body',
             new Tag('div', panelT, [style: 'font-weight:bold;font-style:italic']), [height: '50']).
-            addContent(count != null ? new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']) : ''))
+            addContent(count != null ? new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']).toString() : ''))
 }
 
 class ReportModel {
@@ -115,7 +115,7 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_project"))
-        def naByGroup = actionList.groupBy { it['project'] }
+        Map naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -143,7 +143,7 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_who"))
-        def naByGroup = actionList.groupBy { it['who'] }
+        Map naByGroup = actionList.groupBy { it['who'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -173,7 +173,7 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_context"))
-        def naByGroup = actionList.groupBy { it['context'] }
+        Map naByGroup = actionList.groupBy { it['context'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -201,7 +201,7 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"))
-        def naByGroup = actionList.groupBy { it['when'] }.sort { it.toString().toLowerCase() }
+        Map naByGroup = actionList.groupBy { it['when'] }.sort { it.toString().toLowerCase() }
         /* TODO: implement timeline sorting
         first overdue, then today, than this week, then future elements, then String keys
         
@@ -255,7 +255,7 @@ def refresh = {
     tabbedPane.selectedIndex = report.selPane;
     cbFilterDone.selected = report.filterDone
 }
-def swing = SwingBuilder.edtBuilder {
+SwingBuilder.edtBuilder {
     // make the frame half the height and width
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize()
     int frHeight = (screenSize.height) / 4 * 3
@@ -397,7 +397,7 @@ class NodeLink extends LinkListener {
             ctrl.select(nodesFound[0]);
             ctrl.centerOnNode(nodesFound[0]);
             frame.dispose()
-            frame.hide()
+            frame.visible=false
         } else {
             UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
         }
@@ -478,4 +478,4 @@ delegatePane.scrollTo(new Point(0, 0))
 contextPane.scrollTo(new Point(0, 0))
 timelinePane.scrollTo(new Point(0, 0))
 mainFrame.setLocationRelativeTo(UITools.frame)
-mainFrame.show()
+mainFrame.visible = false

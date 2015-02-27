@@ -65,10 +65,10 @@ class ActionEditorModel {
                 (delegate?.trim() ? "[$delegate]" : '') +
                 (when?.trim() ? "{$when}" : '') +
                 (priority?.trim() ? "#$priority" : '')
-        !delegate?node.attributes.delete('Who'):false
-        !context?node.attributes.delete('Where'):false
-        !when?node.attributes.delete('When'):false
-        !priority?node.attributes.delete('Priority'):false
+        !delegate?node.attributes.remove('Who'):false
+        !context?node.attributes.remove('Where'):false
+        !when?node.attributes.remove('When'):false
+        !priority?node.attributes.remove('Priority'):false
 
         GTDMapReader mapReader = GTDMapReader.instance
         if (node.icons.contains(mapReader.iconToday)!=today) {
@@ -173,9 +173,9 @@ class ActionEditor {
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
                             })
-                    mainFrame.getRootPane().setDefaultButton(doneButton)
                 }
             }
+            mainFrame.getRootPane().setDefaultButton(doneButton)
         }
         // on ESC key close frame
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
