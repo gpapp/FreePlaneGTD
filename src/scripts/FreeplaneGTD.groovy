@@ -19,10 +19,10 @@
 //
 //=========================================================
 
-import FreeplaneGTD.ClipBoardUtil
-import FreeplaneGTD.GTDMapReader
-import FreeplaneGTD.Tag
-import FreeplaneGTD.DateUtil
+import freeplaneGTD.ClipBoardUtil
+import freeplaneGTD.DateUtil
+import freeplaneGTD.GTDMapReader
+import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
@@ -42,6 +42,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.text.ParseException
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
@@ -64,40 +65,48 @@ class ReportModel {
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
-    def taskDateComparator = { a,b ->
+    def taskDateComparator = { a, b ->
         def aw = a['when']
         def bw = b['when']
         if ((!aw && !bw) || aw.equals(bw)) {
             return 0
         }
-        Date ad
-        Date bd
-        if (aw==todayText) ad=new Date()
-        else if (aw==thisWeekText) ad=new Date()
-        else if (aw instanceof Date) ad=aw
+        Date ad = null
+        Date bd = null
+        if (aw == todayText) ad = new Date()
+        else if (aw == thisWeekText) ad = new Date() + 7
+        else if (aw instanceof Date) ad = aw
         else if (aw instanceof String) {
-            ad = DateUtil.stdFormat.parse(aw)
+            try {
+                ad = DateUtil.stdFormat.parse(aw)
+            } catch (ParseException pe) {
+                ad = null
+            }
         }
-        if (bw==todayText) bd=new Date()
-        else if (bw==thisWeekText) bd = new Date()
-        else if (bw instanceof Date) bd=bw
-        else if (aw instanceof String) {
-            bd = DateUtil.stdFormat.parse(bw)
+        if (bw == todayText) bd = new Date()
+        else if (bw == thisWeekText) bd = new Date() + 7
+        else if (bw instanceof Date) bd = bw
+        else if (bw instanceof String) {
+            try {
+                bd = DateUtil.stdFormat.parse(bw)
+            } catch (ParseException pe) {
+                bd = null
+            }
         }
         if (!ad && !bd) {
-            return aw<bw?1:-1
+            return aw < bw ? 1 : -1
         }
-        if (ad && !bd ) return 1
-        if (!ad && bd ) return -1
-        return ad<bd?-1:1
+        if (ad && !bd) return -1
+        if (!ad && bd) return 1
+        return ad < bd ? -1 : 1
     }
-    def taskSortComparator = { a,b ->
+    def taskSortComparator = { a, b ->
         if ((!a['priority'] && !b['priority']) || a['priority'].equals(b['priority'])) {
-            return taskDateComparator (a,b)
+            return taskDateComparator(a, b)
         }
         if (!a['priority']) return 1
         if (!b['priority']) return -1
-        return a['priority']<b['priority']?-1:1
+        return a['priority'] < b['priority'] ? -1 : 1
     }
 
     ReportModel(Proxy.Node rootNode) {
@@ -160,7 +169,7 @@ class ReportModel {
             key, value ->
                 body.addContent('h2', key)
                 Tag curItem = body.addChild('ul')
-                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
@@ -190,7 +199,7 @@ class ReportModel {
                 if (key) {
                     body.addContent('h2', key)
                     Tag curItem = body.addChild('ul')
-                    def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                    def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                     curGroup.each {
                         Tag wrap = curItem.addChild('li')
                         if (it['done']) wrap = wrap.addChild('strike')
@@ -220,7 +229,7 @@ class ReportModel {
             key, value ->
                 body.addContent('h2', key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
                 Tag curItem = body.addChild('ul')
-                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')
@@ -243,13 +252,13 @@ class ReportModel {
         head.addChild('title')
         Tag body = html.addChild('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"))
-        def sortedList = actionList.sort { a,b -> taskDateComparator(a,b) }
+        def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
         def naByGroup = sortedList.groupBy { it['when'] }
         naByGroup.each {
             key, value ->
                 body.addContent('h2', key)
                 Tag curItem = body.addChild('ul')
-                def curGroup = naByGroup[key].sort { a,b -> taskSortComparator (a,b) }
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     Tag wrap = curItem.addChild('li')
                     if (it['done']) wrap = wrap.addChild('strike')

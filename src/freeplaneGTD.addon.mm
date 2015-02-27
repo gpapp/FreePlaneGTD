@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1425003459413" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1425014125558" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -54,7 +54,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="133" VALUE_WIDTH="161"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.1.2"/>
+<attribute NAME="version" VALUE="v1.2"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.2.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -649,8 +649,8 @@
 </richcontent>
 <attribute_layout NAME_WIDTH="60" VALUE_WIDTH="483"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
-<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/freeplaneGTD.groovy"/>
-<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/freeplaneShorthand.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneGTD.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneShorthand.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/icons/fpgtdIcon.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/DateUtil.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/GTDMapReader.groovy"/>
@@ -784,7 +784,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="freeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1416152744616" HGAP="30">
+<node TEXT="FreeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1416152744616" HGAP="30">
 <attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.listActions"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
@@ -797,7 +797,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="freeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1416152732755" HGAP="30">
+<node TEXT="FreeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1416152732755" HGAP="30">
 <attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.parseShorthand"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>

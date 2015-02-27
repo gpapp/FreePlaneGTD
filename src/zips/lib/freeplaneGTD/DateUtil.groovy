@@ -23,13 +23,13 @@
 //=========================================================
 package freeplaneGTD
 
-import org.freeplane.features.format.FormattedDate
-
 import java.text.SimpleDateFormat
 
 import static java.util.Calendar.YEAR
 
 class DateUtil {
+    public static final SimpleDateFormat stdFormat = new SimpleDateFormat('yyyy-MM-dd')
+
     private static final def DATE_FORMAT_REGEXPS = [
             // System date parsing
             '^\\d{4}-\\d{1,2}-\\d{1,2}t\\d{1,2}:\\d{2}\\+\\d{4}$'       : new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mmZ'),
@@ -48,7 +48,7 @@ class DateUtil {
             '^\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}\\.$'                       : new SimpleDateFormat('yy.MM.dd.'),
             // Date parsing
             '^\\d{1,2}-\\d{1,2}-\\d{4}$'                                : new SimpleDateFormat('dd-MM-yyyy'),
-            '^\\d{4}-\\d{1,2}-\\d{1,2}$'                                : new SimpleDateFormat('yyyy-MM-dd'),
+            '^\\d{4}-\\d{1,2}-\\d{1,2}$': stdFormat,
             '^\\d{1,2}/\\d{1,2}/\\d{4}$'                                : new SimpleDateFormat('MM/dd/yyyy'),
             '^\\d{4}/\\d{1,2}/\\d{1,2}$'                                : new SimpleDateFormat('yyyy/MM/dd'),
             '^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$'                            : new SimpleDateFormat('yyyy.MM.dd'),
@@ -94,7 +94,7 @@ class DateUtil {
         String field = dateString.trim();
         SimpleDateFormat fmt = determineDateFormat(field);
         if (fmt != null) {
-            Date date = fmt.parse(field);
+            Date date = fmt.parse(dateString);
             if (fmt.toPattern().indexOf('y') < 0) {
                 Date now = new Date();
                 date[YEAR] = now[YEAR];
@@ -102,7 +102,7 @@ class DateUtil {
             if (date[YEAR] < 1970) {
                 date[YEAR] += 2000;
             }
-            return new FormattedDate(date, 'yyyy-MM-dd')
+            return stdFormat.format(date)
         } else {
             return field
         }
