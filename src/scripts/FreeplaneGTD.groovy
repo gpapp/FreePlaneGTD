@@ -20,7 +20,6 @@
 //=========================================================
 
 import freeplaneGTD.ClipBoardUtil
-import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
@@ -42,7 +41,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.text.ParseException
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
@@ -70,23 +68,9 @@ class ReportModel {
         if (aw == todayText) ad = new Date()
         else if (aw == thisWeekText) ad = new Date() + 7
         else if (aw instanceof Date) ad = aw
-        else if (aw instanceof String) {
-            try {
-                ad = DateUtil.stdFormat.parse(aw)
-            } catch (ParseException pe) {
-                ad = null
-            }
-        }
         if (bw == todayText) bd = new Date()
         else if (bw == thisWeekText) bd = new Date() + 7
         else if (bw instanceof Date) bd = bw
-        else if (bw instanceof String) {
-            try {
-                bd = DateUtil.stdFormat.parse(bw)
-            } catch (ParseException pe) {
-                bd = null
-            }
-        }
         if (!ad && !bd) {
             return aw < bw ? 1 : -1
         }
@@ -249,9 +233,13 @@ class ReportModel {
         Map naByGroup = [:]
         naByGroupFull.each {
             key, value ->
-                def keyList = key?.split(',')
-                keyList.each {
-                    naByGroup.put(it, value)
+                if (!key) {
+                    naByGroup.put(key, value)
+                } else {
+                    def keyList = key.split(',')
+                    keyList.each {
+                        naByGroup.put(it, value)
+                    }
                 }
         }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
@@ -308,9 +296,12 @@ class ReportModel {
 }
 
 def panelTitle = { panelT, count = null ->
-    new Tag('html', new Tag('body',
-            new Tag('div', panelT, [style: 'font-weight:bold;font-style:italic']), [height: '50']).
-            addContent(count != null ? new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']).toString() : ''))
+    Tag tag = new Tag('html')
+    Tag innerChild = tag.addChild('body', [height: '50']).addChild('div', [style: 'font-weight:bold;font-style:italic'])
+    innerChild.addContent(panelT)
+    if (count)
+        innerChild.addContent(new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']))
+    return tag
 }
 ReportModel report = new ReportModel(node.map.root)
 

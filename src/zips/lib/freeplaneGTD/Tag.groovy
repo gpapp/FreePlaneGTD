@@ -69,7 +69,10 @@ class Tag {
         retval += '>\n'
         content.each {
             // TODO: should sanitize HTML entities <> here!
-            retval += it
+            if (it instanceof String) {
+                retval += it.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+            } else
+                retval += it
         }
         retval += '</' + tagName + '>\n'
         return retval

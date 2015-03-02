@@ -161,6 +161,7 @@ class GTDMapReader {
             if (fields['when']) nodeAttr['When'] = fields['when']
             if (fields['priority']) nodeAttr['Priority'] = fields['priority']
 
+            // TODO add multiple context handling
             contextIcons.each {
                 context, icon ->
                     if (thisNode.icons.icons.contains(icon)) {
@@ -179,7 +180,8 @@ class GTDMapReader {
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
-            			
+
+            // TODO add multiple context handling
             if (contextIcons.keySet().contains(nodeAttr['Where'])) {
                 String contextIcon = contextIcons[nodeAttr['Where']];
                 if (!thisNode.icons.icons.contains(contextIcon)) {

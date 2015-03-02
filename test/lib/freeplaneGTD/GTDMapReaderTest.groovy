@@ -883,6 +883,7 @@ class GTDMapReaderTest {
                         [orig: '*a  {2014-11-24} [Joe]b c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe']],
                         [orig: '*a  {2014-11-24} [Joe]b @Home c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe', Where: 'Home'], icon: ['home']],
                         [orig: '*@Home[John]a  {now}[ John ,Ringo] b c@Office[George]', action: 'a b c', attr: [When: 'now', Who: 'Ringo,John,George', Where: 'Home,Office']],
+                        [orig: '*Killer node <>', action: 'Killer node <>'],
                 ]
 
         testvalues.each {
