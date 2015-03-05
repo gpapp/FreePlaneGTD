@@ -169,7 +169,7 @@ class GTDMapReader {
                     }
             }
             if (contexts?.size()) {
-                nodeAttr['Where'] = contexts.join(',')
+                nodeAttr['Where'] = contexts.unique().join(',')
             }
 
             thisNode.icons.each {

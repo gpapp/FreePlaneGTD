@@ -85,14 +85,20 @@ class ActionEditorModel {
                 node.icons.add(mapReader.iconDone)
             }
         }
+        // Find icons in the entire map
+        mapReader.findIcons(node.map.root)
         // Remove priority icons that are to be re-added by the shorthand conversion
         node.icons.each {
             if (it ==~ /^full\-\d$/) {
                 node.icons.remove(it)
             }
         }
-        // Find icons in the entire map
-        mapReader.findIcons(node.map.root)
+        // Remove all existing context icons, that are to be re-added by the shorthand conversion
+        node.icons.each {
+            if (mapReader.contextIcons.containsValue(it)) {
+                node.icons.remove(it)
+            }
+        }
         // Only re-parse the current node
         mapReader.internalConvertShorthand(node)
     }
