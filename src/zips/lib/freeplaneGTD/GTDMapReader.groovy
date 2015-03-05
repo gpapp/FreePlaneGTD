@@ -161,12 +161,15 @@ class GTDMapReader {
             if (fields['when']) nodeAttr['When'] = fields['when']
             if (fields['priority']) nodeAttr['Priority'] = fields['priority']
 
-            // TODO add multiple context handling
+            List contexts = nodeAttr['Where'] ? nodeAttr['Where'].split(',') : []
             contextIcons.each {
                 context, icon ->
                     if (thisNode.icons.icons.contains(icon)) {
-                        nodeAttr['Where'] = context;
+                        contexts << context
                     }
+            }
+            if (contexts?.size()) {
+                nodeAttr['Where'] = contexts.join(',')
             }
 
             thisNode.icons.each {
@@ -181,13 +184,15 @@ class GTDMapReader {
                 thisNode.icons.add(iconNextAction);
             }
 
-            // TODO add multiple context handling
-            if (contextIcons.keySet().contains(nodeAttr['Where'])) {
-                String contextIcon = contextIcons[nodeAttr['Where']];
-                if (!thisNode.icons.icons.contains(contextIcon)) {
-                    thisNode.icons.add(contextIcon);
+            contexts.each {
+                if (contextIcons.keySet().contains(it)) {
+                    String contextIcon = contextIcons[it]
+                    if (!thisNode.icons.icons.contains(contextIcon)) {
+                        thisNode.icons.add(contextIcon);
+                    }
                 }
             }
+
 
             thisNode.icons.each {
                 if (it ==~ /^full\-\d$/) {
@@ -278,7 +283,7 @@ class GTDMapReader {
         Map fields = [:];
 
         String toParse = nodeText
-        Set delegates = []
+        def delegates = []
         while (toParse.matches('^.*\\[([^\\]]*)\\].*$')) {
             def strings = toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').split(',')
             strings.each {
@@ -287,7 +292,7 @@ class GTDMapReader {
             toParse = toParse.replaceFirst('\\s*\\[[^\\]]*\\]\\s*', ' ').trim()
         }
         if (delegates) {
-            fields['delegate'] = delegates.join(',')
+            fields['delegate'] = delegates.unique().join(',')
         }
         if (toParse.indexOf('{') >= 0) {
             fields['when'] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$', '$1').trim());
@@ -297,13 +302,13 @@ class GTDMapReader {
             fields['priority'] = toParse.replaceAll('^.*#(\\d).*$', '$1').trim()
             toParse = toParse.replaceAll('#\\d', '').trim()
         }
-        Set contexts = []
+        def contexts = []
         while (toParse.indexOf('@') >= 0) {
             contexts << toParse.replaceFirst('^[^@]*@([^@\\s\\*]+).*', '$1').trim()
             toParse = toParse.replaceFirst('\\s*@[^@\\s\\*]+\\s*', ' ').trim()
         }
         if (contexts) {
-            fields['context'] = contexts.join(',')
+            fields['context'] = contexts.unique().join(',')
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()
         return fields;

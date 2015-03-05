@@ -826,9 +826,9 @@ class GTDMapReaderTest {
 
     @Test
     public void testParseShortHandMultiContext() {
-        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('*a b c {now}@Home,Office [John,Ringo,George]'));
-        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Barn,Office'] == GTDMapReader.parseShorthand(' [John][ Ringo ][ George]{ now }*a b @Home@Barn @Office c'));
-        assert ([action: 'a b c', when: 'now', delegate: 'Ringo,John,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('@Home[John]*a  {now}[ John ,Ringo] b c@Office[George]'));
+        assert ([action: 'a b c', when: 'now', delegate: 'John,Ringo,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('*a b c {now}@Home,Office [John,Ringo,George]'));
+        assert ([action: 'a b c', when: 'now', delegate: 'John,Ringo,George', context: 'Home,Barn,Office'] == GTDMapReader.parseShorthand(' [John][ Ringo ][ George]{ now }*a b @Home@Barn @Office c'));
+        assert ([action: 'a b c', when: 'now', delegate: 'John,Ringo,George', context: 'Home,Office'] == GTDMapReader.parseShorthand('@Home[John]*a  {now}[ John ,Ringo] b c@Office[George]'));
 
     }
 
@@ -856,6 +856,7 @@ class GTDMapReaderTest {
                 [text: 'Icon: Done', icon: 'done'],
                 [text: 'Icon: Today', icon: 'today'],
                 [text: 'Icon: @Home', icon: 'home'],
+                [text: 'Icon: @Email', icon: 'email'],
         ];
         config.each {
             MyNode n = configNode.createChild()
@@ -871,6 +872,8 @@ class GTDMapReaderTest {
         assert 'today' == mapreader.iconToday
         assert mapreader.contextIcons.containsKey('Home')
         assert mapreader.contextIcons.containsValue('home')
+        assert mapreader.contextIcons.containsKey('Email')
+        assert mapreader.contextIcons.containsValue('email')
 
 
         List testvalues =
@@ -882,7 +885,8 @@ class GTDMapReaderTest {
                         [orig: '*a  {2014-11-24} b c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24')]],
                         [orig: '*a  {2014-11-24} [Joe]b c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe']],
                         [orig: '*a  {2014-11-24} [Joe]b @Home c', action: 'a b c', attr: [When: Date.parse('yyyy-MM-dd', '2014-11-24'), Who: 'Joe', Where: 'Home'], icon: ['home']],
-                        [orig: '*@Home[John]a  {now}[ John ,Ringo] b c@Office[George]', action: 'a b c', attr: [When: 'now', Who: 'Ringo,John,George', Where: 'Home,Office']],
+                        [orig: '*@Home[John]a @Email {now}[ John ,Ringo] b c@Office[George]', action: 'a b c', attr: [When: 'now', Who: 'John,Ringo,George', Where: 'Home,Email,Office'], icon: ['home', 'email']],
+                        [orig: '*@Home[John]a @Email {now}[ John ,Ringo] @Email b c@Office[George]', action: 'a b c', attr: [When: 'now', Who: 'John,Ringo,George', Where: 'Home,Email,Office'], icon: ['home', 'email']],
                         [orig: '*Killer node <>', action: 'Killer node <>'],
                 ]
 
