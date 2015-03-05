@@ -194,7 +194,7 @@ class ReportModel {
             key, value ->
                 def keyList = key?.split(',')
                 keyList.each {
-                    naByGroup.put(it, value)
+					naByGroup.put(it, naByGroup[it]?naByGroup[it]+value:value)
                 }
         }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
@@ -238,7 +238,7 @@ class ReportModel {
                 } else {
                     def keyList = key.split(',')
                     keyList.each {
-                        naByGroup.put(it, value)
+						naByGroup.put(it, naByGroup[it]?naByGroup[it]+value:value)
                     }
                 }
         }
