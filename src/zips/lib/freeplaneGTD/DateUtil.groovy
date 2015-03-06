@@ -24,6 +24,8 @@
 package freeplaneGTD
 
 import org.freeplane.features.format.FormattedDate
+import org.freeplane.plugin.script.proxy.ConvertibleDate
+import org.freeplane.plugin.script.proxy.ConvertibleText
 
 import java.text.SimpleDateFormat
 
@@ -92,7 +94,12 @@ class DateUtil {
         return null; // Unknown format.
     }
 
-    public static Object normalizeDate(String dateString) {
+
+    static Object normalizeDate(Date date) {
+        return date
+    }
+
+    static Object normalizeDate(String dateString) {
         String field = dateString.trim();
         SimpleDateFormat fmt = determineDateFormat(field);
         if (fmt != null) {
@@ -101,12 +108,20 @@ class DateUtil {
                 Date now = new Date();
                 date[YEAR] = now[YEAR];
             }
-            if (date[YEAR] < 1970) {
+            if (date[YEAR] < 100) {
                 date[YEAR] += 2000;
             }
             return new FormattedDate(date.getTime(), stdFormat)
         } else {
             return field
         }
+    }
+
+    static Object normalizeDate(ConvertibleDate date) {
+        return date.date
+    }
+
+    static Object normalizeDate(ConvertibleText date) {
+        return normalizeDate(date.text)
     }
 }

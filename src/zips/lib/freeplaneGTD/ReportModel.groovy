@@ -1,6 +1,7 @@
 package freeplaneGTD
 
 import org.freeplane.core.util.TextUtils
+import org.freeplane.plugin.script.proxy.ConvertibleDate
 import org.freeplane.plugin.script.proxy.Proxy
 
 /**
@@ -27,22 +28,24 @@ class ReportModel {
         if (aw == todayText) ad = today
         else if (aw == thisWeekText) ad = today + 7
         else if (aw instanceof Date) ad = aw
+        else if (aw instanceof ConvertibleDate) ad = aw.date
         if (bw == todayText) bd = today
         else if (bw == thisWeekText) bd = today + 7
         else if (bw instanceof Date) bd = bw
+        else if (bw instanceof ConvertibleDate) bd = bw.date
         if (!ad && !bd) {
             return aw <=> bw
         }
-        if (ad && !bd) return 1
-        if (!ad && bd) return -1
+        if (ad && !bd) return -1
+        if (!ad && bd) return 1
         return ad <=> bd
     }
     def taskSortComparator = { a, b ->
         if ((!a['priority'] && !b['priority']) || a['priority'].equals(b['priority'])) {
             return taskDateComparator(a, b)
         }
-        if (!a['priority']) return -1
-        if (!b['priority']) return 1
+        if (!a['priority']) return 1
+        if (!b['priority']) return -1
         return a['priority'] <=> b['priority']
     }
 
@@ -102,17 +105,20 @@ class ReportModel {
     }
 
     static Tag displayNote(Proxy.Node n) {
-        /*       if (n.noteText) {
-                   Tag tag = new Tag('div',null,[class: 'note'])
-                   tag.addContent(n.displayedText)
-                   return tag
-               }*/
-        return null
+        if (!(n.noteText || n.detailsText)) return null
+        Tag tag = new Tag('div', [class: 'note'])
+        if (n.detailsText) {
+            tag.addChild('div', [class: 'note']).addPreformatted(n.detailsText)
+        }
+        if (n.noteText) {
+            tag.addChild('div', [class: 'note']).addPreformatted(n.noteText)
+        }
+        return tag
     }
 
 
     String projectText() {
-        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
         head.addContent(getStyleSheet())
         head.addChild('title')
@@ -142,7 +148,7 @@ class ReportModel {
     }
 
     String delegateText() {
-        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
         head.addContent(getStyleSheet())
         head.addChild('title')
@@ -182,7 +188,7 @@ class ReportModel {
     }
 
     String contextText() {
-        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
         head.addContent(getStyleSheet())
         head.addChild('title')
@@ -225,7 +231,7 @@ class ReportModel {
     }
 
     String timelineText() {
-        Tag html = new Tag('html', null, [xmlns: 'http://www.w3.org/1999/xhtml'])
+        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
         head.addContent(getStyleSheet())
         head.addChild('title')

@@ -58,14 +58,10 @@ ReportModel report = new ReportModel(node.map.root)
 
 def refresh = {
     report.parseMap()
-    try {
-        projectPane.setDocumentFromString(report.projectText(), null, new XhtmlNamespaceHandler())
-        delegatePane.setDocumentFromString(report.delegateText(), null, new XhtmlNamespaceHandler())
-        contextPane.setDocumentFromString(report.contextText(), null, new XhtmlNamespaceHandler())
-        timelinePane.setDocumentFromString(report.timelineText(), null, new XhtmlNamespaceHandler())
-    } catch (e) {
-        println(report.projectText())
-    }
+    projectPane.setDocumentFromString(report.projectText(), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(report.delegateText(), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(report.contextText(), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(report.timelineText(), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 

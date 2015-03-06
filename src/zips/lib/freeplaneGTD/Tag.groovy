@@ -24,31 +24,57 @@ class Tag {
     def content = []
     def params = []
 
-    Tag(tagName) {
+    Tag(tagName, Map params = null) {
         this.tagName = tagName
+        if (params) {
+            this.params = params
+        }
     }
 
-    Tag(tagName, content, params = null) {
+    Tag(tagName, Object content, params = null) {
         this(tagName)
         if (content) {
-            this.content = [content]
+            addContent(content.toString())
         }
         if (params) {
             this.params = params
         }
     }
 
-    Tag addContent(String content) {
-        this.content.push(content)
+    Tag(tagName, Tag content, params = null) {
+        this(tagName)
+        if (content) {
+            addContent(content)
+        }
+        if (params) {
+            this.params = params
+        }
+    }
+
+    Tag addContent(Object content) {
+        // Very simple sanitation for HTML entities <> here!
+        this.content.push(content.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'))
         return this
     }
+
+    Tag addPreformatted(String tag) {
+        this.content.push(tag)
+        return this
+    }
+
 
     Tag addContent(Tag tag) {
         this.content.push(tag)
         return this
     }
 
-    Tag addContent(tagName, content, params = null) {
+    Tag addContent(tagName, Object content, params = null) {
+        Tag tag = new Tag(tagName, content, params)
+        this.content.push(tag)
+        return this
+    }
+
+    Tag addContent(tagName, Tag content, params = null) {
         Tag tag = new Tag(tagName, content, params)
         this.content.push(tag)
         return this
@@ -66,15 +92,11 @@ class Tag {
         params.each {
             retval += ' ' + it.key + '=\'' + it.value + '\''
         }
-        retval += '>\n'
+        retval += '>'
         content.each {
-            // TODO: should sanitize HTML entities <> here!
-            if (it instanceof String) {
-                retval += it.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-            } else
-                retval += it
+            retval += it
         }
-        retval += '</' + tagName + '>\n'
+        retval += '</' + tagName + '>'
         return retval
     }
 }

@@ -153,7 +153,7 @@ class GTDMapReader {
             Map fields = parseShorthand(nodeText);
             thisNode.text = fields['action'];
 
-            def nodeAttr = [:];
+            def nodeAttr = [:] as Map<String, Object>
             thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
 
             if (fields['context']) nodeAttr['Where'] = fields['context']
@@ -179,7 +179,6 @@ class GTDMapReader {
 			}
 
             thisNode.attributes = nodeAttr;
-
             if (!thisNode.icons.icons.contains(iconNextAction)) {
                 thisNode.icons.add(iconNextAction);
             }
@@ -237,7 +236,7 @@ class GTDMapReader {
         // use index method to get attributes
         String naContext = thisNode['Where'].toString()
         String naWho = thisNode['Who'].toString()
-        String naWhen = thisNode['When'].toString()
+        Object naWhen = thisNode['When']
 		String naPriority = thisNode['Priority'].toString()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
@@ -280,7 +279,7 @@ class GTDMapReader {
     //--------------------------------------------------------------
     // Parse next action shorthand notation
     private static Map parseShorthand(String nodeText) {
-        Map fields = [:];
+        Map fields = [:] as Map<String, Object>
 
         String toParse = nodeText
         def delegates = []
@@ -295,7 +294,7 @@ class GTDMapReader {
             fields['delegate'] = delegates.unique().join(',')
         }
         if (toParse.indexOf('{') >= 0) {
-            fields['when'] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$', '$1').trim());
+            fields['when'] = DateUtil.normalizeDate(toParse.replaceAll('^.*\\{(.*)\\}.*$', '$1').trim())
             toParse = toParse.replaceAll('\\s*\\{.*\\}\\s*', ' ').trim()
         }
         if (toParse =~ /#\d/) {

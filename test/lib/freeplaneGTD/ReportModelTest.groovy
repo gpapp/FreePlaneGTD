@@ -32,7 +32,7 @@ class ReportModelTest extends GroovyTestCase {
         mockReportModel.demand.getText { 'THIS WEEK' }
         mockReportModel.use {
             ReportModel reportModel = new ReportModel()
-            assert reportModel.taskSortComparator([priority: null], [priority: '0']) == -1
+            assert reportModel.taskSortComparator([priority: null], [priority: '0']) == 1
             assert reportModel.taskSortComparator([priority: '1'], [priority: '1']) == 0
             assert reportModel.taskSortComparator([priority: '0'], [priority: '1']) == -1
             assert reportModel.taskSortComparator([priority: '1', when: 'TODAY'], [priority: '2', when: 'TODAY']) == -1

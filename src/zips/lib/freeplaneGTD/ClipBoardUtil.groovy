@@ -17,8 +17,8 @@ class ClipBoardUtil {
         static {
             try {
                 supportedFlavors = [
-                        new DataFlavor('text/html;class=java.lang.String'),
-                        new DataFlavor('text/plain;class=java.lang.String')
+                        new DataFlavor('text/plain;class=java.lang.String'),
+                        new DataFlavor('text/html;class=java.lang.String')
                 ];
             } catch (ClassNotFoundException e) {
                 throw new ExceptionInInitializerError(e);
@@ -48,19 +48,17 @@ class ClipBoardUtil {
 
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
             if (flavor.equals(supportedFlavors[0])) {
-                return htmlData;
+                return plainData;
             }
             if (flavor.equals(supportedFlavors[1])) {
-                return plainData;
+                return htmlData;
             }
             throw new UnsupportedFlavorException(flavor);
         }
     }
 
     static Transferable createTransferable(String content) {
-        final String htmlText =  extractHtml(content)
-        final String plainText = extractText(new StringReader(content))
-        return new MyTransferable(plainText, htmlText);
+        return new MyTransferable(extractText(new StringReader(content)), extractHtml(content));
     }
 
     static String extractText(Reader reader) {
@@ -108,7 +106,6 @@ class ClipBoardUtil {
     }
 
     static String extractHtml(String source) {
-        String result = source.replaceAll ('<a [^>]*>(.*)</a>','$1')
-        return result
+        return source.replaceAll('<a href=\'[^\']*\'>(.*)</a>', '$1')
     }
 }
