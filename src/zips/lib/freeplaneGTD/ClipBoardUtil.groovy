@@ -1,9 +1,5 @@
 package freeplaneGTD
 
-import javax.swing.text.MutableAttributeSet
-import javax.swing.text.html.HTML
-import javax.swing.text.html.HTMLEditorKit
-import javax.swing.text.html.parser.ParserDelegator
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
@@ -57,55 +53,62 @@ class ClipBoardUtil {
         }
     }
 
-    static Transferable createTransferable(String content) {
-        return new MyTransferable(extractText(new StringReader(content)), extractHtml(content));
+    static Transferable createTransferable(Tag content) {
+        return new MyTransferable(extractText(content), extractHtml(content));
     }
 
-    static String extractText(Reader reader) {
-        final ArrayList<String> list = new ArrayList<String>();
-
-        HTMLEditorKit.ParserCallback parserCallback = new HTMLEditorKit.ParserCallback() {
-            public void handleText(final char[] data, final int pos) {
-                list.add(new String(data));
-            }
-
-            public void handleStartTag(HTML.Tag t, MutableAttributeSet attribute, int pos) {
-                if (t.equals(HTML.Tag.LI)) {
-                    list.add("\t");
+    static String extractText(Tag content) {
+        def list = []
+        assert content.tagName == 'body'
+        assert content.content[0].tagName == 'h1'
+        list << (String) ((Tag) content.content[0]).content[0]
+        for (int i = 1; i < content.content.size(); i += 2) {
+            Tag title = content.content[i]
+            Tag actions = content.content[i + 1]
+            assert title.tagName == 'h2'
+            assert actions.tagName == 'ul'
+            list << '\t' + (String) title.content[0]
+            actions.content.each {
+                Tag curTag = (Tag) it
+                assert curTag.tagName == 'li'
+                if (((Tag) curTag.content[0]).tagName == 'del') curTag = (Tag) curTag.content[0]
+                int ptr = 0
+                String priority, action, trail
+                if (((Tag) curTag.content[ptr]).tagName == 'span') {
+                    priority = ((Tag) curTag.content[ptr]).content[0]; ptr++
                 }
-            }
-
-            public void handleEndTag(HTML.Tag t, final int pos) {
-                if (t.equals(HTML.Tag.DIV) || t.equals(HTML.Tag.H1) || t.equals(HTML.Tag.H2) || t.equals(HTML.Tag.LI)) {
-                    list.add("\n");
+                if (((Tag) curTag.content[ptr]).tagName == 'a') {
+                    action = ((Tag) (curTag.content[ptr])).content[0]; ptr++
                 }
-            }
-
-            public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, final int pos) {
-                if (t.equals(HTML.Tag.BR)) {
-                    list.add("\n");
+                if (curTag.content.size() > ptr) {
+                    trail = curTag.content[ptr]
                 }
+                list << '\t\t*' + (priority ? ' #' + priority : '') + ' ' + action + (trail ?: '')
             }
-
-            public void handleComment(final char[] data, final int pos) {
-            }
-
-            public void handleError(final String errMsg, final int pos) {
-            }
-        };
-        try {
-            new ParserDelegator().parse(reader, parserCallback, true);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        String result = "";
-        for (String s : list) {
-            result += s;
-        }
-        return result;
+        return list.join('\n');
     }
 
     static String extractHtml(String source) {
-        return source.replaceAll('<a href=\'[^\']*\'>(.*)</a>', '$1')
+        return source
+    }
+
+    static String extractHtml(Tag source) {
+        String retval = ''
+        if (source.tagName.equalsIgnoreCase('a')) {
+            source.content.each { retval += it instanceof Tag ? extractHtml((Tag) it) : extractHtml((String) it) }
+        } else {
+            retval = '<' + source.tagName
+            source.params.each {
+                retval += ' ' + it.key + '=\'' + it.value + '\''
+            }
+            retval += '>'
+            source.content.each {
+                retval += it instanceof Tag ? extractHtml((Tag) it) : extractHtml((String) it)
+            }
+            retval += '</' + source.tagName + '>'
+        }
+        return retval
     }
 }
+

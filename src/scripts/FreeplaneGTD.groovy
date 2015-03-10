@@ -56,12 +56,39 @@ def panelTitle = { panelT, count = null ->
 }
 ReportModel report = new ReportModel(node.map.root)
 
+String wrapContent(Tag content) {
+    Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
+    Tag head = html.addChild('head')
+    head.addContent('style',
+            '/*<![CDATA[*/' +
+                    'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }\n' +
+                    'h1 {font-size:24pt; font-weight:bold;}\n' +
+                    'a {text-decoration: none; color:#990000;}\n' +
+                    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}\n' +
+                    '.priority-0 {background-color: rgb(215,48,39);}\n' +
+                    '.priority-1 {background-color: rgb(244,109,67);}\n' +
+                    '.priority-2 {background-color: rgb(253,174,97);}\n' +
+                    '.priority-3 {background-color: rgb(204,174,89)}\n' +
+                    '.priority-4 {background-color: rgb(255,255,191);}\n' +
+                    '.priority-5 {background-color: rgb(217,239,139);}\n' +
+                    '.priority-6 {background-color: rgb(166,217,106);}\n' +
+                    '.priority-7 {background-color: rgb(102,189,99);}\n' +
+                    '.priority-8 {background-color: rgb(26,152,80);}\n' +
+                    '.priority-9 {background-color: rgb(16,82,50);}' +
+                    '.note {background-color: rgb(240,250,240);font-size:10pt}' +
+                    '/*]]>*/',
+            [type: 'text/css'])
+    head.addChild('title')
+    html.addContent(content)
+    return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' + html.toString()
+}
+
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(report.projectText(), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(report.delegateText(), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(report.contextText(), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(report.timelineText(), null, new XhtmlNamespaceHandler())
+    projectPane.setDocumentFromString(wrapContent(report.projectText()), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(wrapContent(report.delegateText()), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(wrapContent(report.contextText()), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(wrapContent(report.timelineText()), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -157,6 +184,9 @@ SwingBuilder.edtBuilder {
             cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                     selected: report.filterDone,
                     actionPerformed: { report.filterDone = it.source.selected; refresh(mainFrame) })
+            cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
+                    selected: report.showNotes,
+                    actionPerformed: { report.showNotes = it.source.selected; refresh(mainFrame) })
         }
     }
 

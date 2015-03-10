@@ -8,11 +8,12 @@ import org.freeplane.plugin.script.proxy.Proxy
  * Created by gpapp on 2015.03.05..
  */
 class ReportModel {
+    boolean showNotes
     boolean filterDone
     int selPane
-    Proxy.Node rootNode;
-    def actionList;
-    GTDMapReader mapreader;
+    Proxy.Node rootNode
+    def actionList
+    GTDMapReader mapReader
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
@@ -28,11 +29,11 @@ class ReportModel {
         if (aw == todayText) ad = today
         else if (aw == thisWeekText) ad = today + 7
         else if (aw instanceof Date) ad = aw
-        else if (aw instanceof ConvertibleDate) ad = aw.date
+        else if (aw instanceof ConvertibleDate) ad = aw.calendar.time
         if (bw == todayText) bd = today
         else if (bw == thisWeekText) bd = today + 7
         else if (bw instanceof Date) bd = bw
-        else if (bw instanceof ConvertibleDate) bd = bw.date
+        else if (bw instanceof ConvertibleDate) bd = bw.calendar.time
         if (!ad && !bd) {
             return aw <=> bw
         }
@@ -52,17 +53,17 @@ class ReportModel {
 
     ReportModel(Proxy.Node rootNode) {
         this.rootNode = rootNode
-        this.mapreader = GTDMapReader.instance
+        this.mapReader = GTDMapReader.instance
     }
 
     //--------------------------------------------------------------
     // parse the GTD mind map
     void parseMap() {
         // Expand any nodes with next action shorthand
-        mapreader.convertShorthand(rootNode);
+        mapReader.convertShorthand(rootNode);
 
         // Get next action lists
-        actionList = mapreader.getActionList(rootNode, filterDone);
+        actionList = mapReader.getActionList(rootNode, filterDone);
     }
 
     int projectCount() {
@@ -80,31 +81,8 @@ class ReportModel {
         return delegates.size()
     }
 
-    static Tag getStyleSheet() {
-        Tag style = new Tag('style',
-                '/*<![CDATA[*/' +
-                        'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }\n' +
-                        'h1 {font-size:24pt; font-weight:bold;}\n' +
-                        'a {text-decoration: none; color:#990000;}\n' +
-                        '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}\n' +
-                        '.priority-0 {background-color: rgb(215,48,39);}\n' +
-                        '.priority-1 {background-color: rgb(244,109,67);}\n' +
-                        '.priority-2 {background-color: rgb(253,174,97);}\n' +
-                        '.priority-3 {background-color: rgb(204,174,89)}\n' +
-                        '.priority-4 {background-color: rgb(255,255,191);}\n' +
-                        '.priority-5 {background-color: rgb(217,239,139);}\n' +
-                        '.priority-6 {background-color: rgb(166,217,106);}\n' +
-                        '.priority-7 {background-color: rgb(102,189,99);}\n' +
-                        '.priority-8 {background-color: rgb(26,152,80);}\n' +
-                        '.priority-9 {background-color: rgb(16,82,50);}' +
-                        '.note {background-color: rgb(240,250,240);font-size:10pt}' +
-                        '/*]]>*/',
-                [type: 'text/css'])
-
-        return style
-    }
-
-    static Tag displayNote(Proxy.Node n) {
+    Tag displayNote(Proxy.Node n) {
+        if (!showNotes) return null
         if (!(n.noteText || n.detailsText)) return null
         Tag tag = new Tag('div', [class: 'note'])
         if (n.detailsText) {
@@ -117,12 +95,8 @@ class ReportModel {
     }
 
 
-    String projectText() {
-        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-        Tag head = html.addChild('head')
-        head.addContent(getStyleSheet())
-        head.addChild('title')
-        Tag body = html.addChild('body')
+    Tag projectText() {
+        Tag body = new Tag('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_project"))
         Map naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
@@ -144,15 +118,11 @@ class ReportModel {
                     wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
-        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' + html.toString()
+        return body
     }
 
-    String delegateText() {
-        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-        Tag head = html.addChild('head')
-        head.addContent(getStyleSheet())
-        head.addChild('title')
-        Tag body = html.addChild('body')
+    Tag delegateText() {
+        Tag body = new Tag('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_who"))
         Map naByGroupFull = actionList.groupBy { it['who'] }
         Map naByGroup = [:]
@@ -184,15 +154,11 @@ class ReportModel {
                     }
                 }
         }
-        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n' + html.toString()
+        return body
     }
 
-    String contextText() {
-        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-        Tag head = html.addChild('head')
-        head.addContent(getStyleSheet())
-        head.addChild('title')
-        Tag body = html.addChild('body')
+    Tag contextText() {
+        Tag body = new Tag('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_context"))
         Map naByGroupFull = actionList.groupBy { it['context'] }
 
@@ -227,15 +193,11 @@ class ReportModel {
                     wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
-        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n' + html.toString()
+        return body
     }
 
-    String timelineText() {
-        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-        Tag head = html.addChild('head')
-        head.addContent(getStyleSheet())
-        head.addChild('title')
-        Tag body = html.addChild('body')
+    Tag timelineText() {
+        Tag body = new Tag('body')
         body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"))
         def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
         def naByGroup = sortedList.groupBy { it['when'] }
@@ -257,6 +219,6 @@ class ReportModel {
                     wrap.addContent(displayNote(it['node']) ?: '')
                 }
         }
-        return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "resources/schema/xhtml/xhtml-1/xhtml1-strict.dtd">\n' + html.toString()
+        return body
     }
 }
