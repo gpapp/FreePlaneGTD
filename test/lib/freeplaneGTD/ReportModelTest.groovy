@@ -17,7 +17,7 @@ class ReportModelTest extends GroovyTestCase {
             assert reportModel.taskDateComparator([when: '0'], [when: '0']) == 0
             assert reportModel.taskDateComparator([when: '1'], [when: '0']) == 1
             assert reportModel.taskDateComparator([when: '0'], [when: '1']) == -1
-            assert reportModel.taskDateComparator([when: new Date()], [when: '0']) == 1
+            assert reportModel.taskDateComparator([when: new Date()], [when: '0']) == -1
             assert reportModel.taskDateComparator([when: 'TODAY'], [when: new Date().clearTime()]) == 0
             assert reportModel.taskDateComparator([when: 'THIS WEEK'], [when: new Date().clearTime() + 7]) == 0
             assert reportModel.taskDateComparator([when: 'TODAY'], [when: 'THIS WEEK']) == -1

@@ -65,10 +65,10 @@ class ActionEditorModel {
                 (delegate?.trim() ? "[$delegate]" : '') +
                 (when?.trim() ? "{$when}" : '') +
                 (priority?.trim() ? "#$priority" : '')
-        !delegate?node.attributes.remove('Who'):false
-        !context?node.attributes.remove('Where'):false
-        !when?node.attributes.remove('When'):false
-        !priority?node.attributes.remove('Priority'):false
+        !delegate ? node.attributes.removeAll('Who') : false
+        !context ? node.attributes.removeAll('Where') : false
+        !when ? node.attributes.removeAll('When') : false
+        !priority ? node.attributes.removeAll('Priority') : false
 
         GTDMapReader mapReader = GTDMapReader.instance
         if (node.icons.contains(mapReader.iconToday)!=today) {
@@ -115,6 +115,7 @@ class ActionEditor {
     JTextField whenField
     JTextField priorityField
     JCheckBox  doneField
+    JButton doneButton
 
     ActionEditor() {
         SwingBuilder.edtBuilder {
@@ -158,9 +159,10 @@ class ActionEditor {
                         constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
 
                 }
+
                 panel() {
                     boxLayout(axis: BoxLayout.X_AXIS)
-                    cancelButton = button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
+                    button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                             actionPerformed: {
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
