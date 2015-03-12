@@ -81,6 +81,10 @@ class ReportModel {
         return delegates.size()
     }
 
+    Tag createGroupTitle(Tag root, Object title) {
+        root.addContent('h2', title.toString())
+    }
+
     Tag displayNote(Proxy.Node n) {
         if (!showNotes) return null
         if (!(n.noteText || n.detailsText)) return null
@@ -102,7 +106,7 @@ class ReportModel {
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                body.addContent('h2', key)
+                createGroupTitle(body, key)
                 Tag curItem = body.addChild('ul')
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
@@ -137,7 +141,7 @@ class ReportModel {
         naByGroup.each {
             key, value ->
                 if (key) {
-                    body.addContent('h2', key)
+                    createGroupTitle(body, key)
                     Tag curItem = body.addChild('ul')
                     def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                     curGroup.each {
@@ -177,7 +181,7 @@ class ReportModel {
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                body.addContent('h2', key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
+                createGroupTitle(body, key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
                 Tag curItem = body.addChild('ul')
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
@@ -203,7 +207,7 @@ class ReportModel {
         def naByGroup = sortedList.groupBy { it['when'] }
         naByGroup.each {
             key, value ->
-                body.addContent('h2', key)
+                createGroupTitle(body, key)
                 Tag curItem = body.addChild('ul')
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
