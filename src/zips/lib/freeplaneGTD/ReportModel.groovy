@@ -12,7 +12,7 @@ class ReportModel {
     boolean filterDone
     int selPane
     Proxy.Node rootNode
-    def actionList
+    List actionList
     GTDMapReader mapReader
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
@@ -81,53 +81,38 @@ class ReportModel {
         return delegates.size()
     }
 
-    Tag createGroupTitle(Tag root, String title) {
-        root.addContent('h2', title)
-    }
-
-    Tag displayNote(Proxy.Node n) {
-        if (!showNotes) return null
-        if (!(n.noteText || n.detailsText)) return null
-        Tag tag = new Tag('div', [class: 'note'])
-        if (n.detailsText) {
-            tag.addChild('div', [class: 'note']).addPreformatted(n.detailsText)
-        }
-        if (n.noteText) {
-            tag.addChild('div', [class: 'note']).addPreformatted(n.noteText)
-        }
-        return tag
-    }
-
-
-    Tag projectText() {
-        Tag body = new Tag('body')
-        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_project"))
+    Map projectList() {
+        Map retval = [type: 'project']
+        List groups = []
         Map naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                createGroupTitle(body, key)
-                Tag curItem = body.addChild('ul')
+                List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('del')
-                    if (it['priority']) {
-                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                    Map item = [done    : it['done'],
+                                priority: it['priority'],
+                                action  : it['action'],
+                                nodeID  : it['nodeID'],
+                                who     : it['who'],
+                                when    : it['when'],
+                                context : it['context']]
+                    if (showNotes) {
+                        item['details'] = ((Proxy.Node) it['node']).detailsText
+                        item['notes'] = ((Proxy.Node) it['node']).noteText
                     }
-                    wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
-                            (it['who'] ? ' [' + it['who'] + ']' : '') +
-                                    (it['when'] ? ' {' + it['when'] + '}' : '') +
-                                    (it['context'] ? ' @' + it['context'] : ''))
-                    wrap.addContent(displayNote(it['node']) ?: '')
+                    items << item
                 }
+                groups << [title: key, items: items]
         }
-        return body
+        retval['groups'] = groups
+        return retval
     }
 
-    Tag delegateText() {
-        Tag body = new Tag('body')
-        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_who"))
+    Map delegateList() {
+        Map retval = [type: 'who']
+        List groups = []
         Map naByGroupFull = actionList.groupBy { it['who'] }
         Map naByGroup = [:]
         naByGroupFull.each {
@@ -140,39 +125,39 @@ class ReportModel {
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                if (key) {
-                    createGroupTitle(body, key)
-                    Tag curItem = body.addChild('ul')
-                    def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
-                    curGroup.each {
-                        Tag wrap = curItem.addChild('li')
-                        if (it['done']) wrap = wrap.addChild('del')
-                        if (it['priority']) {
-                            wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
-                        }
-                        wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
-                                (it['when'] ? ' {' + it['when'] + '}' : '') +
-                                        (it['context'] ? ' @' + it['context'] : '') +
-                                        ' for ' + it['project'])
-                        wrap.addContent(displayNote(it['node']) ?: '')
+                List<Map> items = []
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                curGroup.each {
+                    Map item = [done    : it['done'],
+                                priority: it['priority'],
+                                action  : it['action'],
+                                nodeId  : it['nodeId'],
+                                when    : it['when'],
+                                context : it['context'],
+                                project : it['project']]
+                    if (showNotes) {
+                        item['details'] = it['details']
+                        item['notes'] = it['notes']
                     }
+                    items << item
                 }
+                groups << [title: key, items: items]
         }
-        return body
+        retval['groups'] = groups
+        return retval
     }
 
-    Tag contextText() {
-        Tag body = new Tag('body')
-        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_context"))
+    Map contextList() {
+        Map retval = [type: 'context']
+        List groups = []
         Map naByGroupFull = actionList.groupBy { it['context'] }
-
         Map naByGroup = [:]
         naByGroupFull.each {
             key, value ->
                 if (!key) {
                     naByGroup.put(key, value)
                 } else {
-                    def keyList = key.split(',')
+                    def keyList = key?.split(',')
                     keyList.each {
                         naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
                     }
@@ -181,48 +166,54 @@ class ReportModel {
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
-                createGroupTitle(body, key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"))
-                Tag curItem = body.addChild('ul')
+                List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('del')
-                    if (it['priority']) {
-                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                    Map item = [done    : it['done'],
+                                priority: it['priority'],
+                                action  : it['action'],
+                                nodeId  : it['nodeId'],
+                                when    : it['when'],
+                                who     : it['who'],
+                                project : it['project']]
+                    if (showNotes) {
+                        item['details'] = it['details']
+                        item['notes'] = it['notes']
                     }
-                    wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
-                            (it['who'] ? ' [' + it['who'] + ']' : '') +
-                                    (it['when'] ? ' {' + it['when'] + '}' : '') +
-                                    ' for ' + it['project'])
-                    wrap.addContent(displayNote(it['node']) ?: '')
+                    items << item
                 }
+                groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
         }
-        return body
+        retval['groups'] = groups
+        return retval
     }
 
-    Tag timelineText() {
-        Tag body = new Tag('body')
-        body.addContent('h1', TextUtils.getText("freeplaneGTD_view_when"))
+    Map timelineList() {
+        Map retval = [type: 'when']
+        List groups = []
         def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
         def naByGroup = sortedList.groupBy { it['when'] }
         naByGroup.each {
             key, value ->
-                createGroupTitle(body, key)
-                Tag curItem = body.addChild('ul')
+                List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Tag wrap = curItem.addChild('li')
-                    if (it['done']) wrap = wrap.addChild('del')
-                    if (it['priority']) {
-                        wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                    Map item = [done    : it['done'],
+                                priority: it['priority'],
+                                action  : it['action'],
+                                nodeId  : it['nodeId'],
+                                who     : it['who'],
+                                project : it['project'],
+                                context : it['context']]
+                    if (showNotes) {
+                        item['details'] = it['details']
+                        item['notes'] = it['notes']
                     }
-                    wrap.addContent('a', it['action'], [href: it['nodeID']]).addContent(
-                            (it['who'] ? ' [' + it['who'] + ']' : '') +
-                                    (it['context'] ? ' @' + it['context'] : '') +
-                                    ' for ' + it['project'])
-                    wrap.addContent(displayNote(it['node']) ?: '')
+                    items << item
                 }
+                groups << [title: key, items: items]
         }
-        return body
+        retval['groups'] = groups
+        return retval
     }
 }

@@ -1,5 +1,7 @@
 package freeplaneGTD
 
+import org.freeplane.core.util.TextUtils
+
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
@@ -53,62 +55,56 @@ class ClipBoardUtil {
         }
     }
 
-    static Transferable createTransferable(Tag content) {
+    static Transferable createTransferable(Map content) {
         return new MyTransferable(extractText(content), extractHtml(content));
     }
 
-    static String extractText(Tag content) {
+    static String extractText(Map content) {
         def list = []
-        assert content.tagName == 'body'
-        assert content.content[0].tagName == 'h1'
-        list << (String) ((Tag) content.content[0]).content[0]
-        for (int i = 1; i < content.content.size(); i += 2) {
-            Tag title = content.content[i]
-            Tag actions = content.content[i + 1]
-            assert title.tagName == 'h2'
-            assert actions.tagName == 'ul'
-            list << '\t' + (String) title.content[0]
-            actions.content.each {
-                Tag curTag = (Tag) it
-                assert curTag.tagName == 'li'
-                if (((Tag) curTag.content[0]).tagName == 'del') curTag = (Tag) curTag.content[0]
-                int ptr = 0
-                String priority, action, trail
-                if (((Tag) curTag.content[ptr]).tagName == 'span') {
-                    priority = ((Tag) curTag.content[ptr]).content[0]; ptr++
-                }
-                if (((Tag) curTag.content[ptr]).tagName == 'a') {
-                    action = ((Tag) (curTag.content[ptr])).content[0]; ptr++
-                }
-                if (curTag.content.size() > ptr) {
-                    trail = curTag.content[ptr]
-                }
-                list << '\t\t*' + (priority ? ' #' + priority : '') + ' ' + action + (trail ?: '')
+        list << TextUtils.getText('freeplaneGTD_view_' + content['type'])
+        content['groups'].each {
+            list << '\t' + it['title']
+            it['items'].each {
+                list << '\t\t*' + (it['priority'] ? ' #' + it['priority'] : '') + ' ' + it['action'] +
+                        (it['who'] ? ' [' + it['who'] + ']' : '') +
+                        (it['when'] ? ' {' + it['when'] + '}' : '') +
+                        (it['context'] ? ' @' + it['context'] : '') +
+                        (it['project'] ? ' for ' + it['project'] : '')
             }
         }
         return list.join('\n');
     }
 
-    static String extractHtml(String source) {
-        return source
-    }
-
-    static String extractHtml(Tag source) {
-        String retval = ''
-        if (source.tagName.equalsIgnoreCase('a')) {
-            source.content.each { retval += it instanceof Tag ? extractHtml((Tag) it) : extractHtml((String) it) }
-        } else {
-            retval = '<' + source.tagName
-            source.params.each {
-                retval += ' ' + it.key + '=\'' + it.value + '\''
+    static String extractHtml(Map list) {
+        Tag body = new Tag('body')
+        body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
+        list['groups'].each {
+            body.addContent('h2', it['title'])
+            Tag curItem = body.addChild('ul')
+            it['items'].each {
+                Tag wrap = curItem.addChild('li')
+                if (it['done']) wrap = wrap.addChild('del')
+                if (it['priority']) {
+                    wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                }
+                wrap.addContent(it['action'] +
+                        (it['who'] ? ' [' + it['who'] + ']' : '') +
+                        (it['when'] ? ' {' + it['when'] + '}' : '') +
+                        (it['context'] ? ' @' + it['context'] : '') +
+                        (it['project'] ? ' for ' + it['project'] : ''))
+                if (it['details'] || it['notes']) {
+                    Tag tag = new Tag('div', [class: 'note'])
+                    if (it['details']) {
+                        tag.addChild('div', [class: 'details']).addPreformatted(it['details'])
+                    }
+                    if (it['notes']) {
+                        tag.addChild('div', [class: 'note']).addPreformatted(it['notes'])
+                    }
+                    wrap.addContent(tag)
+                }
             }
-            retval += '>'
-            source.content.each {
-                retval += it instanceof Tag ? extractHtml((Tag) it) : extractHtml((String) it)
-            }
-            retval += '</' + source.tagName + '>'
         }
-        return retval
+        return body.toString()
     }
 }
 

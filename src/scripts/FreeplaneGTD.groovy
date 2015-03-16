@@ -43,7 +43,7 @@ import java.awt.event.MouseEvent
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.3'
+String txtVer = '1.4'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 def panelTitle = { panelT, count = null ->
@@ -56,7 +56,7 @@ def panelTitle = { panelT, count = null ->
 }
 ReportModel report = new ReportModel(node.map.root)
 
-String wrapContent(Tag content) {
+String formatList(Map list) {
     Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
     Tag head = html.addChild('head')
     head.addContent('style',
@@ -79,16 +79,47 @@ String wrapContent(Tag content) {
                     '/*]]>*/',
             [type: 'text/css'])
     head.addChild('title')
-    html.addContent(content)
+    Tag body = new Tag('body')
+    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
+    list['groups'].each {
+        body.addContent('h2', it['title'])
+        body.addChild('div', [class: 'buttons']).
+                addContent('a', TextUtils.getText("freeplaneGTD.button.copy"),
+                        [href: 'copy:' + list['title'] + '/' + it['title']])
+        Tag curItem = body.addChild('ul')
+        it['items'].each {
+            Tag wrap = curItem.addChild('li')
+            if (it['done']) wrap = wrap.addChild('del')
+            if (it['priority']) {
+                wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+            }
+            wrap.addContent('a', it['action'], [href: 'link:' + it['nodeID']]).addContent(
+                    (it['who'] ? ' [' + it['who'] + ']' : '') +
+                            (it['when'] ? ' {' + it['when'] + '}' : '') +
+                            (it['context'] ? ' @' + it['context'] : '') +
+                            (it['project'] ? ' for ' + it['project'] : ''))
+            if (it['details'] || it['notes']) {
+                Tag tag = new Tag('div', [class: 'note'])
+                if (it['details']) {
+                    tag.addChild('div', [class: 'details']).addPreformatted(it['details'])
+                }
+                if (it['notes']) {
+                    tag.addChild('div', [class: 'note']).addPreformatted(it['notes'])
+                }
+                wrap.addContent(tag)
+            }
+        }
+    }
+    html.addContent(body)
     return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' + html.toString()
 }
 
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(wrapContent(report.projectText()), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(wrapContent(report.delegateText()), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(wrapContent(report.contextText()), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(wrapContent(report.timelineText()), null, new XhtmlNamespaceHandler())
+    projectPane.setDocumentFromString(formatList(report.projectList()), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(formatList(report.delegateList()), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(formatList(report.contextList()), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(formatList(report.timelineList()), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -167,11 +198,11 @@ SwingBuilder.edtBuilder {
                         Clipboard clip = projectPanel.getToolkit().getSystemClipboard();
                         if (clip != null) {
                             switch (report.selPane) {
-                                case 0: curContent = report.projectText(); break;
-                                case 1: curContent = report.delegateText(); break;
-                                case 2: curContent = report.contextText(); break;
-                                case 3: curContent = report.timelineText(); break;
-                                default: curContent = report.projectText(); break;
+                                case 0: curContent = report.projectList(); break;
+                                case 1: curContent = report.delegateList(); break;
+                                case 2: curContent = report.contextList(); break;
+                                case 3: curContent = report.timelineList(); break;
+                                default: curContent = report.projectList(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent), null)
                         }
@@ -207,9 +238,11 @@ SwingBuilder.edtBuilder {
                     if (Desktop.isDesktopSupported()) {
                         try {
                             Desktop.getDesktop().browse(uriLink);
-                        } catch (IOException e) { /* TODO: error handling */
+                        } catch (IOException e) {
+                            UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
                         }
-                    } else { /* TODO: error handling */
+                    } else {
+                        UITools.informationMessage('Error opening link: Desktop is not supported')
                     }
                 }
             })
@@ -230,19 +263,34 @@ class NodeLink extends LinkListener {
     }
 
     public void linkClicked(BasicPanel panel, String uri) {
-        String linkNodeID = uri;
-        def nodesFound = ctrl.find { it.nodeID == linkNodeID };
+        if (uri.startsWith('copy:')) {
 
-        if (nodesFound[0] != null) {
-            FoldToTop(nodesFound[0]);
-            UnfoldBranch(nodesFound[0]);
-            ctrl.select(nodesFound[0]);
-            ctrl.centerOnNode(nodesFound[0]);
-            ctrl.centerOnNode(nodesFound[0]);
-            frame.dispose()
-            frame.visible=false
+        } else if (uri.startsWith('link:')) {
+            String linkNodeID = uri.substring(5)
+            def nodesFound = ctrl.find { it.nodeID == linkNodeID }
+
+            if (nodesFound[0] != null) {
+                FoldToTop(nodesFound[0])
+                UnfoldBranch(nodesFound[0])
+                ctrl.select(nodesFound[0])
+                ctrl.centerOnNode(nodesFound[0])
+                ctrl.centerOnNode(nodesFound[0])
+                frame.dispose()
+                frame.visible = false
+            } else {
+                UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
+            }
         } else {
-            UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
+            URI uriLink = new URI(uri);
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(uriLink);
+                } catch (IOException e) {
+                    UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
+                }
+            } else {
+                UITools.informationMessage('Error opening link: Desktop is not supported')
+            }
         }
     }
 
