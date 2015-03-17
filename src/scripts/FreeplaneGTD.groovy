@@ -75,21 +75,23 @@ String formatList(Map list) {
                     '.priority-7 {background-color: rgb(102,189,99);}\n' +
                     '.priority-8 {background-color: rgb(26,152,80);}\n' +
                     '.priority-9 {background-color: rgb(16,82,50);}' +
-                    '.note {background-color: rgb(240,250,240);font-size:10pt}' +
+                    '.details {background-color: rgb(240,250,240);font-size:10pt}' +
+                    '.note {background-color: rgb(250,250,240);font-size:10pt}' +
+                    '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
             [type: 'text/css'])
     head.addChild('title')
     Tag body = new Tag('body')
     body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
-    list['groups'].each {
-        body.addContent('h2', it['title'])
+    list['groups'].eachWithIndex { it, index ->
         body.addChild('div', [class: 'buttons']).
                 addContent('a', TextUtils.getText("freeplaneGTD.button.copy"),
-                        [href: 'copy:' + list['title'] + '/' + it['title']])
+                        [href: 'copy:' + index])
+        body.addContent('h2', it['title'])
         Tag curItem = body.addChild('ul')
         it['items'].each {
             Tag wrap = curItem.addChild('li')
-            if (it['done']) wrap = wrap.addChild('del')
+            if (it['done']) wrap.params = [style: 'text-decoration: line-through']
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
             }
@@ -99,14 +101,12 @@ String formatList(Map list) {
                             (it['context'] ? ' @' + it['context'] : '') +
                             (it['project'] ? ' for ' + it['project'] : ''))
             if (it['details'] || it['notes']) {
-                Tag tag = new Tag('div', [class: 'note'])
                 if (it['details']) {
-                    tag.addChild('div', [class: 'details']).addPreformatted(it['details'])
+                    wrap.addChild('div', [class: 'details']).addPreformatted(it['details'])
                 }
                 if (it['notes']) {
-                    tag.addChild('div', [class: 'note']).addPreformatted(it['notes'])
+                    wrap.addChild('div', [class: 'note']).addPreformatted(it['notes'])
                 }
-                wrap.addContent(tag)
             }
         }
     }
@@ -255,16 +255,28 @@ SwingBuilder.edtBuilder {
 class NodeLink extends LinkListener {
     Proxy.Controller ctrl
     JFrame frame
+    ReportModel report
 
-    NodeLink(Proxy.Controller ctrl, JFrame frame) {
+    NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report) {
         this.ctrl = ctrl
         this.frame = frame
-
+        this.report = report
     }
 
     public void linkClicked(BasicPanel panel, String uri) {
         if (uri.startsWith('copy:')) {
-
+            int pos = uri.substring(5).toInteger()
+            Map feeder
+            Clipboard clip = panel.getToolkit().getSystemClipboard();
+            if (clip != null) {
+                switch (report.selPane) {
+                    case 0: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
+                    case 1: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
+                    case 2: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
+                    case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+                }
+                clip.setContents(ClipBoardUtil.createTransferable(feeder), null)
+            }
         } else if (uri.startsWith('link:')) {
             String linkNodeID = uri.substring(5)
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
@@ -315,7 +327,7 @@ class NodeLink extends LinkListener {
 
 }
 
-NodeLink nl = new NodeLink(c, mainFrame)
+NodeLink nl = new NodeLink(c, mainFrame, report)
 projectPane.getMouseTrackingListeners().each {
     if (it instanceof LinkListener) {
         projectPane.removeMouseTrackingListener(it)

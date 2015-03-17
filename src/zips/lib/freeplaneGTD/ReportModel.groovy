@@ -136,8 +136,8 @@ class ReportModel {
                                 context : it['context'],
                                 project : it['project']]
                     if (showNotes) {
-                        item['details'] = it['details']
-                        item['notes'] = it['notes']
+                        item['details'] = ((Proxy.Node) it['node']).detailsText
+                        item['notes'] = ((Proxy.Node) it['node']).noteText
                     }
                     items << item
                 }
@@ -177,8 +177,8 @@ class ReportModel {
                                 who     : it['who'],
                                 project : it['project']]
                     if (showNotes) {
-                        item['details'] = it['details']
-                        item['notes'] = it['notes']
+                        item['details'] = ((Proxy.Node) it['node']).detailsText
+                        item['notes'] = ((Proxy.Node) it['node']).noteText
                     }
                     items << item
                 }
@@ -206,8 +206,8 @@ class ReportModel {
                                 project : it['project'],
                                 context : it['context']]
                     if (showNotes) {
-                        item['details'] = it['details']
-                        item['notes'] = it['notes']
+                        item['details'] = ((Proxy.Node) it['node']).detailsText
+                        item['notes'] = ((Proxy.Node) it['node']).noteText
                     }
                     items << item
                 }

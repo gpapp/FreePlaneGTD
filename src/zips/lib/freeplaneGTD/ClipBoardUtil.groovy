@@ -83,9 +83,9 @@ class ClipBoardUtil {
             Tag curItem = body.addChild('ul')
             it['items'].each {
                 Tag wrap = curItem.addChild('li')
-                if (it['done']) wrap = wrap.addChild('del')
+                if (it['done']) wrap.params = [style: 'text-decoration: line-through']
                 if (it['priority']) {
-                    wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                    wrap = wrap.addContent('span', it['priority'] + ' ', [style: 'color:red'])
                 }
                 wrap.addContent(it['action'] +
                         (it['who'] ? ' [' + it['who'] + ']' : '') +
@@ -93,12 +93,12 @@ class ClipBoardUtil {
                         (it['context'] ? ' @' + it['context'] : '') +
                         (it['project'] ? ' for ' + it['project'] : ''))
                 if (it['details'] || it['notes']) {
-                    Tag tag = new Tag('div', [class: 'note'])
+                    Tag tag = new Tag('div',)
                     if (it['details']) {
-                        tag.addChild('div', [class: 'details']).addPreformatted(it['details'])
+                        tag.addChild('div', [style: 'background-color: rgb(240,250,240);font-size:10pt']).addPreformatted(it['details'])
                     }
                     if (it['notes']) {
-                        tag.addChild('div', [class: 'note']).addPreformatted(it['notes'])
+                        tag.addChild('div', [style: 'background-color: rgb(250,250,240);font-size:10pt']).addPreformatted(it['notes'])
                     }
                     wrap.addContent(tag)
                 }
