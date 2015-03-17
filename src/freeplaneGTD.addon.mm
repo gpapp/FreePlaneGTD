@@ -270,7 +270,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1426030643797" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1426554975390" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -301,6 +301,7 @@
 <attribute NAME="freeplaneGTD.button.filter_done" VALUE="Filter done"/>
 <attribute NAME="freeplaneGTD.button.show_notes" VALUE="Display notes"/>
 <attribute NAME="freeplaneGTD.button.done" VALUE="Done"/>
+<attribute NAME="freeplaneGTD.button.select" VALUE="Select nodes"/>
 <attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Unassigned"/>
 <attribute NAME="freeplaneGTD.view.when.today" VALUE="Today"/>
 <attribute NAME="freeplaneGTD.view.when.this_week" VALUE="This week"/>
@@ -312,9 +313,10 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Today"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Done"/>
+<attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selection copied to clipboard."/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1426030677055" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1426555018859" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend\u0151k"/>
@@ -344,6 +346,7 @@
 <attribute NAME="freeplaneGTD.button.filter_done" VALUE="Lez\u00E1rtak sz\u0171r\u00E9se"/>
 <attribute NAME="freeplaneGTD.button.show_notes" VALUE="Jegyzetek megjelen&#xed;t&#xe9;se"/>
 <attribute NAME="freeplaneGTD.button.done" VALUE="Ok"/>
+<attribute NAME="freeplaneGTD.button.select" VALUE="Elemek kiv&#xe1;laszt&#xe1;sa"/>
 <attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Kontextus n\u00E9lk\u00FCl"/>
 <attribute NAME="freeplaneGTD.view.when.today" VALUE="Ma"/>
 <attribute NAME="freeplaneGTD.view.when.this_week" VALUE="Ezen a h\u00E9ten"/>
@@ -355,6 +358,7 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Ma"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe1;s"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="K\u00E9sz"/>
+<attribute NAME="freeplaneGTD.message.copy_ok" VALUE="V&#xe1;lasztott elemek a v&#xe1;g&#xf3;lapra m&#xe1;solva."/>
 <edge COLOR="#999999"/>
 </node>
 </node>

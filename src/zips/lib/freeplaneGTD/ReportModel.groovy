@@ -131,7 +131,7 @@ class ReportModel {
                     Map item = [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
-                                nodeId  : it['nodeId'],
+                                nodeID: it['nodeID'],
                                 when    : it['when'],
                                 context : it['context'],
                                 project : it['project']]
@@ -172,7 +172,7 @@ class ReportModel {
                     Map item = [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
-                                nodeId  : it['nodeId'],
+                                nodeID: it['nodeID'],
                                 when    : it['when'],
                                 who     : it['who'],
                                 project : it['project']]
@@ -201,7 +201,7 @@ class ReportModel {
                     Map item = [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
-                                nodeId  : it['nodeId'],
+                                nodeID: it['nodeID'],
                                 who     : it['who'],
                                 project : it['project'],
                                 context : it['context']]

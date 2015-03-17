@@ -40,6 +40,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.util.List
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
@@ -85,8 +86,9 @@ String formatList(Map list) {
     body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
     list['groups'].eachWithIndex { it, index ->
         body.addChild('div', [class: 'buttons']).
-                addContent('a', TextUtils.getText("freeplaneGTD.button.copy"),
-                        [href: 'copy:' + index])
+                addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
+                addContent('|').
+                addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
         body.addContent('h2', it['title'])
         Tag curItem = body.addChild('ul')
         it['items'].each {
@@ -205,6 +207,7 @@ SwingBuilder.edtBuilder {
                                 default: curContent = report.projectList(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent), null)
+                            UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                         }
                     })
             button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
@@ -239,7 +242,7 @@ SwingBuilder.edtBuilder {
                         try {
                             Desktop.getDesktop().browse(uriLink);
                         } catch (IOException e) {
-                            UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
+                            UITools.informationMessage('Cannot open link ' + txtURI + ' in browser: ' + e.message)
                         }
                     } else {
                         UITools.informationMessage('Error opening link: Desktop is not supported')
@@ -276,7 +279,31 @@ class NodeLink extends LinkListener {
                     case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                 }
                 clip.setContents(ClipBoardUtil.createTransferable(feeder), null)
+                UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
             }
+        } else if (uri.startsWith('select:')) {
+            int pos = uri.substring(7).toInteger()
+            List list
+            switch (report.selPane) {
+                case 0: list = report.projectList()['groups'][pos]['items']; break;
+                case 1: list = report.delegateList()['groups'][pos]['items']; break;
+                case 2: list = report.contextList()['groups'][pos]['items']; break;
+                case 3: list = report.timelineList()['groups'][pos]['items']; break;
+            }
+            List ids = list.collect { it['nodeID'] }
+            def nodesFound = ctrl.find { ids.contains(it.nodeID) }
+            if (nodesFound.size() > 0) {
+                FoldToTop(nodesFound[0])
+                nodesFound.each {
+                    UnfoldBranch(it)
+                }
+                ctrl.selectMultipleNodes(nodesFound)
+                frame.dispose()
+                frame.visible = false
+            } else {
+                UITools.informationMessage("Error finding selection");
+            }
+
         } else if (uri.startsWith('link:')) {
             String linkNodeID = uri.substring(5)
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
