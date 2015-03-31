@@ -42,12 +42,12 @@ class ReportModel {
         return ad <=> bd
     }
     def taskSortComparator = { a, b ->
-        if ((!a['priority'] && !b['priority']) || a['priority'].equals(b['priority'])) {
+        def ap = a['priority'] ?: '5'
+        def bp = b['priority'] ?: '5'
+        if ((!ap && !bp) || ap.equals(bp)) {
             return taskDateComparator(a, b)
         }
-        if (!a['priority']) return 1
-        if (!b['priority']) return -1
-        return a['priority'] <=> b['priority']
+        return ap <=> bp
     }
 
 
