@@ -50,8 +50,8 @@ class ActionEditorModel {
             return false
         }
         action=node.text
-        delegate=node.attributes['Who']
-        context=node.attributes['Where']
+        delegate = node.attributes['Who']?.replaceAll(',', ', ')
+        context = node.attributes['Where']?.replaceAll(',', ', ')
         today=node.icons.contains(GTDMapReader.instance.iconToday)
         when=node.attributes['When']
         priority=node.attributes['Priority']
