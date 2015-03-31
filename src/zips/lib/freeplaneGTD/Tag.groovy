@@ -22,7 +22,7 @@ package freeplaneGTD
 class Tag {
     String tagName
     def content = []
-    def params = []
+    Map params = [:]
 
     Tag(tagName, Map params = null) {
         this.tagName = tagName
@@ -51,9 +51,12 @@ class Tag {
         }
     }
 
-    Tag addContent(Object content) {
+    Tag addContent(Object content, Map params = null) {
         // Very simple sanitation for HTML entities <> here!
         this.content.push(content.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'))
+        if (params) {
+            this.params = params
+        }
         return this
     }
 
@@ -68,23 +71,20 @@ class Tag {
         return this
     }
 
-    Tag addContent(tagName, Object content, params = null) {
+    Tag addContent(tagName, Object content, Map params = null) {
         Tag tag = new Tag(tagName, content, params)
         this.content.push(tag)
         return this
     }
 
-    Tag addContent(tagName, Tag content, params = null) {
-        Tag tag = new Tag(tagName, content, params)
-        this.content.push(tag)
-        return this
-    }
-
-    Tag addChild(tagName, params = null) {
-        Tag tag = new Tag(tagName)
-        tag.params = params
+    Tag addChild(tagName, Map params = null) {
+        Tag tag = new Tag(tagName, params)
         this.content.push(tag)
         return tag
+    }
+
+    Tag addProperty(String key, String value) {
+        params.put(key, value)
     }
 
     String toString() {
@@ -99,5 +99,6 @@ class Tag {
         retval += '</' + tagName + '>'
         return retval
     }
+
 }
 

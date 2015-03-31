@@ -30,7 +30,7 @@ class ClipBoardUtilTest extends GroovyTestCase {
             assert 'Title\n' +
                     '\tGroup1\n' +
                     '\t\t* item1\n' +
-                    '\t\t* item2 [who] {when} @context for project' == ClipBoardUtil.extractText([type: 'test_type', groups: [
+                    '\t\t* item2 [who] {when} for project @context' == ClipBoardUtil.extractText([type: 'test_type', groups: [
                     [title: 'Group1',
                      items: [[action: 'item1', nodeID: '1234'],
                              [action: 'item2', nodeID: '1234', who: 'who', when: 'when', context: 'context', project: 'project']]]]])
@@ -55,7 +55,7 @@ class ClipBoardUtilTest extends GroovyTestCase {
         }
         mockReportModel.demand.getText { 'Title' }
         mockReportModel.use {
-            assert '<body><h1>Title</h1><h2>Group1</h2><ul><li>item1</li><li>item2 [who] {when} @context for project</li></ul></body>' == ClipBoardUtil.extractHtml([type: 'test_type', groups: [
+            assert '<body><h1>Title</h1><h2>Group1</h2><ul><li>item1</li><li>item2 [who] {when} for project @context</li></ul></body>' == ClipBoardUtil.extractHtml([type: 'test_type', groups: [
                     [title: 'Group1',
                      items: [[action: 'item1', nodeID: '1234'],
                              [action: 'item2', nodeID: '1234', who: 'who', when: 'when', context: 'context', project: 'project']]]]])

@@ -1,6 +1,8 @@
 package freeplaneGTD
 
 import org.freeplane.core.util.TextUtils
+import org.freeplane.features.format.FormattedDate
+import org.freeplane.features.format.FormattedNumber
 
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
@@ -10,23 +12,18 @@ class ClipBoardUtil {
 
     static class MyTransferable implements Transferable {
 
-        private static final DataFlavor[] supportedFlavors
+        private static final DataFlavor[] supportedFlavors = [
+                new DataFlavor("text/freeplane-nodes; class=java.lang.String"),
+                new DataFlavor('text/html; class=java.lang.String'),
+                new DataFlavor('text/plain; class=java.lang.String'),
+        ]
 
-        static {
-            try {
-                supportedFlavors = [
-                        new DataFlavor('text/plain;class=java.lang.String'),
-                        new DataFlavor('text/html;class=java.lang.String')
-                ];
-            } catch (ClassNotFoundException e) {
-                throw new ExceptionInInitializerError(e);
-            }
-        }
-
+        private final String freeplaneData;
         private final String plainData;
         private final String htmlData;
 
-        public MyTransferable(String plainData, String htmlData) {
+        public MyTransferable(String freeplaneData, String plainData, String htmlData) {
+            this.freeplaneData = freeplaneData;
             this.plainData = plainData;
             this.htmlData = htmlData;
         }
@@ -46,17 +43,61 @@ class ClipBoardUtil {
 
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
             if (flavor.equals(supportedFlavors[0])) {
-                return plainData;
+                return freeplaneData;
             }
             if (flavor.equals(supportedFlavors[1])) {
-                return htmlData;
+                return htmlData
+            }
+            if (flavor.equals(supportedFlavors[2])) {
+                return plainData
             }
             throw new UnsupportedFlavorException(flavor);
         }
     }
 
-    static Transferable createTransferable(Map content) {
-        return new MyTransferable(extractText(content), extractHtml(content));
+    static Transferable createTransferable(Map content, GTDMapReader reader) {
+        return new MyTransferable(
+                extractFreeplane(content, reader),
+                extractText(content),
+                extractHtml(content));
+    }
+
+    static String contextsToList(String context) {
+        String[] list = context.split(',')
+        return ' @' + list.join(' @')
+    }
+
+    static String extractFreeplane(Map content, GTDMapReader reader) {
+        Tag body = new Tag('node', [TEXT: TextUtils.getText('freeplaneGTD_view_' + content['type'])])
+        content['groups'].each {
+            Tag curItem = body.addChild('node', [TEXT: it['title']])
+            it['items'].each {
+                Tag node = curItem.addChild('node', [TEXT: it['action']])
+                node.addChild('icon', [BUILTIN: reader.iconNextAction])
+                it['done'] ? node.addChild('icon', [BUILTIN: reader.iconDone]) : false
+                it['context'] ? node.addChild('attribute', [NAME: 'Where', VALUE: it['context']]) : false
+                if (it['when']) {
+                    Tag attr = node.addChild('attribute', [
+                            NAME : 'When',
+                            VALUE: it['when']])
+                    if (it['when'] instanceof FormattedDate) {
+                        attr.addProperty('OBJECT', 'org.freeplane.features.format.FormattedDate|' + it['when'] + '|yyyy-MM-dd')
+                    }
+                }
+                it['who'] ? node.addChild('attribute', [NAME: 'Who', VALUE: it['who']]) : false
+                if (it['priority']) {
+                    Tag attr = node.addChild('attribute', [NAME : 'Priority',
+                                                           VALUE: it['priority']
+                    ])
+                    if (it['property'] instanceof FormattedNumber) {
+                        attr.addProperty('OBJECT', 'org.freeplane.features.format.FormattedNumber|' + it['priority'])
+                    }
+                }
+                it['details'] ? node.addChild('richcontent', [TYPE: 'DETAILS']).addPreformatted((String) it['details']) : false
+                it['notes'] ? node.addChild('richcontent', [TYPE: 'NOTE']).addPreformatted((String) it['notes']) : false
+            }
+        }
+        return body.toString()
     }
 
     static String extractText(Map content) {
@@ -68,17 +109,17 @@ class ClipBoardUtil {
                 list << '\t\t*' + (it['priority'] ? ' #' + it['priority'] : '') + ' ' + it['action'] +
                         (it['who'] ? ' [' + it['who'] + ']' : '') +
                         (it['when'] ? ' {' + it['when'] + '}' : '') +
-                        (it['context'] ? ' @' + it['context'] : '') +
-                        (it['project'] ? ' for ' + it['project'] : '')
+                        (it['project'] ? ' for ' + it['project'] : '') +
+                        (it['context'] ? contextsToList((String) it['context']) : '')
             }
         }
         return list.join('\n');
     }
 
-    static String extractHtml(Map list) {
+    static String extractHtml(Map content) {
         Tag body = new Tag('body')
-        body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
-        list['groups'].each {
+        body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + content['type']))
+        content['groups'].each {
             body.addContent('h2', it['title'])
             Tag curItem = body.addChild('ul')
             it['items'].each {
@@ -90,15 +131,16 @@ class ClipBoardUtil {
                 wrap.addContent(it['action'] +
                         (it['who'] ? ' [' + it['who'] + ']' : '') +
                         (it['when'] ? ' {' + it['when'] + '}' : '') +
-                        (it['context'] ? ' @' + it['context'] : '') +
-                        (it['project'] ? ' for ' + it['project'] : ''))
+                        (it['project'] ? ' for ' + it['project'] : '') +
+                        (it['context'] ? contextsToList((String) it['context']) : '')
+                )
                 if (it['details'] || it['notes']) {
                     Tag tag = new Tag('div',)
                     if (it['details']) {
-                        tag.addChild('div', [style: 'background-color: rgb(240,250,240);font-size:10pt']).addPreformatted(it['details'])
+                        tag.addChild('div', [style: 'background-color: rgb(240,250,240);font-size:10pt']).addPreformatted((String) it['details'])
                     }
                     if (it['notes']) {
-                        tag.addChild('div', [style: 'background-color: rgb(250,250,240);font-size:10pt']).addPreformatted(it['notes'])
+                        tag.addChild('div', [style: 'background-color: rgb(250,250,240);font-size:10pt']).addPreformatted((String) it['notes'])
                     }
                     wrap.addContent(tag)
                 }

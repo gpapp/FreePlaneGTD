@@ -44,7 +44,7 @@ import java.util.List
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.4'
+String txtVer = '1.5'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 def panelTitle = { panelT, count = null ->
@@ -206,7 +206,7 @@ SwingBuilder.edtBuilder {
                                 case 3: curContent = report.timelineList(); break;
                                 default: curContent = report.projectList(); break;
                             }
-                            clip.setContents(ClipBoardUtil.createTransferable(curContent), null)
+                            clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader), null)
                             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                         }
                     })
@@ -278,7 +278,7 @@ class NodeLink extends LinkListener {
                     case 2: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
                     case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                 }
-                clip.setContents(ClipBoardUtil.createTransferable(feeder), null)
+                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader), null)
                 UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
             }
         } else if (uri.startsWith('select:')) {

@@ -60,11 +60,13 @@ class ActionEditorModel {
     }
 
     void updateNode() {
+        localContext = ' @' + (context.split(',')).join(' @')
         node.text = "* $action " +
-                (context?.trim() ? "@$context" : '') +
+                (context?.trim() ? "$localContext" : '') +
                 (delegate?.trim() ? "[$delegate]" : '') +
                 (when?.trim() ? "{$when}" : '') +
                 (priority?.trim() ? "#$priority" : '')
+
         !delegate ? node.attributes.removeAll('Who') : false
         !context ? node.attributes.removeAll('Where') : false
         !when ? node.attributes.removeAll('When') : false
