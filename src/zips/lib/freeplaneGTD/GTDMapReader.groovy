@@ -284,10 +284,7 @@ class GTDMapReader {
         String toParse = nodeText
         def delegates = []
         while (toParse.matches('^.*\\[([^\\]]*)\\].*$')) {
-            def strings = toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').split(',')
-            strings.each {
-                delegates << it.trim()
-            }
+            def strings = toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').split(',')*.trim()
             toParse = toParse.replaceFirst('\\s*\\[[^\\]]*\\]\\s*', ' ').trim()
         }
         if (delegates) {
@@ -302,7 +299,7 @@ class GTDMapReader {
             toParse = toParse.replaceAll('#\\d', '').trim()
         }
         def contexts = []
-        while (toParse.indexOf('@') >= 0) {
+        while (toParse =~ '^[^@]*@([^@\\s\\*]+).*') {
             contexts << toParse.replaceFirst('^[^@]*@([^@\\s\\*]+).*', '$1').trim()
             toParse = toParse.replaceFirst('\\s*@[^@\\s\\*]+\\s*', ' ').trim()
         }

@@ -60,7 +60,7 @@ class ActionEditorModel {
     }
 
     void updateNode() {
-        localContext = ' @' + (context.split(',')).join(' @')
+        String localContext = ' @' + (context.split(',')*.trim()).join(' @')
         node.text = "* $action " +
                 (context?.trim() ? "$localContext" : '') +
                 (delegate?.trim() ? "[$delegate]" : '') +

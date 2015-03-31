@@ -47,6 +47,8 @@ String userPath = c.userDirectory.toString()
 String txtVer = '1.5'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
+JFrame mainFrame
+
 def panelTitle = { panelT, count = null ->
     Tag tag = new Tag('html')
     Tag innerChild = tag.addChild('body', [height: '50']).addChild('div', [style: 'font-weight:bold;font-style:italic'])
@@ -57,7 +59,7 @@ def panelTitle = { panelT, count = null ->
 }
 ReportModel report = new ReportModel(node.map.root)
 
-String formatList(Map list) {
+String formatList(Map list,boolean showNotes) {
     Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
     Tag head = html.addChild('head')
     head.addContent('style',
@@ -102,12 +104,12 @@ String formatList(Map list) {
                             (it['when'] ? ' {' + it['when'] + '}' : '') +
                             (it['context'] ? ' @' + it['context'] : '') +
                             (it['project'] ? ' for ' + it['project'] : ''))
-            if (it['details'] || it['notes']) {
+            if (showNotes) {
                 if (it['details']) {
-                    wrap.addChild('div', [class: 'details']).addPreformatted(it['details'])
+                    wrap.addChild('div', [class: 'details']).addPreformatted((String)it['details'])
                 }
                 if (it['notes']) {
-                    wrap.addChild('div', [class: 'note']).addPreformatted(it['notes'])
+                    wrap.addChild('div', [class: 'note']).addPreformatted((String)it['notes'])
                 }
             }
         }
@@ -118,10 +120,10 @@ String formatList(Map list) {
 
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(formatList(report.projectList()), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(formatList(report.delegateList()), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(formatList(report.contextList()), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(formatList(report.timelineList()), null, new XhtmlNamespaceHandler())
+    projectPane.setDocumentFromString(formatList(report.projectList(),report.showNotes), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(formatList(report.delegateList(),report.showNotes), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(formatList(report.contextList(),report.showNotes), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(formatList(report.timelineList(),report.showNotes), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -206,13 +208,14 @@ SwingBuilder.edtBuilder {
                                 case 3: curContent = report.timelineList(); break;
                                 default: curContent = report.projectList(); break;
                             }
-                            clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader), null)
+                            clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, report.showNotes), null)
                             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                         }
+                        mainFrame.toFront();
                     })
             button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                     actionPerformed: {
-                        mainFrame.hide()
+                        mainFrame.visible=false
                         mainFrame.dispose()
                     })
             cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
@@ -223,7 +226,6 @@ SwingBuilder.edtBuilder {
                     actionPerformed: { report.showNotes = it.source.selected; refresh(mainFrame) })
         }
     }
-
     // Register a change listener to track selected tab
     tabbedPane.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent evt) {
@@ -278,8 +280,9 @@ class NodeLink extends LinkListener {
                     case 2: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
                     case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                 }
-                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader), null)
+                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
                 UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
+                frame.toFront()
             }
         } else if (uri.startsWith('select:')) {
             int pos = uri.substring(7).toInteger()
@@ -298,8 +301,8 @@ class NodeLink extends LinkListener {
                     UnfoldBranch(it)
                 }
                 ctrl.selectMultipleNodes(nodesFound)
-                frame.dispose()
                 frame.visible = false
+                frame.dispose()
             } else {
                 UITools.informationMessage("Error finding selection");
             }
@@ -314,8 +317,8 @@ class NodeLink extends LinkListener {
                 ctrl.select(nodesFound[0])
                 ctrl.centerOnNode(nodesFound[0])
                 ctrl.centerOnNode(nodesFound[0])
-                frame.dispose()
                 frame.visible = false
+                frame.dispose()
             } else {
                 UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
             }

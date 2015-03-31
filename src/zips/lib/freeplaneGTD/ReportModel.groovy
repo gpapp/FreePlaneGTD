@@ -91,18 +91,16 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Map item = [done    : it['done'],
+                    items << [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
                                 nodeID  : it['nodeID'],
                                 who     : it['who'],
                                 when    : it['when'],
-                                context : it['context']]
-                    if (showNotes) {
-                        item['details'] = ((Proxy.Node) it['node']).detailsText
-                        item['notes'] = ((Proxy.Node) it['node']).noteText
-                    }
-                    items << item
+                                context : it['context'],
+                                details : ((Proxy.Node) it['node']).detailsText,
+                                notes   : ((Proxy.Node) it['node']).noteText
+                    ]
                 }
                 groups << [title: key, items: items]
         }
@@ -128,18 +126,16 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Map item = [done    : it['done'],
+                    items << [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
                                 nodeID: it['nodeID'],
                                 when    : it['when'],
                                 context : it['context'],
-                                project : it['project']]
-                    if (showNotes) {
-                        item['details'] = ((Proxy.Node) it['node']).detailsText
-                        item['notes'] = ((Proxy.Node) it['node']).noteText
-                    }
-                    items << item
+                                project : it['project'],
+                                details : ((Proxy.Node) it['node']).detailsText,
+                                notes   : ((Proxy.Node) it['node']).noteText
+                    ]
                 }
                 groups << [title: key, items: items]
         }
@@ -169,18 +165,16 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Map item = [done    : it['done'],
+                    items << [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
                                 nodeID: it['nodeID'],
                                 when    : it['when'],
                                 who     : it['who'],
-                                project : it['project']]
-                    if (showNotes) {
-                        item['details'] = ((Proxy.Node) it['node']).detailsText
-                        item['notes'] = ((Proxy.Node) it['node']).noteText
-                    }
-                    items << item
+                                project : it['project'],
+                                details : ((Proxy.Node) it['node']).detailsText,
+                                notes   : ((Proxy.Node) it['node']).noteText
+                    ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
         }
@@ -198,18 +192,16 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    Map item = [done    : it['done'],
+                    items <<  [done    : it['done'],
                                 priority: it['priority'],
                                 action  : it['action'],
                                 nodeID: it['nodeID'],
                                 who     : it['who'],
                                 project : it['project'],
-                                context : it['context']]
-                    if (showNotes) {
-                        item['details'] = ((Proxy.Node) it['node']).detailsText
-                        item['notes'] = ((Proxy.Node) it['node']).noteText
-                    }
-                    items << item
+                                context : it['context'],
+                                details : ((Proxy.Node) it['node']).detailsText,
+                                notes   : ((Proxy.Node) it['node']).noteText
+                    ]
                 }
                 groups << [title: key, items: items]
         }

@@ -55,11 +55,11 @@ class ClipBoardUtil {
         }
     }
 
-    static Transferable createTransferable(Map content, GTDMapReader reader) {
+    static Transferable createTransferable(Map content, GTDMapReader reader, boolean showNotes) {
         return new MyTransferable(
                 extractFreeplane(content, reader),
                 extractText(content),
-                extractHtml(content));
+                extractHtml(content,showNotes));
     }
 
     static String contextsToList(String context) {
@@ -89,7 +89,7 @@ class ClipBoardUtil {
                     Tag attr = node.addChild('attribute', [NAME : 'Priority',
                                                            VALUE: it['priority']
                     ])
-                    if (it['property'] instanceof FormattedNumber) {
+                    if (it['priority'] instanceof FormattedNumber) {
                         attr.addProperty('OBJECT', 'org.freeplane.features.format.FormattedNumber|' + it['priority'])
                     }
                 }
@@ -116,7 +116,7 @@ class ClipBoardUtil {
         return list.join('\n');
     }
 
-    static String extractHtml(Map content) {
+    static String extractHtml(Map content, boolean showNotes) {
         Tag body = new Tag('body')
         body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + content['type']))
         content['groups'].each {
@@ -134,7 +134,7 @@ class ClipBoardUtil {
                         (it['project'] ? ' for ' + it['project'] : '') +
                         (it['context'] ? contextsToList((String) it['context']) : '')
                 )
-                if (it['details'] || it['notes']) {
+                if (showNotes) {
                     Tag tag = new Tag('div',)
                     if (it['details']) {
                         tag.addChild('div', [style: 'background-color: rgb(240,250,240);font-size:10pt']).addPreformatted((String) it['details'])
