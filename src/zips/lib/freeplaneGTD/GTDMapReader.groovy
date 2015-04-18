@@ -144,12 +144,12 @@ class GTDMapReader {
     public void internalConvertShorthand(Proxy.Node thisNode) {
         String nodeText = thisNode.text.trim();
 
-        if (nodeText.length() > 0 && nodeText.charAt(0) == "?") {
+        if (nodeText.length() > 0 && nodeText.charAt(0) == '?') {
             nodeText = nodeText.substring(1).trim();
             thisNode.text = nodeText;
             thisNode.icons.add('help');
         }
-        if ((nodeText.length() > 0 && nodeText.charAt(0) == "*") || (thisNode.icons.icons.contains(iconNextAction))) {
+        if ((nodeText.length() > 0 && nodeText.charAt(0) == '*') || (thisNode.icons.icons.contains(iconNextAction))) {
             Map fields = parseShorthand(nodeText);
             thisNode.text = fields['action'];
 

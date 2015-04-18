@@ -81,10 +81,10 @@ class ReportModel {
         return delegates.size()
     }
 
-    Map projectList() {
-        Map retval = [type: 'project']
-        List groups = []
-        Map naByGroup = actionList.groupBy { it['project'] }
+    Map<String, String> projectList() {
+        Map<String, String> retval = [type: 'project']
+        List<Map> groups = []
+        Map<Object, List> naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->

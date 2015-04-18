@@ -22,8 +22,7 @@ import freeplaneGTD.ClipBoardUtil
 import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
-import org.freeplane.core.ui.components.UITools
-import org.freeplane.core.util.TextUtils
+import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Proxy
 import org.xhtmlrenderer.simple.FSScrollPane
 import org.xhtmlrenderer.simple.XHTMLPanel
@@ -64,28 +63,30 @@ String formatList(Map list,boolean showNotes) {
     Tag head = html.addChild('head')
     head.addContent('style',
             '/*<![CDATA[*/' +
-                    'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }\n' +
-                    'h1 {font-size:24pt; font-weight:bold;}\n' +
-                    'a {text-decoration: none; color:#990000;}\n' +
-                    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}\n' +
-                    '.priority-0 {background-color: rgb(215,48,39);}\n' +
-                    '.priority-1 {background-color: rgb(244,109,67);}\n' +
-                    '.priority-2 {background-color: rgb(253,174,97);}\n' +
-                    '.priority-3 {background-color: rgb(204,174,89)}\n' +
-                    '.priority-4 {background-color: rgb(255,255,191);}\n' +
-                    '.priority-5 {background-color: rgb(217,239,139);}\n' +
-                    '.priority-6 {background-color: rgb(166,217,106);}\n' +
-                    '.priority-7 {background-color: rgb(102,189,99);}\n' +
-                    '.priority-8 {background-color: rgb(26,152,80);}\n' +
+                    'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }' +
+                    'h1 {font-size:24pt; font-weight:bold;}' +
+                    'a {text-decoration: none; color:#990000;}' +
+                    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}' +
+                    '.priority-0 {background-color: rgb(215,48,39);}' +
+                    '.priority-1 {background-color: rgb(244,109,67);}' +
+                    '.priority-2 {background-color: rgb(253,174,97);}' +
+                    '.priority-3 {background-color: rgb(204,174,89)}' +
+                    '.priority-4 {background-color: rgb(255,255,191);}' +
+                    '.priority-5 {background-color: rgb(217,239,139);}' +
+                    '.priority-6 {background-color: rgb(166,217,106);}' +
+                    '.priority-7 {background-color: rgb(102,189,99);}' +
+                    '.priority-8 {background-color: rgb(26,152,80);}' +
                     '.priority-9 {background-color: rgb(16,82,50);}' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt}' +
                     '.note {background-color: rgb(250,250,240);font-size:10pt}' +
+                    '.overdue {background-color: rgb(250,100,90)}' +
                     '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
             [type: 'text/css'])
     head.addChild('title')
     Tag body = new Tag('body')
     body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
+    Date now = Calendar.getInstance().getTime()
     list['groups'].eachWithIndex { it, index ->
         body.addChild('div', [class: 'buttons']).
                 addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
@@ -96,6 +97,7 @@ String formatList(Map list,boolean showNotes) {
         it['items'].each {
             Tag wrap = curItem.addChild('li')
             if (it['done']) wrap.params = [style: 'text-decoration: line-through']
+            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
             }
@@ -413,5 +415,5 @@ projectPane.scrollTo(new Point(0, 0))
 delegatePane.scrollTo(new Point(0, 0))
 contextPane.scrollTo(new Point(0, 0))
 timelinePane.scrollTo(new Point(0, 0))
-mainFrame.setLocationRelativeTo(UITools.frame)
+mainFrame.setLocationRelativeTo(ui.frame)
 mainFrame.visible = true
