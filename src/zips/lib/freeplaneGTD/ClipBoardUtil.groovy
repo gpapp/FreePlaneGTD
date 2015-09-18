@@ -134,7 +134,7 @@ class ClipBoardUtil {
                         (it['project'] ? ' for ' + it['project'] : '') +
                         (it['context'] ? contextsToList((String) it['context']) : '')
                 )
-                if (showNotes) {
+                if (showNotes && (it['details'] || it['notes'])) {
                     Tag tag = new Tag('div',)
                     if (it['details']) {
                         tag.addChild('div', [style: 'background-color: rgb(240,250,240);font-size:10pt']).addPreformatted((String) it['details'])
