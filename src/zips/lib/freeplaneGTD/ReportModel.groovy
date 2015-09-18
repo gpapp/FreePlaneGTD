@@ -98,8 +98,8 @@ class ReportModel {
                                 who     : it['who'],
                                 when    : it['when'],
                                 context : it['context'],
-                                details : ((Proxy.Node) it['node']).detailsText,
-                                notes   : ((Proxy.Node) it['node']).noteText
+                                details : it['details'],
+                                notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -133,8 +133,8 @@ class ReportModel {
                                 when    : it['when'],
                                 context : it['context'],
                                 project : it['project'],
-                                details : ((Proxy.Node) it['node']).detailsText,
-                                notes   : ((Proxy.Node) it['node']).noteText
+                                details : it['details'],
+                                notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -172,8 +172,8 @@ class ReportModel {
                                 when    : it['when'],
                                 who     : it['who'],
                                 project : it['project'],
-                                details : ((Proxy.Node) it['node']).detailsText,
-                                notes   : ((Proxy.Node) it['node']).noteText
+                                details : it['details'],
+                                notes   : it['notes']
                     ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
@@ -199,8 +199,8 @@ class ReportModel {
                                 who     : it['who'],
                                 project : it['project'],
                                 context : it['context'],
-                                details : ((Proxy.Node) it['node']).detailsText,
-                                notes   : ((Proxy.Node) it['node']).noteText
+                                details : it['details'],
+                                notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]

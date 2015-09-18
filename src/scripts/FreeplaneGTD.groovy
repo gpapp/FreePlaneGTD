@@ -79,14 +79,14 @@ String formatList(Map list, boolean showNotes) {
                     '.priority-7 {background-color: rgb(102,189,99);}' +
                     '.priority-8 {background-color: rgb(26,152,80);}' +
                     '.priority-9 {background-color: rgb(16,82,50);}' +
-                    '.details {background-color: rgb(240,250,240);font-size:10pt}' +
                     'ul.actionlist { list-style: none; }' +
                     'li { padding-left: 1em; text-indent: -1em; }' +
-                    'li:before { padding-right: 5px; }' +
+                    'li:before { padding-right: 5px; font-size:120%; vertical-align:middle}' +
                     'li.task_incomplete:before { content: "\\2610"; }' +
                     'li.task_done:before { content: "\\2611"; }' +
                     'div.done { text-decoration: line-through }' +
-                    '.note {background-color: rgb(250,250,240);font-size:10pt}' +
+                    '.details {background-color: rgb(240,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
+                    '.note {background-color: rgb(250,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
                     '.overdue {background-color: rgb(250,100,90)}' +
                     '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
@@ -108,7 +108,8 @@ String formatList(Map list, boolean showNotes) {
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
             }
-            wrap.addContent('a', it['action'], [href: 'link:' + it['nodeID']]).addContent(
+            wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action']);
+            wrap.addContent(
                     (it['who'] ? ' [' + it['who'] + ']' : '') +
                             (it['when'] ? ' {' + it['when'] + '}' : '') +
                             (it['context'] ? ' @' + it['context'] : '') +

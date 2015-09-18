@@ -24,6 +24,7 @@
 package freeplaneGTD
 
 import org.freeplane.features.format.FormattedDate
+import org.freeplane.plugin.script.proxy.Convertible
 import org.freeplane.plugin.script.proxy.ConvertibleDate
 import org.freeplane.plugin.script.proxy.ConvertibleText
 
@@ -121,7 +122,7 @@ class DateUtil {
         return date.date
     }
 
-    static Object normalizeDate(ConvertibleText date) {
+    static Object normalizeDate(Convertible date) {
         return normalizeDate(date.text)
     }
 }

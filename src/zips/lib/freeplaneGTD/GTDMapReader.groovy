@@ -20,11 +20,17 @@
 //=========================================================
 package freeplaneGTD
 
+import org.freeplane.core.util.HtmlUtils
+
 //=========================================================
 // references
 //=========================================================
 import org.freeplane.core.util.TextUtils
+import org.freeplane.plugin.script.proxy.ConvertibleText
 import org.freeplane.plugin.script.proxy.Proxy
+import org.freeplane.plugin.script.proxy.ScriptUtils
+
+import java.awt.SystemTray
 
 //=========================================================
 // classes
@@ -229,8 +235,10 @@ class GTDMapReader {
     private
     def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone) {
         def icons = thisNode.icons.icons;
-        def naAction = thisNode.text;
         def naNodeID = thisNode.id;
+        String naAction = stripHTMLTags(thisNode.transformedText);
+        String naDetails = stripHTMLTags(thisNode.detailsText)
+        String naNotes = stripHTMLTags(thisNode.noteText)
 
         // use index method to get attributes
         String naContext = thisNode['Where'].toString()
@@ -264,6 +272,8 @@ class GTDMapReader {
                                when    : naWhen,
                                priority: naPriority,
                                nodeID  : naNodeID,
+                               details : naDetails,
+                               notes   : naNotes,
                                done    : done]
                 }
             }
@@ -273,6 +283,15 @@ class GTDMapReader {
             result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone))
         }
         return result;
+    }
+
+    private static final String stripHTMLTags(String string) {
+        if (string == null) {
+            return null
+        }
+        String retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1")
+        retval = retval.replaceFirst("(?s)^\\s*<p>\\s*(.*)\\s*</p>\\s*\$", "\$1")
+        return retval
     }
 
     //--------------------------------------------------------------
