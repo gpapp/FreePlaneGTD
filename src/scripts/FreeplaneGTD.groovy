@@ -22,6 +22,8 @@ import freeplaneGTD.ClipBoardUtil
 import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
+import org.freeplane.core.ui.components.UITools
+import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Proxy
 import org.xhtmlrenderer.simple.FSScrollPane
@@ -58,7 +60,7 @@ def panelTitle = { panelT, count = null ->
 }
 ReportModel report = new ReportModel(node.map.root)
 
-String formatList(Map list,boolean showNotes) {
+String formatList(Map list, boolean showNotes) {
     Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
     Tag head = html.addChild('head')
     head.addContent('style',
@@ -78,6 +80,12 @@ String formatList(Map list,boolean showNotes) {
                     '.priority-8 {background-color: rgb(26,152,80);}' +
                     '.priority-9 {background-color: rgb(16,82,50);}' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt}' +
+                    'ul.actionlist { list-style: none; }' +
+                    'li { padding-left: 1em; text-indent: -1em; }' +
+                    'li:before { padding-right: 5px; }' +
+                    'li.task_incomplete:before { content: "\\2610"; }' +
+                    'li.task_done:before { content: "\\2611"; }' +
+                    'div.done { text-decoration: line-through }' +
                     '.note {background-color: rgb(250,250,240);font-size:10pt}' +
                     '.overdue {background-color: rgb(250,100,90)}' +
                     '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
@@ -93,10 +101,9 @@ String formatList(Map list,boolean showNotes) {
                 addContent('|').
                 addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
         body.addContent('h2', it['title'])
-        Tag curItem = body.addChild('ul')
+        Tag curItem = body.addChild('ul',['class': 'actionlist'])
         it['items'].each {
-            Tag wrap = curItem.addChild('li')
-            if (it['done']) wrap.params = [style: 'text-decoration: line-through']
+            Tag wrap = curItem.addChild('li',['class': it['done']?'task_done':'task_incomplete'])
             if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
@@ -108,10 +115,10 @@ String formatList(Map list,boolean showNotes) {
                             (it['project'] ? ' for ' + it['project'] : ''))
             if (showNotes) {
                 if (it['details']) {
-                    wrap.addChild('div', [class: 'details']).addPreformatted((String)it['details'])
+                    wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
                 }
                 if (it['notes']) {
-                    wrap.addChild('div', [class: 'note']).addPreformatted((String)it['notes'])
+                    wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
                 }
             }
         }
@@ -122,10 +129,10 @@ String formatList(Map list,boolean showNotes) {
 
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(formatList(report.projectList(),report.showNotes), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(formatList(report.delegateList(),report.showNotes), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(formatList(report.contextList(),report.showNotes), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(formatList(report.timelineList(),report.showNotes), null, new XhtmlNamespaceHandler())
+    projectPane.setDocumentFromString(formatList(report.projectList(), report.showNotes), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(formatList(report.delegateList(), report.showNotes), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(formatList(report.contextList(), report.showNotes), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(formatList(report.timelineList(), report.showNotes), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
@@ -217,7 +224,7 @@ SwingBuilder.edtBuilder {
                     })
             button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                     actionPerformed: {
-                        mainFrame.visible=false
+                        mainFrame.visible = false
                         mainFrame.dispose()
                     })
             cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),

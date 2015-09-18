@@ -64,7 +64,6 @@ class GTDMapReader {
         internalConvertShorthand(rootNode)
     }
 
-
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findIcons(Proxy.Node thisNode) {
@@ -76,12 +75,32 @@ class GTDMapReader {
         contextIcons = [:]
 
         internalFindIcons(thisNode)
+        if (['help', iconProject, iconToday, iconDone].contains(iconNextAction)
+                || contextIcons.values().contains(iconNextAction)) {
+            throw new Exception('Trying to reuse icon:' + iconNextAction + ' as \'Next action\'')
+        }
+        if (['help', iconNextAction, iconToday, iconDone].contains(iconProject)
+                || contextIcons.values().contains(iconProject)) {
+            throw new Exception('Trying to reuse icon:' + iconProject + ' as \'Project\'')
+        }
+        if (['help', iconNextAction, iconProject, iconDone].contains(iconToday)
+                || contextIcons.values().contains(iconToday)) {
+            throw new Exception('Trying to reuse icon:' + iconToday + ' as \'Today\'')
+        }
+        if (['help', iconNextAction, iconProject, iconToday].contains(iconDone)
+                || contextIcons.values().contains(iconDone)) {
+            throw new Exception('Trying to reuse icon:' + iconDone + ' as \'Done\'')
+        }
+        contextIcons.each { context, icon ->
+            if (['help', iconNextAction, iconProject, iconToday, iconDone].contains(icon)) {
+                throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'')
+            }
+        }
     }
 
     public List getActionList(Proxy.Node rootNode, boolean filterDone) {
         return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
     }
-
 
     //Get icon key names from Settings/Icons nodes
     private void internalFindIcons(Proxy.Node thisNode) {
@@ -89,39 +108,19 @@ class GTDMapReader {
         String nodeText = thisNode.text.trim();
 
         if (nodeText =~ '^Icon:') {
-			if (firstIcon ==~ /^full\-\d$/) {
-                    throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
-			}
+            if (firstIcon ==~ /^full\-\d$/) {
+                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
+            }
             if (nodeText == 'Icon: Next action') {
-                if (['help', iconProject, iconToday, iconDone].contains(firstIcon)
-                        || contextIcons.values().contains(firstIcon)) {
-                    throw new Exception('Trying to reuse icon:' + firstIcon + ' on node ' + nodeText)
-                }
                 iconNextAction = firstIcon
             } else if (nodeText == 'Icon: Project') {
-                if (['help', iconNextAction, iconToday, iconDone].contains(firstIcon)
-                        || contextIcons.values().contains(firstIcon)) {
-                    throw new Exception('Trying to reuse icon:' + firstIcon + ' on node ' + nodeText)
-                }
                 iconProject = firstIcon
             } else if (nodeText == 'Icon: Today') {
-                if (['help', iconNextAction, iconProject, iconDone].contains(firstIcon)
-                        || contextIcons.values().contains(firstIcon)) {
-                    throw new Exception('Trying to reuse icon:' + firstIcon + ' on node ' + nodeText)
-                }
                 iconToday = firstIcon
             } else if (nodeText == 'Icon: Done') {
-                if (['help', iconNextAction, iconProject, iconToday].contains(firstIcon)
-                        || contextIcons.values().contains(firstIcon)) {
-                    throw new Exception('Trying to reuse icon:' + firstIcon + ' on node ' + nodeText)
-                }
                 iconDone = firstIcon
             } else if (nodeText =~ '^Icon: @') {
                 String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1');
-                if (['help', iconNextAction, iconProject, iconToday, iconDone].contains(firstIcon)
-                        || contextIcons.values().contains(firstIcon)) {
-                    throw new Exception('Trying to reuse icon:' + firstIcon + ' on node ' + nodeText)
-                }
                 contextIcons[context] = firstIcon
             }
         }
@@ -173,10 +172,10 @@ class GTDMapReader {
             }
 
             thisNode.icons.each {
-				if (it ==~ /^full\-\d$/) {
-					nodeAttr['Priority'] = it[5]
-				}
-			}
+                if (it ==~ /^full\-\d$/) {
+                    nodeAttr['Priority'] = it[5]
+                }
+            }
 
             thisNode.attributes = nodeAttr;
             if (!thisNode.icons.icons.contains(iconNextAction)) {
@@ -198,10 +197,10 @@ class GTDMapReader {
                     thisNode.icons.remove(it)
                 }
             }
-			if (nodeAttr['Priority']) {
-				String priorityIcon = 'full-' + nodeAttr['Priority'];
+            if (nodeAttr['Priority']) {
+                String priorityIcon = 'full-' + nodeAttr['Priority'];
                 thisNode.icons.add(priorityIcon);
-			}
+            }
         }
 
         thisNode.children.each {
@@ -237,7 +236,7 @@ class GTDMapReader {
         String naContext = thisNode['Where'].toString()
         String naWho = thisNode['Who'].toString()
         Object naWhen = thisNode['When']
-		String naPriority = thisNode['Priority'].toString()
+        String naPriority = thisNode['Priority'].toString()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
         if (!naWhen) {
