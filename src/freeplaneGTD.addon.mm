@@ -223,9 +223,9 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1413659673642"/>
+<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1442656278534"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1442605475293">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1442655976699">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -243,6 +243,7 @@
 <attribute_layout NAME_WIDTH="170" VALUE_WIDTH="173"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
 <attribute NAME="freeplaneGTD_default_view" VALUE="2" OBJECT="org.freeplane.features.format.FormattedNumber|2|#0.####"/>
+<attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 </node>
 <node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1442605475298">
 <edge COLOR="#999999" WIDTH="3"/>
@@ -270,7 +271,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1426554975390" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1442656132003" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -280,6 +281,7 @@
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filter completed tasks by default"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Default action view"/>
+<attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Fold map to show only relevant tasks"/>
 <attribute NAME="freeplaneGTD_view_project" VALUE="Project"/>
 <attribute NAME="freeplaneGTD_view_who" VALUE="Who"/>
 <attribute NAME="freeplaneGTD_view_context" VALUE="Context"/>
@@ -316,7 +318,7 @@
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selection copied to clipboard."/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1442654339679" HGAP="50" VSHIFT="10">
+<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1442656220861" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -326,6 +328,7 @@
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Voreinstellung: Erledigte Punkte herausfiltern"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Voreinstellung f&#xfc;r OPL-Ansicht"/>
+<attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Map falten, um OPL-Punkte hervorzuheben"/>
 <attribute NAME="freeplaneGTD_view_project" VALUE="Projekt"/>
 <attribute NAME="freeplaneGTD_view_who" VALUE="Wer"/>
 <attribute NAME="freeplaneGTD_view_context" VALUE="Kontext"/>

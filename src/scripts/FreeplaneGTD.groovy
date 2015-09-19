@@ -306,7 +306,9 @@ class NodeLink extends LinkListener {
             List ids = list.collect { it['nodeID'] }
             def nodesFound = ctrl.find { ids.contains(it.nodeID) }
             if (nodesFound.size() > 0) {
-                FoldToTop(nodesFound[0])
+                if( report.autoFoldMap ){
+					FoldToTop(nodesFound[0]) 
+				}
                 nodesFound.each {
                     UnfoldBranch(it)
                 }
@@ -322,7 +324,9 @@ class NodeLink extends LinkListener {
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
 
             if (nodesFound[0] != null) {
-                FoldToTop(nodesFound[0])
+                if( report.autoFoldMap ){
+					FoldToTop(nodesFound[0])
+				}
                 UnfoldBranch(nodesFound[0])
                 ctrl.select(nodesFound[0])
                 ctrl.centerOnNode(nodesFound[0])
@@ -418,6 +422,7 @@ System.setProperty("xr.text.aa-rendering-hint", "RenderingHints.VALUE_TEXT_ANTIA
 
 report.selPane = config.getIntProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
+report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 refresh()
 projectPane.scrollTo(new Point(0, 0))
 delegatePane.scrollTo(new Point(0, 0))
