@@ -68,7 +68,7 @@ String formatList(Map list, boolean showNotes) {
                     'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }' +
                     'h1 {font-size:24pt; font-weight:bold;}' +
                     'a {text-decoration: none; color:#990000;}' +
-                    '.priority {padding: 2px; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}' +
+                    '.priority {padding-left: 1em; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}' +
                     '.priority-0 {background-color: rgb(215,48,39);}' +
                     '.priority-1 {background-color: rgb(244,109,67);}' +
                     '.priority-2 {background-color: rgb(253,174,97);}' +
@@ -81,8 +81,7 @@ String formatList(Map list, boolean showNotes) {
                     '.priority-9 {background-color: rgb(16,82,50);}' +
                     'ul.actionlist { list-style: none; }' +
                     'li { padding-left: 1em; text-indent: -1em; }' +
-                    'li:before { padding-right: 5px; font-size:120%; vertical-align:middle}' +
-                    'li.task_incomplete:before { content: "\\2610"; }' +
+                    'li:before { padding-right: 5px; font-size:120%; vertical-align:middle; content: "\\2610"; }' +
                     'li.task_done:before { content: "\\2611"; }' +
                     'div.done { text-decoration: line-through }' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
@@ -103,7 +102,10 @@ String formatList(Map list, boolean showNotes) {
         body.addContent('h2', it['title'])
         Tag curItem = body.addChild('ul', ['class': 'actionlist'])
         it['items'].each {
-            Tag wrap = curItem.addChild('li', ['class': it['done'] ? 'task_done' : 'task_incomplete'])
+            Tag wrap = curItem.addChild('li')
+            if (it['done']) {
+                wrap.addProperty('class', 'task_done')
+            }
             if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
@@ -299,10 +301,10 @@ class NodeLink extends LinkListener {
             int pos = uri.substring(7).toInteger()
             List list
             switch (report.selPane) {
-                case 0: list = (List)report.projectList()['groups'][pos]['items']; break;
-                case 1: list = (List)report.delegateList()['groups'][pos]['items']; break;
-                case 2: list = (List)report.contextList()['groups'][pos]['items']; break;
-                case 3: list = (List)report.timelineList()['groups'][pos]['items']; break;
+                case 0: list = (List) report.projectList()['groups'][pos]['items']; break;
+                case 1: list = (List) report.delegateList()['groups'][pos]['items']; break;
+                case 2: list = (List) report.contextList()['groups'][pos]['items']; break;
+                case 3: list = (List) report.timelineList()['groups'][pos]['items']; break;
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
             }
             List ids = list.collect { it['nodeID'] }
