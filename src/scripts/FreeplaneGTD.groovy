@@ -55,7 +55,7 @@ def panelTitle = { panelT, count = null ->
     Tag innerChild = tag.addChild('body', [height: '50']).addChild('div', [style: 'font-weight:bold;font-style:italic'])
     innerChild.addContent(panelT)
     if (count)
-        innerChild.addContent(new Tag('div', count, [style: 'font-size:24pt;color:#666666;text-align:center']))
+        innerChild.addContent(new Tag('div', String.valueOf(count), [style: 'font-size:24pt;color:#666666;text-align:center']))
     return tag
 }
 ReportModel report = new ReportModel(node.map.root)
@@ -150,8 +150,7 @@ SwingBuilder.edtBuilder {
     iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
     mainFrame = frame(title: title,
             iconImage: iconFrame,
-            width: frWidth,
-            height: frHeight,
+            size: new Dimension(frWidth, frHeight),
             defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
             show: false) {
         borderLayout()
