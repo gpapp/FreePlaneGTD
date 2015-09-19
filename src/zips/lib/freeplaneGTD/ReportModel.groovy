@@ -10,6 +10,7 @@ import org.freeplane.plugin.script.proxy.Proxy
 class ReportModel {
     boolean showNotes
     boolean filterDone
+	boolean autoFoldMap
     int selPane
     Proxy.Node rootNode
     List actionList
