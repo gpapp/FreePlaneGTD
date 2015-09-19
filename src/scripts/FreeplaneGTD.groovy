@@ -101,14 +101,14 @@ String formatList(Map list, boolean showNotes) {
                 addContent('|').
                 addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
         body.addContent('h2', it['title'])
-        Tag curItem = body.addChild('ul',['class': 'actionlist'])
+        Tag curItem = body.addChild('ul', ['class': 'actionlist'])
         it['items'].each {
-            Tag wrap = curItem.addChild('li',['class': it['done']?'task_done':'task_incomplete'])
+            Tag wrap = curItem.addChild('li', ['class': it['done'] ? 'task_done' : 'task_incomplete'])
             if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
                 wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
             }
-            wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action']);
+            wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
             wrap.addContent(
                     (it['who'] ? ' [' + it['who'] + ']' : '') +
                             (it['when'] ? ' {' + it['when'] + '}' : '') +
@@ -150,7 +150,8 @@ SwingBuilder.edtBuilder {
     iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
     mainFrame = frame(title: title,
             iconImage: iconFrame,
-            size: [frWidth, frHeight],
+            width: frWidth,
+            height: frHeight,
             defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
             show: false) {
         borderLayout()
@@ -289,6 +290,7 @@ class NodeLink extends LinkListener {
                     case 1: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
                     case 2: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
                     case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+                    default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
                 clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
                 UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
@@ -298,17 +300,18 @@ class NodeLink extends LinkListener {
             int pos = uri.substring(7).toInteger()
             List list
             switch (report.selPane) {
-                case 0: list = report.projectList()['groups'][pos]['items']; break;
-                case 1: list = report.delegateList()['groups'][pos]['items']; break;
-                case 2: list = report.contextList()['groups'][pos]['items']; break;
-                case 3: list = report.timelineList()['groups'][pos]['items']; break;
+                case 0: list = (List)report.projectList()['groups'][pos]['items']; break;
+                case 1: list = (List)report.delegateList()['groups'][pos]['items']; break;
+                case 2: list = (List)report.contextList()['groups'][pos]['items']; break;
+                case 3: list = (List)report.timelineList()['groups'][pos]['items']; break;
+                default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
             }
             List ids = list.collect { it['nodeID'] }
             def nodesFound = ctrl.find { ids.contains(it.nodeID) }
             if (nodesFound.size() > 0) {
-                if( report.autoFoldMap ){
-					FoldToTop(nodesFound[0]) 
-				}
+                if (report.autoFoldMap) {
+                    FoldToTop(nodesFound[0])
+                }
                 nodesFound.each {
                     UnfoldBranch(it)
                 }
@@ -324,9 +327,9 @@ class NodeLink extends LinkListener {
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
 
             if (nodesFound[0] != null) {
-                if( report.autoFoldMap ){
-					FoldToTop(nodesFound[0])
-				}
+                if (report.autoFoldMap) {
+                    FoldToTop(nodesFound[0])
+                }
                 UnfoldBranch(nodesFound[0])
                 ctrl.select(nodesFound[0])
                 ctrl.centerOnNode(nodesFound[0])

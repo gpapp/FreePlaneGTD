@@ -20,18 +20,12 @@
 //=========================================================
 package freeplaneGTD
 
-import org.freeplane.core.util.HtmlUtils
+import org.freeplane.core.util.TextUtils
+import org.freeplane.plugin.script.proxy.Proxy
 
 //=========================================================
 // references
 //=========================================================
-import org.freeplane.core.util.TextUtils
-import org.freeplane.plugin.script.proxy.ConvertibleText
-import org.freeplane.plugin.script.proxy.Proxy
-import org.freeplane.plugin.script.proxy.ScriptUtils
-
-import java.awt.SystemTray
-
 //=========================================================
 // classes
 //=========================================================
@@ -149,12 +143,12 @@ class GTDMapReader {
     public void internalConvertShorthand(Proxy.Node thisNode) {
         String nodeText = thisNode.text.trim();
 
-        if (nodeText.length() > 0 && nodeText.charAt(0) == '?') {
+        if (nodeText.length() > 0 && nodeText.charAt(0) == (char) '?') {
             nodeText = nodeText.substring(1).trim();
             thisNode.text = nodeText;
             thisNode.icons.add('help');
         }
-        if ((nodeText.length() > 0 && nodeText.charAt(0) == '*') || (thisNode.icons.icons.contains(iconNextAction))) {
+        if ((nodeText.length() > 0 && nodeText.charAt(0) == (char) '*') || (thisNode.icons.icons.contains(iconNextAction))) {
             Map fields = parseShorthand(nodeText);
             thisNode.text = fields['action'];
 

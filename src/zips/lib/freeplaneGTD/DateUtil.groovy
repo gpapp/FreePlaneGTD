@@ -26,7 +26,6 @@ package freeplaneGTD
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Convertible
 import org.freeplane.plugin.script.proxy.ConvertibleDate
-import org.freeplane.plugin.script.proxy.ConvertibleText
 
 import java.text.SimpleDateFormat
 

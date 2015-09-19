@@ -5,12 +5,14 @@ import org.freeplane.plugin.script.proxy.ConvertibleDate
 import org.freeplane.plugin.script.proxy.Proxy
 
 /**
+ * Model for the report pane.
+ *
  * Created by gpapp on 2015.03.05..
  */
 class ReportModel {
     boolean showNotes
     boolean filterDone
-	boolean autoFoldMap
+    boolean autoFoldMap
     int selPane
     Proxy.Node rootNode
     List actionList
@@ -82,8 +84,8 @@ class ReportModel {
         return delegates.size()
     }
 
-    Map<String, String> projectList() {
-        Map<String, String> retval = [type: 'project']
+    def projectList() {
+        Map<String, Object> retval = [type: 'project']
         List<Map> groups = []
         Map<Object, List> naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
@@ -93,14 +95,14 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done    : it['done'],
-                                priority: it['priority'],
-                                action  : it['action'],
-                                nodeID  : it['nodeID'],
-                                who     : it['who'],
-                                when    : it['when'],
-                                context : it['context'],
-                                details : it['details'],
-                                notes   : it['notes']
+                              priority: it['priority'],
+                              action  : it['action'],
+                              nodeID  : it['nodeID'],
+                              who     : it['who'],
+                              when    : it['when'],
+                              context : it['context'],
+                              details : it['details'],
+                              notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -109,7 +111,7 @@ class ReportModel {
         return retval
     }
 
-    Map delegateList() {
+    def delegateList() {
         Map retval = [type: 'who']
         List groups = []
         Map naByGroupFull = actionList.groupBy { it['who'] }
@@ -128,14 +130,14 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done    : it['done'],
-                                priority: it['priority'],
-                                action  : it['action'],
-                                nodeID: it['nodeID'],
-                                when    : it['when'],
-                                context : it['context'],
-                                project : it['project'],
-                                details : it['details'],
-                                notes   : it['notes']
+                              priority: it['priority'],
+                              action  : it['action'],
+                              nodeID  : it['nodeID'],
+                              when    : it['when'],
+                              context : it['context'],
+                              project : it['project'],
+                              details : it['details'],
+                              notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -144,7 +146,7 @@ class ReportModel {
         return retval
     }
 
-    Map contextList() {
+    def contextList() {
         Map retval = [type: 'context']
         List groups = []
         Map naByGroupFull = actionList.groupBy { it['context'] }
@@ -167,14 +169,14 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done    : it['done'],
-                                priority: it['priority'],
-                                action  : it['action'],
-                                nodeID: it['nodeID'],
-                                when    : it['when'],
-                                who     : it['who'],
-                                project : it['project'],
-                                details : it['details'],
-                                notes   : it['notes']
+                              priority: it['priority'],
+                              action  : it['action'],
+                              nodeID  : it['nodeID'],
+                              when    : it['when'],
+                              who     : it['who'],
+                              project : it['project'],
+                              details : it['details'],
+                              notes   : it['notes']
                     ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
@@ -183,7 +185,7 @@ class ReportModel {
         return retval
     }
 
-    Map timelineList() {
+    def timelineList() {
         Map retval = [type: 'when']
         List groups = []
         def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
@@ -193,15 +195,15 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    items <<  [done    : it['done'],
-                                priority: it['priority'],
-                                action  : it['action'],
-                                nodeID: it['nodeID'],
-                                who     : it['who'],
-                                project : it['project'],
-                                context : it['context'],
-                                details : it['details'],
-                                notes   : it['notes']
+                    items << [done    : it['done'],
+                              priority: it['priority'],
+                              action  : it['action'],
+                              nodeID  : it['nodeID'],
+                              who     : it['who'],
+                              project : it['project'],
+                              context : it['context'],
+                              details : it['details'],
+                              notes   : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
