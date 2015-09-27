@@ -46,7 +46,7 @@ class ActionEditorModel {
         mapReader.findIcons(node.map.root)
         mapReader.internalConvertShorthand(node)
         if(!node.icons.contains(mapReader.iconNextAction)){
-            ui.errorMessage('Selected node is not a task')
+            UITools.errorMessage('Selected node is not a task')
             return false
         }
         action=node.text
