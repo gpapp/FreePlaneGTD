@@ -85,9 +85,10 @@ If you want to add pre-defined icons for some contexts specified in your action 
 
 The icons specified will be converted to the corresponding context attribute (Where property).
 
-## Versions
+## Credits
 
 The addon is based on the v0.8 FreeplaneGTD addon by Auxilus.
 
-* v0.9 – You can find the release page [here](http://www.itworks.hu/index.php/freeplane-gtd-v0-9/)
-* v1.0 – You can find the release page [here](http://www.itworks.hu/index.php/freeplanegtd-v1-0-final-released/)
+## Versions
+
+Versions can be found on the official [release page](www.itworks.hu/freeplanegtd-release) or on [GitHub release page](https://github.com/gpapp/FreePlaneGTD/releases)
