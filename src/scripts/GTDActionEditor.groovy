@@ -21,6 +21,8 @@
 import freeplaneGTD.GTDMapReader
 import groovy.swing.SwingBuilder
 import org.freeplane.plugin.script.proxy.Proxy
+import org.freeplane.core.util.TextUtils
+import org.freeplane.core.ui.components.UITools
 
 import javax.swing.*
 import java.awt.*
@@ -120,7 +122,7 @@ class ActionEditor {
     ActionEditor() {
         SwingBuilder.edtBuilder {
             mainFrame = dialog(
-                    title: textUtils.getText("freeplaneGTD.actioneditor.title"),
+                    title: TextUtils.getText("freeplaneGTD.actioneditor.title"),
                     defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
                     show: false,
                     modal: true) {
@@ -128,32 +130,32 @@ class ActionEditor {
                 panel(border:BorderFactory.createEmptyBorder(10,10,10,10)) {
                     gridBagLayout()
 
-                    label(text: textUtils.getText("freeplaneGTD.actioneditor.action"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.action"),
                         constraints: gbc(gridx:0,gridy:0,ipadx:5,fill:HORIZONTAL))
                     actionField = textField(preferredSize:new Dimension(400,25),
                         constraints:gbc(gridx:1,gridy:0,gridwidth:REMAINDER,fill:HORIZONTAL))
 
-                    label(text: textUtils.getText("freeplaneGTD.actioneditor.delegate"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.delegate"),
                         constraints: gbc(gridx:0,gridy:1,ipadx:5,fill:HORIZONTAL))
                     delegateField = textField(preferredSize:new Dimension(300,25),
                         constraints:gbc(gridx:1,gridy:1,gridwidth:REMAINDER,fill:HORIZONTAL))
 
-                    label(text: textUtils.getText("freeplaneGTD.actioneditor.context"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.context"),
                         constraints: gbc(gridx:0,gridy:2,ipadx:5,fill:HORIZONTAL))
                     contextField = textField(preferredSize:new Dimension(300,25),
                         constraints:gbc(gridx:1,gridy:2,gridwidth:REMAINDER,fill:HORIZONTAL))
 
-                    label(text: textUtils.getText("freeplaneGTD.actioneditor.when"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
                         constraints: gbc(gridx:0,gridy:3,ipadx:5,fill:HORIZONTAL))
-                    todayField = checkBox(text: textUtils.getText("freeplaneGTD.actioneditor.today"),
+                    todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
 //                        preferredSize:new Dimension(50,25),
                         constraints:gbc(gridx:1,gridy:3,ipadx:5))
                     whenField = textField(preferredSize:new Dimension(250,25),
                         constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
-                    doneField = checkBox(text: textUtils.getText("freeplaneGTD.actioneditor.done"),
+                    doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                             constraints:gbc(gridx:3,gridy:3,fill:HORIZONTAL))
 
-                    label(text: textUtils.getText("freeplaneGTD.actioneditor.priority"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
                         constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
                     priorityField = textField(preferredSize:new Dimension(20,25),
                         constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
@@ -162,12 +164,12 @@ class ActionEditor {
 
                 panel() {
                     boxLayout(axis: BoxLayout.X_AXIS)
-                    button(text: textUtils.getText("freeplaneGTD.button.cancel"),
+                    button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
                             actionPerformed: {
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
                             })
-                    doneButton = button(id: 'doneButton', text: textUtils.getText("freeplaneGTD.button.done"),
+                    doneButton = button(id: 'doneButton', text: TextUtils.getText("freeplaneGTD.button.done"),
                             actionPerformed: {
                                 model.action=actionField.text
                                 model.delegate=delegateField.text
@@ -186,8 +188,8 @@ class ActionEditor {
         }
         // on ESC key close frame
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), textUtils.getText("freeplaneGTD.button.cancel"));
-        mainFrame.getRootPane().getActionMap().put(textUtils.getText("freeplaneGTD.button.cancel"),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"));
+        mainFrame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"),
             new AbstractAction () {
                 void actionPerformed(ActionEvent e) {
                     mainFrame.setVisible(false);
