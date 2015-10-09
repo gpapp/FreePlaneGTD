@@ -52,13 +52,6 @@ String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 JFrame mainFrame
 
-enum PANES {
-    PROJECT,
-    WHO,
-    CONTEXT,
-    WHEN
-}
-
 def panelTitle = { panelT, count = null ->
     Tag tag = new Tag('html')
     Tag innerChild = tag.addChild('body', [height: '50']).addChild('div', [style: 'font-weight:bold;font-style:italic'])
@@ -69,7 +62,7 @@ def panelTitle = { panelT, count = null ->
 }
 ReportModel report = new ReportModel(node.map.root)
 
-String formatList(Map list, boolean showNotes) {
+String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
     Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
     Tag head = html.addChild('head')
     head.addContent('style',
@@ -77,22 +70,8 @@ String formatList(Map list, boolean showNotes) {
                     'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }' +
                     'h1 {font-size:24pt; font-weight:bold;}' +
                     'a {text-decoration: none; color:#990000;}' +
-                    '.priority {padding-left: 1em; display:inline-block; margin-right: 2px; color: black; font-weight:bold;}' +
-                    '.priority-0 {background-color: rgb(215,48,39);}' +
-                    '.priority-1 {background-color: rgb(244,109,67);}' +
-                    '.priority-2 {background-color: rgb(253,174,97);}' +
-                    '.priority-3 {background-color: rgb(204,174,89)}' +
-                    '.priority-4 {background-color: rgb(255,255,191);}' +
-                    '.priority-5 {background-color: rgb(217,239,139);}' +
-                    '.priority-6 {background-color: rgb(166,217,106);}' +
-                    '.priority-7 {background-color: rgb(102,189,99);}' +
-                    '.priority-8 {background-color: rgb(26,152,80);}' +
-                    '.priority-9 {background-color: rgb(16,82,50);}' +
                     'ul.actionlist { list-style: none; }' +
                     'li { padding-left: 1em; text-indent: -1em; }' +
-                    'li:before { padding-right: 5px; font-size:120%; vertical-align:middle; content: "\\2610"; }' +
-                    'li.task_done:before { content: "\\2611"; }' +
-                    'div.done { text-decoration: line-through }' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
                     '.note {background-color: rgb(250,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
                     '.overdue {background-color: rgb(250,100,90)}' +
@@ -112,19 +91,26 @@ String formatList(Map list, boolean showNotes) {
         Tag curItem = body.addChild('ul', ['class': 'actionlist'])
         it['items'].each {
             Tag wrap = curItem.addChild('li')
-            if (it['done']) {
-                wrap.addProperty('class', 'task_done')
-            }
+            wrap.addChild('img', [src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
             if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
-                wrap = wrap.addContent('span', it['priority'], [class: 'priority priority-' + it['priority']])
+                wrap.addChild('img', [src: "builtin:full-" + it['priority']])
             }
             wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
-            wrap.addContent(
-                    (it['who'] ? ' [' + it['who'] + ']' : '') +
-                            (it['when'] ? ' {' + it['when'] + '}' : '') +
-                            (it['context'] ? ' @' + it['context'] : '') +
-                            (it['project'] ? ' for ' + it['project'] : ''))
+
+            Tag contextTag = new Tag('span')
+
+            it['context']?.split(',').each { key ->
+                if (contextIcons.keySet().contains(key)) {
+                    contextTag.addChild('img', [src: "builtin:" + contextIcons.get(key), "title": key])
+                }
+                contextTag.addContent('@');
+                contextTag.addContent(key);
+            }
+            !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
+            !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
+            !it['context'] ?: wrap.addContent(contextTag)
+            !it['project'] ?: wrap.addContent(' for ' + it['project'])
             if (showNotes) {
                 if (it['details']) {
                     wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
@@ -133,7 +119,6 @@ String formatList(Map list, boolean showNotes) {
                     wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
                 }
             }
-            wrap.addChild('img', [src: "bundle://1:1:/images/icons/stop.png"])
         }
     }
     html.addContent(body)
@@ -142,14 +127,14 @@ String formatList(Map list, boolean showNotes) {
 
 def refresh = {
     report.parseMap()
-    projectPane.setDocumentFromString(formatList(report.projectList(), report.showNotes), null, new XhtmlNamespaceHandler())
-    delegatePane.setDocumentFromString(formatList(report.delegateList(), report.showNotes), null, new XhtmlNamespaceHandler())
-    contextPane.setDocumentFromString(formatList(report.contextList(), report.showNotes), null, new XhtmlNamespaceHandler())
-    timelinePane.setDocumentFromString(formatList(report.timelineList(), report.showNotes), null, new XhtmlNamespaceHandler())
+    projectPane.setDocumentFromString(formatList(report.projectList(), report.mapReader.contextIcons, report.showNotes), null, new XhtmlNamespaceHandler())
+    delegatePane.setDocumentFromString(formatList(report.delegateList(), report.mapReader.contextIcons, report.showNotes), null, new XhtmlNamespaceHandler())
+    contextPane.setDocumentFromString(formatList(report.contextList(), report.mapReader.contextIcons, report.showNotes), null, new XhtmlNamespaceHandler())
+    timelinePane.setDocumentFromString(formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes), null, new XhtmlNamespaceHandler())
     tabbedPane.setTitleAt(0, panelTitle(TextUtils.getText("freeplaneGTD.tab.project.title"), report.projectCount()).toString())
     tabbedPane.setTitleAt(1, panelTitle(TextUtils.getText("freeplaneGTD.tab.who.title"), report.delegateCount()).toString())
 
-    tabbedPane.selectedIndex = report.selPane;
+    tabbedPane.selectedIndex = report.selPane.ordinal();
     cbFilterDone.selected = report.filterDone
 }
 SwingBuilder.edtBuilder {
@@ -161,8 +146,8 @@ SwingBuilder.edtBuilder {
     ImageResourceLoader imageLoader = new ImageResourceLoader() {
         @Override
         public synchronized ImageResource get(final String uri, final int width, final int height) {
-            if (uri.startsWith("bundle://1:1:/images/icons/")) {
-                ImageIcon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("bundle://1:1:/images/icons/(.*).png", "\$1"))
+            if (uri.startsWith("builtin:")) {
+                Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
                 return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
             }
             return super.get(uri, width, height)
@@ -179,7 +164,7 @@ SwingBuilder.edtBuilder {
         borderLayout()
         reportPanel = panel(constraints: BorderLayout.CENTER) {
             gridLayout(cols: 1, rows: 1)
-            tabbedPane = tabbedPane(tabPlacement: JTabbedPane.RIGHT, selectedIndex: report.selPane) {
+            tabbedPane = tabbedPane(tabPlacement: JTabbedPane.RIGHT, selectedIndex: report.selPane?.ordinal()) {
 
                 projectPanel = panel(toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip")) {
                     gridLayout(cols: 1, rows: 1)
@@ -240,10 +225,10 @@ SwingBuilder.edtBuilder {
                         Clipboard clip = projectPanel.getToolkit().getSystemClipboard();
                         if (clip != null) {
                             switch (report.selPane) {
-                                case PANES.PROJECT: curContent = report.projectList(); break;
-                                case PANES.WHO: curContent = report.delegateList(); break;
-                                case PANES.CONTEXT: curContent = report.contextList(); break;
-                                case PANES.WHEN: curContent = report.timelineList(); break;
+                                case ReportModel.PANES.PROJECT: curContent = report.projectList(); break;
+                                case ReportModel.PANES.WHO: curContent = report.delegateList(); break;
+                                case ReportModel.PANES.CONTEXT: curContent = report.contextList(); break;
+                                case ReportModel.PANES.WHEN: curContent = report.timelineList(); break;
                                 default: curContent = report.projectList(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, report.showNotes), null)
@@ -269,7 +254,7 @@ SwingBuilder.edtBuilder {
         public void stateChanged(ChangeEvent evt) {
             JTabbedPane pane = (JTabbedPane) evt.getSource();
             // Get current tab index
-            report.selPane = pane.getSelectedIndex();
+            report.selPane = ReportModel.PANES.find(pane.getSelectedIndex());
         }
     });
 
@@ -313,10 +298,10 @@ class NodeLink extends LinkListener {
             Clipboard clip = panel.getToolkit().getSystemClipboard();
             if (clip != null) {
                 switch (report.selPane) {
-                    case PANES.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
-                    case PANES.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
-                    case PANES.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
-                    case PANES.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+                    case ReportModel.PANES.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
+                    case ReportModel.PANES.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
+                    case ReportModel.PANES.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
+                    case ReportModel.PANES.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
                 clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
@@ -327,10 +312,10 @@ class NodeLink extends LinkListener {
             int pos = uri.substring(7).toInteger()
             List list
             switch (report.selPane) {
-                case PANES.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
-                case PANES.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
-                case PANES.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
-                case PANES.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
+                case ReportModel.PANES.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
+                case ReportModel.PANES.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
+                case ReportModel.PANES.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
+                case ReportModel.PANES.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
             }
             List ids = list.collect { it['nodeID'] }
@@ -450,7 +435,7 @@ System.setProperty("xr.text.aa-smoothing-level", "1")
 System.setProperty("xr.text.aa-fontsize-threshhold", "1")
 System.setProperty("xr.text.aa-rendering-hint", "RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT")
 
-report.selPane = config.getIntProperty('freeplaneGTD_default_view')
+report.selPane = ReportModel.PANES.find(config.getIntProperty('freeplaneGTD_default_view'))
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 refresh()

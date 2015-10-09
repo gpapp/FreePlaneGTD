@@ -9,11 +9,28 @@ import org.freeplane.plugin.script.proxy.Proxy
  *
  * Created by gpapp on 2015.03.05..
  */
+
 class ReportModel {
+    enum PANES {
+        PROJECT,
+        WHO,
+        CONTEXT,
+        WHEN
+
+        static PANES find(int toFind) {
+            for (p in values()) {
+                if (p.ordinal() == toFind) {
+                    return p;
+                }
+            }
+            return null
+        }
+    }
+
     boolean showNotes
     boolean filterDone
     boolean autoFoldMap
-    int selPane
+    PANES selPane = PANES.PROJECT
     Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader
