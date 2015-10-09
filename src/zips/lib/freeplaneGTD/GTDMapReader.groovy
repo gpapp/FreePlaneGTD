@@ -20,6 +20,7 @@
 //=========================================================
 package freeplaneGTD
 
+import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 
@@ -248,7 +249,7 @@ class GTDMapReader {
         def result = [];
         // include result if it has next action icon and its not the icon setting node for next actions
         if (icons.contains(iconNextAction)) {
-            String naAction = stripHTMLTags(thisNode.transformedText);
+            String naAction = stripHTMLTags(thisNode.text);
             if (!(naAction =~ /Icon:/)) {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
@@ -283,8 +284,13 @@ class GTDMapReader {
         if (string == null) {
             return null
         }
-        String retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1")
-        retval = retval.replaceFirst("(?s)^\\s*<p>\\s*(.*)\\s*</p>\\s*\$", "\$1")
+        String retval
+        if (HtmlUtils.isHtmlNode(string)) {
+            retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1")
+            retval = retval.replaceFirst("(?s)^\\s*<p>\\s*(.*)\\s*</p>\\s*\$", "\$1")
+        } else {
+            retval = HtmlUtils.toHTMLEscapedText(string)
+        }
         return retval
     }
 
