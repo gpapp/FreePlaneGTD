@@ -45,10 +45,17 @@ import java.util.List
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.5.2'
+String txtVer = '1.6'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 JFrame mainFrame
+
+private enum PANES {
+    PROJECT,
+    WHO,
+    CONTEXT,
+    WHEN
+}
 
 def panelTitle = { panelT, count = null ->
     Tag tag = new Tag('html')
@@ -214,10 +221,10 @@ SwingBuilder.edtBuilder {
                         Clipboard clip = projectPanel.getToolkit().getSystemClipboard();
                         if (clip != null) {
                             switch (report.selPane) {
-                                case 0: curContent = report.projectList(); break;
-                                case 1: curContent = report.delegateList(); break;
-                                case 2: curContent = report.contextList(); break;
-                                case 3: curContent = report.timelineList(); break;
+                                case PANES.PROJECT: curContent = report.projectList(); break;
+                                case PANES.WHO: curContent = report.delegateList(); break;
+                                case PANES.CONTEXT: curContent = report.contextList(); break;
+                                case PANES.WHEN: curContent = report.timelineList(); break;
                                 default: curContent = report.projectList(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, report.showNotes), null)
@@ -287,10 +294,10 @@ class NodeLink extends LinkListener {
             Clipboard clip = panel.getToolkit().getSystemClipboard();
             if (clip != null) {
                 switch (report.selPane) {
-                    case 0: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
-                    case 1: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
-                    case 2: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
-                    case 3: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+                    case PANES.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
+                    case PANES.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
+                    case PANES.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
+                    case PANES.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
                 clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
@@ -301,10 +308,10 @@ class NodeLink extends LinkListener {
             int pos = uri.substring(7).toInteger()
             List list
             switch (report.selPane) {
-                case 0: list = (List) report.projectList()['groups'][pos]['items']; break;
-                case 1: list = (List) report.delegateList()['groups'][pos]['items']; break;
-                case 2: list = (List) report.contextList()['groups'][pos]['items']; break;
-                case 3: list = (List) report.timelineList()['groups'][pos]['items']; break;
+                case PANES.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
+                case PANES.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
+                case PANES.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
+                case PANES.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
             }
             List ids = list.collect { it['nodeID'] }
