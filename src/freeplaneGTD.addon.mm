@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1444387304403" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1444407662854" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/index.php/freeplane-gtd">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -412,7 +412,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1442675880417">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1444407647060">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -687,7 +687,7 @@
 <node TEXT="${name}-icon.png" ID="ID_1819207796" CREATED="1323059863835" MODIFIED="1323063753585">
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="fpgtdLogo.png" ID="ID_1897993304" CREATED="1323059879726" MODIFIED="1323063753585">
+<node TEXT="fpgtdLogo.png" ID="ID_1897993304" CREATED="1323059879726" MODIFIED="1444407674459">
 <edge COLOR="#999999"/>
 </node>
 </node>
