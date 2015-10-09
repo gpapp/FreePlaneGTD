@@ -13,5 +13,6 @@
     <orderEntry type="library" name="flying-saucer-core-9.0.7" level="project" />
     <orderEntry type="library" name="org.osgi.core-6.0.0" level="application" />
     <orderEntry type="library" name="freeplane" level="application" />
+    <orderEntry type="library" name="flying-saucer-core-9.0.8" level="project" />
   </component>
 </module>

@@ -68,13 +68,17 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
     head.addContent('style',
             '/*<![CDATA[*/' +
                     'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }' +
-                    'h1 {font-size:24pt; font-weight:bold;}' +
-                    'a {text-decoration: none; color:#990000;}' +
+                    'h1 {font-size:20pt; font-weight:bold;}' +
+                    'h2 {font-size:16pt; font-weight:bold;}' +
+                    'a {text-decoration: none; color:#000077;}' +
                     'ul.actionlist { list-style: none; }' +
-                    'li { padding-left: 1em; text-indent: -1em; }' +
+                    'li { padding-left: 1em; text-indent: -2em; padding-bottom:5pt }' +
+                    '.doneIcon { padding-right: 1em }' +
+                    '.priorityIcon { left: 2em; position:absolute; }' +
+                    '.contextIcon { padding-left: 1em }' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
                     '.note {background-color: rgb(250,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
-                    '.overdue {background-color: rgb(250,100,90)}' +
+                    '.overdue {background-color: rgb(250,150,140)}' +
                     '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
             [type: 'text/css'])
@@ -91,21 +95,22 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
         Tag curItem = body.addChild('ul', ['class': 'actionlist'])
         it['items'].each {
             Tag wrap = curItem.addChild('li')
-            wrap.addChild('img', [src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
-            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             if (it['priority']) {
-                wrap.addChild('img', [src: "builtin:full-" + it['priority']])
+                wrap.addChild('img', [class:"priorityIcon", src: "builtin:full-" + it['priority']])
             }
+            wrap.addChild('img', [class:"doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
+            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
 
             Tag contextTag = new Tag('span')
 
             it['context']?.split(',').each { key ->
                 if (contextIcons.keySet().contains(key)) {
-                    contextTag.addChild('img', [src: "builtin:" + contextIcons.get(key), "title": key])
+                    contextTag.addChild('img', [class:"contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
+                } else {
+                    contextTag.addContent('@');
+                    contextTag.addContent(key);
                 }
-                contextTag.addContent('@');
-                contextTag.addContent(key);
             }
             !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
             !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
