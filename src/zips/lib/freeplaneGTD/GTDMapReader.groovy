@@ -216,12 +216,12 @@ class GTDMapReader {
             Proxy.Node walker = parentNode;
             while (walker) {
                 if (walker.icons.contains(iconProject)) {
-                    retval = walker.text + (retval ? '/' + retval : '');
+                    retval = stripHTMLTags(walker.text) + (retval ? '/' + retval : '');
                 }
                 walker = walker.parent;
             }
         }
-        return retval ? retval : parentNode.text;
+        return retval ? retval : stripHTMLTags(parentNode.text);
     }
 
     //--------------------------------------------------------------
@@ -230,9 +230,6 @@ class GTDMapReader {
     def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone) {
         def icons = thisNode.icons.icons;
         def naNodeID = thisNode.id;
-        String naAction = stripHTMLTags(thisNode.transformedText);
-        String naDetails = stripHTMLTags(thisNode.detailsText)
-        String naNotes = stripHTMLTags(thisNode.noteText)
 
         // use index method to get attributes
         String naContext = thisNode['Where'].toString()
@@ -251,8 +248,11 @@ class GTDMapReader {
         def result = [];
         // include result if it has next action icon and its not the icon setting node for next actions
         if (icons.contains(iconNextAction)) {
+            String naAction = stripHTMLTags(thisNode.transformedText);
             if (!(naAction =~ /Icon:/)) {
-                def naProject = findNextActionProject(thisNode, iconProject);
+                String naDetails = stripHTMLTags(thisNode.detailsText)
+                String naNotes = stripHTMLTags(thisNode.noteText)
+                String naProject = findNextActionProject(thisNode, iconProject);
                 if (icons.contains(iconToday)) {
                     naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
                 }
