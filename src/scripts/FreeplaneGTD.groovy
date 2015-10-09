@@ -23,14 +23,15 @@ import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
 import org.freeplane.core.ui.components.UITools
+import org.freeplane.core.util.FreeplaneIconUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Proxy
+import org.xhtmlrenderer.resource.ImageResource
 import org.xhtmlrenderer.simple.FSScrollPane
 import org.xhtmlrenderer.simple.XHTMLPanel
 import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler
-import org.xhtmlrenderer.swing.BasicPanel
-import org.xhtmlrenderer.swing.LinkListener
+import org.xhtmlrenderer.swing.*
 
 import javax.swing.*
 import javax.swing.event.ChangeEvent
@@ -41,6 +42,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
 import java.util.List
 
 String title = 'GTD Next Actions'
@@ -50,7 +52,7 @@ String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 JFrame mainFrame
 
-private enum PANES {
+enum PANES {
     PROJECT,
     WHO,
     CONTEXT,
@@ -131,6 +133,7 @@ String formatList(Map list, boolean showNotes) {
                     wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
                 }
             }
+            wrap.addChild('img', [src: "bundle://1:1:/images/icons/stop.png"])
         }
     }
     html.addContent(body)
@@ -154,6 +157,17 @@ SwingBuilder.edtBuilder {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize()
     int frHeight = (screenSize.height) / 4 * 3
     int frWidth = (screenSize.width) / 4 * 3
+
+    ImageResourceLoader imageLoader = new ImageResourceLoader() {
+        @Override
+        public synchronized ImageResource get(final String uri, final int width, final int height) {
+            if (uri.startsWith("bundle://1:1:/images/icons/")) {
+                ImageIcon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("bundle://1:1:/images/icons/(.*).png", "\$1"))
+                return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
+            }
+            return super.get(uri, width, height)
+        }
+    }
 
     iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
     iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
@@ -201,14 +215,19 @@ SwingBuilder.edtBuilder {
             projectPane = new XHTMLPanel()
             projectPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(projectPane))
 
+            projectPane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(projectPane, imageLoader))
+
             delegatePane = new XHTMLPanel()
             delegatePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(delegatePane))
+            delegatePane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(delegatePane, imageLoader))
 
             contextPane = new XHTMLPanel()
             contextPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(contextPane))
+            contextPane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(contextPane, imageLoader))
 
             timelinePane = new XHTMLPanel()
             timelinePanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(timelinePane))
+            timelinePane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(timelinePane, imageLoader))
         }
         panel(constraints: BorderLayout.SOUTH) {
             boxLayout(axis: BoxLayout.X_AXIS)
@@ -441,3 +460,35 @@ contextPane.scrollTo(new Point(0, 0))
 timelinePane.scrollTo(new Point(0, 0))
 mainFrame.setLocationRelativeTo(ui.frame)
 mainFrame.visible = true
+
+static BufferedImage iconToImage(Icon icon) {
+    if (icon instanceof ImageIcon) {
+        Image img = ((ImageIcon) icon).image;
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
+    } else {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        GraphicsEnvironment ge =
+                GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage image = gc.createCompatibleImage(w, h);
+        Graphics2D g = image.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
+        return image;
+    }
+}
