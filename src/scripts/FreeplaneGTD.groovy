@@ -47,7 +47,7 @@ import java.util.List
 
 String title = 'GTD Next Actions'
 String userPath = c.userDirectory.toString()
-String txtVer = '1.6.1'
+String txtVer = '1.6.2'
 String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 JFrame mainFrame

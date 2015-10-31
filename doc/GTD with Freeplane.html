@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Getting Things Done using Freeplane GTD+</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-slide-content { background-color: aliceblue; margin: 5%}   
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, title
+
+# Getting Things Done using Freeplane GTD+
+
+---
+
+# Agenda
+
+1. [GTD primer](#primer)
+2. [Getting started](#install)
+3. [Starting up the GTD system](#start)
+4. [Creating tasks and projects using Freeplane built-ins](#create-bi)
+5. [Creating tasks and projects using shortcuts](#create-ao)
+6. [Editing tasks and projects using the add-on](#edit)
+7. [Using the task list](#task-list)
+8. [Performing task reviews](#review)
+9. [Supporting task engagement](#engage)
+10. [Customization](#customization)
+
+---
+name:primer
+# GTD primer
+
+### What's Getting Things Done?
+
+Getting Things Done is a task management methodology developed
+by David Allen. It's primarily focused on the following 
+[five steps](http://gettingthingsdone.com/fivesteps/) 
+1. Capture (Collect your tasks/ideas)
+1. Clarify (Identify what is to be done)
+1. Organize (Assign the tasks to  corresponding projects)
+1. Reflect (Review to see what is done)
+1. Engage (Do the actual tasks)
+
+Please see the [Official site](http://gettingthingsdone.com/) for 
+more information.
+
+---
+name:install
+# Getting started
+
+## Install Freeplane
+
+Download and install [Freeplane](http://freeplane.sourceforge.net) 
+for your computer.
+
+## Install the add-on
+
+Install the [Freeplane GTD+ add-on](http://www.itworks.hu/freeplanegtd-release/)
+in Freeplane using the Tools -> Add-ons menu. Either you download 
+it locally and open the file using the file browser, or paste the 
+URL directly to the file selection dialog.
+
+After installation, you must restart Freeplane, to use the add-on.
+
+---
+name:start
+# Starting up the GTD system
+
+You should create your own GTD structure, to assist the 5 steps. 
+An example file can be downloaded <a href='GTD_template.mm' download>here</a>.
+
+This template covers the simplest possible GTD set-up, which 
+can be customized to your GTD system. You can create your sections at will, 
+restructure the map to your liking. The six most commonly used sections are in the template.
+
+* Inbox - is for holding the __Captured__ tasks, and for performing basic __Clarification__.
+* Projects - is for holding all kind of personal/business projects once they are __Clarified__ and __Organised__
+* Someday - Maybe - is for holding tasks that are not readily actionable, but are not to be forgotten
+* Review - is for holding the completed tasks waiting for __Reflection__
+* Archive - is for holding __Reflected__ items, that have some importance to be remembered for 
+* Config - is a technical section to hold configuration information specific to this map
+
+---
+name:create-bi
+# Creating tasks and projects using Freeplane built-ins
+
+The __Collection__ and __Clarification__ tasks can be performed by created by 
+creating simple text nodes in the mindmap. Once the tasks are marked with the
+![important](yes.png) icon, the add-on will consider it as a task.
+
+The __Organization__ can be performed by creating projects and, dragging/moving the tasks 
+to their corresponding projects. The add-on will consider nodes marked with a 
+![list](list.png) icon as a project.
+
+The projects can be marked complete using the ![ok](button_ok.png) icon.
+
+These icons can be configured to your liking in the configuration nodes.
+
+The other important task aspects like, When, Where, Who can be specified by 
+node attributes, using the Attribute editor Alt-F9.
+
+It's a good idea to use the notes feature of Freeplane to add more information 
+about the task in the __Clarification__ phase.       
+
+---
+name:create-ao
+# Creating tasks using shortcuts
+
+The other possibility of defining tasks is by using the shortcut notation, 
+where the node text is formatted in a way, that it can be converted to a task.
+It must start with a * like:
+```bash
+    * Your task here
+```
+Once the add-on task collection is executed using either Alt-H or when 
+opening the task list with Ctrl-H. it  will be converted to 
+
+![yes](yes.png) Your task here
+
+---
+
+# Creating tasks using shortcuts 2.
+ 
+Task properties can also be specified in shortcuts,
+```bash 
+    * Your task must be completed [someone] {date} #2 @Context
+```
+Will be converted to a priority 2 task 
+
+![yes](yes.png)![2](full-2.png) Your task must be completed
+* Who - someone
+* Where - Context
+* When - date
+
+You can specify any text for these attributes, but be aware of the following. 
+* The add-on will try to guess the date format using several standard formats, 
+so it can be used for sorting the tasks by date.
+* Priorities must be numeric from 0 to 9
+* The contexts cannot contain spaces, but more than one may be specified
+* More than one responsible can be assigned 
+
+---
+name:edit
+# Editing tasks and projects using the add-on
+
+The add-on provides a simple editor that can be used to edit the created tasks.
+
+The editor can be invoked using, the F4 key on a selected task.
+
+You can change the attributes of the tasks here, as well as mark them as done.
+
+---
+name:task-list
+# Using the task list
+
+The task list is the main feature of the add-on. It can show the tasks in the current 
+map sorted according to the four basic task aspects.
+* By project - a list of tasks organized by project
+* By responsible - a list of tasks by responsible
+* By context - tasks by context
+* Timeline view - tasks organized by time
+
+The group of tasks are all organized according to priority and date.
+Tasks without specified priority are considered to have priority 5.
+
+You can use the buttons next to the grouped items to copy the data to
+the clipboard, or to select the corresponding items in the map.
+
+You can use the checkboxes on the bottom, to show/hide the completed tasks
+and to show/hide the notes for the tasks.
+
+---
+name:review
+# Performing task reviews
+
+As a preparation for a reviews the done items from each project, 
+can be moved to the review section. 
+
+Once all done items are moved to the Review section, they can be reviewed manually.
+
+After review and reflection the items can either be simply deleted, or moved 
+to the archive section. 
+
+---
+name:engage
+# Supporting task engagement
+
+The tasks can support task execution in two simple ways. 
+
+First of all they can be a placeholder for the mindmap corresponding 
+to the task itself. Notes, information about the task can be kept under it, 
+as well as corresponding subtasks could be also added here.
+
+The second is the done status. It's not only important to know if a task 
+is done, or not, but it also gives a great satisfaction, when a task item 
+is finally checked.
+---
+name: customization
+# Customization - Preferences
+
+Some basic behaviour of the add-on can be configured from the Freeplane settings. 
+Open Tools -> Settings menu, select add-ons, and scroll to FreeplaneGTD section to set these up.
+
+* Filter done items - Whether to filter done items by default when the action list is opened
+* Initial view - Which tab to open the list view, by default
+* Auto collapse upon selection - Whether to collapse all branches automatically, when 
+  an item is selected from the action list  
+---
+# Customization - Icons
+
+The icons used by the add-on are configured using simple nodes. It's best to collect them under 
+a configuration node, but feel free to throw them around your map, if you like.
+
+The configuration nodes must be assigned a single item, if there are 
+multiple icons, only the first one will be considered!
+
+Configuration takes the form
+```bash
+     Icon: OPTION
+```
+
+Where _OPTION_ can be
+* Next Action - Action icon 
+* Project - To specify the project icon
+* Done - To specify the completed icon
+
+If _OPTION_ starts with a @ it will be considered a Context icon.
+   
+---
+# That's all
+
+Have a great time using this tool, and don't forget to drop me a line if you 
+have an idea for enhancing it's features!
+
+* [Official site](http://www.itworks.hu/index.php/freeplane-gtd/)
+* [Releases](http://www.itworks.hu/freeplanegtd-release/)
+* [Issue tracking](https://github.com/gpapp/FreePlaneGTD/issues)
+ 
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

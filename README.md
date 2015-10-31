@@ -53,12 +53,13 @@ In order to speed up the action entry, shorthand notation can be used to add new
 
 The format of the shorthand notation is as follows. Please note, that the position of the attributes do not matter. The first character of the notation must be an “*”.
 
-> `* Action name {when} @context [who]
+> `* Action name {when} @context [who] #priority
 
 Will be converted to a node with attributes
 * Where - 'context'
 * When - 'when'
 * Who - 'who'
+* Priority - 'priority' (only accepts values 0 to 9)
 
 
 > `* Increase default size of the GTD pane @Coding {v0.9}
