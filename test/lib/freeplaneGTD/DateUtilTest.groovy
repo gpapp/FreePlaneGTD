@@ -6,12 +6,13 @@ import java.text.SimpleDateFormat
 
 class DateUtilTest {
 
+    int currentYear = Calendar.instance.get(Calendar.YEAR);
     Map goodresults = [
             ['v1.1', 'v1.1']                  : null,
-            ['11 23', '2015-11-23'] : 'MM dd',
-            ['11/23', '2015-11-23'] : 'MM/dd',
-            ['11.23', '2015-11-23'] : 'MM.dd',
-            ['11.23.', '2015-11-23']: 'MM.dd.',
+            ['11 23', currentYear+'-11-23'] : 'MM dd',
+            ['11/23', currentYear+'-11-23'] : 'MM/dd',
+            ['11.23', currentYear+'-11-23'] : 'MM.dd',
+            ['11.23.', currentYear+'-11-23']: 'MM.dd.',
 
             ['14-11-23', '2014-11-23']        : 'yy-MM-dd',
             ['14 11 23', '2014-11-23']        : 'yy MM dd',
