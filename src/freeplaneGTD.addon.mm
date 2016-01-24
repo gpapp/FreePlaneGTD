@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1447782976156" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1453650315083" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -52,7 +52,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<attribute_layout NAME_WIDTH="133" VALUE_WIDTH="161"/>
+<attribute_layout NAME_WIDTH="133" VALUE_WIDTH="319"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
 <attribute NAME="version" VALUE="v1.7.0"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
@@ -96,9 +96,10 @@
     </ul>
   </body>
 </html>
+
 </richcontent>
 <edge COLOR="#999999"/>
-<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1446325988586">
+<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1453644072875">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -119,7 +120,7 @@
   </body>
 </html>
 </richcontent>
-<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1415057406446" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
+<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1453650197342" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
 
 <html>
   <head>
@@ -127,36 +128,36 @@
   </head>
   <body>
     <p>
-      Freeplane|GTD creates views of GTD-style Next Action lists extracted from a mind map, providing views:
+      <font size="2">Freeplane|GTD creates views of GTD-style lists extracted from a mind map, providing views: </font>
     </p>
     <ul>
       <li>
-        By Project
+        <font size="2">By Project </font>
       </li>
       <li>
-        By Context (where the next action gets done)
+        <font size="2">By Context (where the next action gets done) </font>
       </li>
       <li>
-        By Owner (who owns it, if not you)
+        <font size="2">By Owner (who owns it, if not you) </font>
       </li>
       <li>
-        By Due Date (when)
+        <font size="2">By Due Date (when) </font>
       </li>
     </ul>
     <p>
-      The completed actions can be marked and filtered.
+      <font size="2">The completed actions can be marked and filtered, moved to Review folder or Archive folder </font>
     </p>
     <p>
       
     </p>
     <p>
-      Markers (icons) can be configured to correspond to contexts
+      <font size="2">Markers (icons) can be configured to correspond to contexts </font>
     </p>
     <p>
       
     </p>
     <p>
-      Simple action editor is provided.
+      <font size="2">Simple action editor is provided.</font>
     </p>
   </body>
 </html>
@@ -164,7 +165,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1446325988591">
+<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1453644072887">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -180,7 +181,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1446325988598">
+<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1453644072899">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -205,7 +206,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1446325988605">
+<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1453644072912">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -225,7 +226,7 @@
 </richcontent>
 <node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1442656278534"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1447782976154">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1453650134269">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -245,7 +246,7 @@
 <attribute NAME="freeplaneGTD_default_view" VALUE="2" OBJECT="org.freeplane.features.format.FormattedNumber|2|#0.####"/>
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1446325988616">
+<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1453644072933">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -271,13 +272,15 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1447782976143" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1453635505206" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Next action list"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="Convert tasks from shorthand"/>
 <attribute NAME="addons.${name}.editAction" VALUE="Edit action"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="Move completed to archive"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="Move completed to review"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filter completed tasks by default"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Default action view"/>
@@ -316,14 +319,18 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Done"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selection copied to clipboard."/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archives"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1447782976141" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1453650777129" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend&#x151;k"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="Feladatok l&#xe9;trehoz&#xe1;sa r&#xf6;vid&#xed;t&#xe9;sb&#x151;l"/>
 <attribute NAME="addons.${name}.editAction" VALUE="Szerkeszt&#xe9;s"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="K&#xe9;sz feladatok arc&#xed;vumba"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="K&#xe9;sz feladatok &#xe1;tn&#xe9;z&#xe9;sre"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD tulajdons&#xe1;gai"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="K&#xe9;sz elemek sz&#x171;r&#xe9;se alapb&#xf3;l"/>
@@ -362,9 +369,11 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe1;s"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="K&#xe9;sz"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="V&#xe1;lasztott elemek a v&#xe1;g&#xf3;lapra m&#xe1;solva."/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Arch&#xed;vum"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="&#xc1;tn&#xe9;zend&#x151;"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1447782976140" HGAP="50" VSHIFT="10">
+<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1453634392469" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -409,9 +418,11 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe4;t"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Erledigt"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Auswahl wurde in den Zwischenspeicher abgelegt."/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="es" ID="ID_62414400" CREATED="1323057303773" MODIFIED="1447782976139" HGAP="50" VSHIFT="10">
+<node TEXT="es" ID="ID_62414400" CREATED="1323057303773" MODIFIED="1453650818214" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -456,9 +467,11 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Hecho"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selecci&#xf3;n copiada al portapapeles"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1447782976137" HGAP="50" VSHIFT="10">
+<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1453634421057" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -503,10 +516,12 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe9;"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Termin&#xe9;e"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="S&#xe9;lection copi&#xe9;e dans le presse-papiers"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1447782976151">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1453644080457">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -538,8 +553,11 @@
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/freeplaneGTD.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/freeplaneGTD-icon.png"/>
 <attribute NAME="delete" VALUE="${installationbase}/resources/images/fpgtdLogo.png"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/GTDArchiveTask.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/GTDReviewTask.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/DoneMover.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1446325988638">
+<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1453644072964">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -700,8 +718,32 @@
 <attribute NAME="execute_scripts_without_exec_restriction" VALUE="false"/>
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
+<node TEXT="GTDReviewTask.groovy" ID="ID_1165981840" CREATED="1453634472702" MODIFIED="1453635023181">
+<attribute_layout NAME_WIDTH="291" VALUE_WIDTH="200"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.reviewTask"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
+<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="keyboardShortcut" VALUE="F5"/>
+<attribute NAME="execute_scripts_without_asking" VALUE="true"/>
+<attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_write_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_exec_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1446325995193">
+<node TEXT="GTDArchiveTask.groovy" ID="ID_1222024407" CREATED="1453634472702" MODIFIED="1453635033484">
+<attribute_layout NAME_WIDTH="291" VALUE_WIDTH="200"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.archiveTask"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
+<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="keyboardShortcut" VALUE="F6"/>
+<attribute NAME="execute_scripts_without_asking" VALUE="true"/>
+<attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_write_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_exec_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
+</node>
+</node>
+<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1453644074575">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -744,7 +786,7 @@
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1413298787850" LINK="zips/lib/"/>
 <node TEXT="templates" ID="ID_1096097283" CREATED="1446325478471" MODIFIED="1446325502332" LINK="zips/templates"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1446325995214"><richcontent TYPE="NOTE">
+<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1453644074604"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -787,7 +829,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1446325995181"><richcontent TYPE="NOTE">
+<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1453644074562"><richcontent TYPE="NOTE">
 
 <html>
   <head>

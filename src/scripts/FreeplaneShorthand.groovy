@@ -2,7 +2,7 @@
 //=========================================================
 // Freeplane GTD+
 //
-// Copyright (c)2014 Gergely Papp
+// Copyright (c)2016 Gergely Papp
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
