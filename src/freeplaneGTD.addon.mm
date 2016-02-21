@@ -1,6 +1,7 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1453650315083" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
+<attribute_registry SHOW_ATTRIBUTES="hide"/>
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1456080272188" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -54,7 +55,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="133" VALUE_WIDTH="319"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.7.0"/>
+<attribute NAME="version" VALUE="v1.7.1"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.3.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -226,7 +227,7 @@
 </richcontent>
 <node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;0&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;1&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;2&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;3&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1442656278534"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1453650134269">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1456079691310">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -246,7 +247,7 @@
 <attribute NAME="freeplaneGTD_default_view" VALUE="2" OBJECT="org.freeplane.features.format.FormattedNumber|2|#0.####"/>
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1453644072933">
+<node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1456079691291">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -272,7 +273,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1453635505206" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1456080214870" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -323,7 +324,7 @@
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1453650777129" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1456079984995" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend&#x151;k"/>
@@ -373,13 +374,15 @@
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="&#xc1;tn&#xe9;zend&#x151;"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1453634392469" HGAP="50" VSHIFT="10">
+<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1456080054770" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="OPL-Punkt Kurzschreibweise verarbeiten"/>
 <attribute NAME="addons.${name}.editAction" VALUE="OPL-Punkt bearbeiten"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="Bewegung abgeschlossen zu archivieren"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="Bewegung abgeschlossen Meinung"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Voreinstellung: Erledigte Punkte herausfiltern"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Voreinstellung f&#xfc;r OPL-Ansicht"/>
@@ -418,66 +421,19 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe4;t"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Erledigt"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Auswahl wurde in den Zwischenspeicher abgelegt."/>
-<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
-<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archiv"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="R&#xfc;ckblick"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="es" ID="ID_62414400" CREATED="1323057303773" MODIFIED="1453650818214" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
-<attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
-<attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
-<attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
-<attribute NAME="addons.${name}.parseShorthand" VALUE="Convertir acciones desde notaci&#xf3;n"/>
-<attribute NAME="addons.${name}.editAction" VALUE="Editar acci&#xf3;n"/>
-<attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
-<attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filtrar completadas por defecto"/>
-<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Vista por defecto"/>
-<attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Colapsar mapa para ver solo acciones relevantes"/>
-<attribute NAME="freeplaneGTD_view_project" VALUE="Proyecto"/>
-<attribute NAME="freeplaneGTD_view_who" VALUE="Quien"/>
-<attribute NAME="freeplaneGTD_view_context" VALUE="Contexto"/>
-<attribute NAME="freeplaneGTD_view_when" VALUE="Orden temporal"/>
-<attribute NAME="freeplaneGTD.tab.project.title" VALUE="Por proyecto"/>
-<attribute NAME="freeplaneGTD.tab.project.tooltip" VALUE="Listar acciones por proyecto"/>
-<attribute NAME="freeplaneGTD.tab.who.title" VALUE="por Quien"/>
-<attribute NAME="freeplaneGTD.tab.who.tooltip" VALUE="Listar acciones por persona"/>
-<attribute NAME="freeplaneGTD.tab.context.title" VALUE="por Contexto"/>
-<attribute NAME="freeplaneGTD.tab.context.tooltip" VALUE="Lista acciones por contexto"/>
-<attribute NAME="freeplaneGTD.tab.when.title" VALUE="Orden temporal"/>
-<attribute NAME="freeplaneGTD.tab.when.tooltip" VALUE="Listar acciones por orden temporal"/>
-<attribute NAME="freeplaneGTD.tab.about.title" VALUE="Sobre"/>
-<attribute NAME="freeplaneGTD.tab.about.tooltip" VALUE="Sobre Freeplane|GTD+"/>
-<attribute NAME="freeplaneGTD.button.refresh" VALUE="Refrescar"/>
-<attribute NAME="freeplaneGTD.button.print" VALUE="Imprimir"/>
-<attribute NAME="freeplaneGTD.button.copy" VALUE="Copiar"/>
-<attribute NAME="freeplaneGTD.button.cancel" VALUE="Cerrar"/>
-<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Filtrar hechos"/>
-<attribute NAME="freeplaneGTD.button.show_notes" VALUE="Mostrar notas"/>
-<attribute NAME="freeplaneGTD.button.done" VALUE="Hecho"/>
-<attribute NAME="freeplaneGTD.button.select" VALUE="Seleccionar nodos"/>
-<attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Sin asignar"/>
-<attribute NAME="freeplaneGTD.view.when.today" VALUE="Hoy"/>
-<attribute NAME="freeplaneGTD.view.when.this_week" VALUE="Esta semana"/>
-<attribute NAME="freeplaneGTD.actioneditor.title" VALUE="Editar acci&#xf3;n"/>
-<attribute NAME="freeplaneGTD.actioneditor.action" VALUE="Acci&#xf3;n"/>
-<attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Quien"/>
-<attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Contexto"/>
-<attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Cuando"/>
-<attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Hoy"/>
-<attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
-<attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Hecho"/>
-<attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selecci&#xf3;n copiada al portapapeles"/>
-<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
-<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
-<edge COLOR="#999999"/>
-</node>
-<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1453634421057" HGAP="50" VSHIFT="10">
+<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1456080252314" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Liste des prochaines actions"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="Convertir action &#xe0; partir du libell&#xe9;"/>
 <attribute NAME="addons.${name}.editAction" VALUE="Modifier action"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="D&#xe9;placement termin&#xe9;e pour archiver"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="D&#xe9;placement termin&#xe9;e &#xe0; donner votre avis"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Par d&#xe9;faut, masquer les actions termin&#xe9;es"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Par d&#xe9;faut, lister les actions par"/>
@@ -516,12 +472,114 @@
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe9;"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Termin&#xe9;e"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="S&#xe9;lection copi&#xe9;e dans le presse-papiers"/>
-<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archive"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archives"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Revue"/>
+<edge COLOR="#999999"/>
+</node>
+<node TEXT="es" ID="ID_1393937145" CREATED="1323057303773" MODIFIED="1456079691297" HGAP="50" VSHIFT="10">
+<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
+<attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
+<attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
+<attribute NAME="addons.${name}.parseShorthand" VALUE="Convertir acciones desde notaci\u00F3n"/>
+<attribute NAME="addons.${name}.editAction" VALUE="Editar acci\u00F3n"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="Pasar completadas a Archivo"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="Pasar completadas a Revisar"/>
+<attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
+<attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filtrar completadas por defecto"/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Vista por defecto"/>
+<attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Colapsar mapa para ver solo acciones relevantes"/>
+<attribute NAME="freeplaneGTD_view_project" VALUE="Proyecto"/>
+<attribute NAME="freeplaneGTD_view_who" VALUE="Quien"/>
+<attribute NAME="freeplaneGTD_view_context" VALUE="Contexto"/>
+<attribute NAME="freeplaneGTD_view_when" VALUE="Orden temporal"/>
+<attribute NAME="freeplaneGTD.tab.project.title" VALUE="Por proyecto"/>
+<attribute NAME="freeplaneGTD.tab.project.tooltip" VALUE="Listar acciones por proyecto"/>
+<attribute NAME="freeplaneGTD.tab.who.title" VALUE="por Quien"/>
+<attribute NAME="freeplaneGTD.tab.who.tooltip" VALUE="Listar acciones por persona"/>
+<attribute NAME="freeplaneGTD.tab.context.title" VALUE="por Contexto"/>
+<attribute NAME="freeplaneGTD.tab.context.tooltip" VALUE="Lista acciones por contexto"/>
+<attribute NAME="freeplaneGTD.tab.when.title" VALUE="Orden temporal"/>
+<attribute NAME="freeplaneGTD.tab.when.tooltip" VALUE="Listar acciones por orden temporal"/>
+<attribute NAME="freeplaneGTD.tab.about.title" VALUE="Sobre"/>
+<attribute NAME="freeplaneGTD.tab.about.tooltip" VALUE="Sobre Freeplane|GTD+"/>
+<attribute NAME="freeplaneGTD.button.refresh" VALUE="Refrescar"/>
+<attribute NAME="freeplaneGTD.button.print" VALUE="Imprimir"/>
+<attribute NAME="freeplaneGTD.button.copy" VALUE="Copiar"/>
+<attribute NAME="freeplaneGTD.button.cancel" VALUE="Cerrar"/>
+<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Filtrar hechos"/>
+<attribute NAME="freeplaneGTD.button.show_notes" VALUE="Mostrar notas"/>
+<attribute NAME="freeplaneGTD.button.done" VALUE="Hecho"/>
+<attribute NAME="freeplaneGTD.button.select" VALUE="Seleccionar nodos"/>
+<attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Sin asignar"/>
+<attribute NAME="freeplaneGTD.view.when.today" VALUE="Hoy"/>
+<attribute NAME="freeplaneGTD.view.when.this_week" VALUE="Esta semana"/>
+<attribute NAME="freeplaneGTD.actioneditor.title" VALUE="Editar acci\u00F3n"/>
+<attribute NAME="freeplaneGTD.actioneditor.action" VALUE="Acci\u00F3n"/>
+<attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Quien"/>
+<attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Contexto"/>
+<attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Cuando"/>
+<attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Hoy"/>
+<attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
+<attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Hecho"/>
+<attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selecci\u00F3n copiada al portapapeles"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archivo"/>
+<attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Revisar"/>
+<edge COLOR="#999999"/>
+</node>
+<node TEXT="nl" ID="ID_1763629932" CREATED="1323057303773" MODIFIED="1456080263018" HGAP="50" VSHIFT="10">
+<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
+<attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
+<attribute NAME="addons.${name}.listActions" VALUE="Lijst met eerstvolgende acties"/>
+<attribute NAME="addons.${name}.parseShorthand" VALUE="Converteer actie vanuit omschrijving"/>
+<attribute NAME="addons.${name}.editAction" VALUE="Wijzig actie"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="Verplaats afgeronden naar archief"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="Verplaats afgeronden naar review"/>
+<attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
+<attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Filter de afgewerkte acties er standaard uit."/>
+<attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Standaard actie overzicht"/>
+<attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Vouw de map dicht zodat alleen relevante taken getoond worden"/>
+<attribute NAME="freeplaneGTD_view_project" VALUE="Project"/>
+<attribute NAME="freeplaneGTD_view_who" VALUE="Wie"/>
+<attribute NAME="freeplaneGTD_view_context" VALUE="Context"/>
+<attribute NAME="freeplaneGTD_view_when" VALUE="Tijdslijn"/>
+<attribute NAME="freeplaneGTD.tab.project.title" VALUE="Volgens Project"/>
+<attribute NAME="freeplaneGTD.tab.project.tooltip" VALUE="Lijst van projectacties"/>
+<attribute NAME="freeplaneGTD.tab.who.title" VALUE="Volgens Wie"/>
+<attribute NAME="freeplaneGTD.tab.who.tooltip" VALUE="Lijst van gedelegeerde acties"/>
+<attribute NAME="freeplaneGTD.tab.context.title" VALUE="Volgens Context"/>
+<attribute NAME="freeplaneGTD.tab.context.tooltip" VALUE="Lijst van contextuele acties"/>
+<attribute NAME="freeplaneGTD.tab.when.title" VALUE="Tijdslijn"/>
+<attribute NAME="freeplaneGTD.tab.when.tooltip" VALUE="Volgens Tijdslijn"/>
+<attribute NAME="freeplaneGTD.tab.about.title" VALUE="Over"/>
+<attribute NAME="freeplaneGTD.tab.about.tooltip" VALUE="Over Freeplane|GTD+"/>
+<attribute NAME="freeplaneGTD.button.refresh" VALUE="Ververs"/>
+<attribute NAME="freeplaneGTD.button.print" VALUE="Print"/>
+<attribute NAME="freeplaneGTD.button.copy" VALUE="Kopieer"/>
+<attribute NAME="freeplaneGTD.button.cancel" VALUE="Sluit"/>
+<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Filter klaar"/>
+<attribute NAME="freeplaneGTD.button.show_notes" VALUE="Toon notities"/>
+<attribute NAME="freeplaneGTD.button.done" VALUE="Klaar"/>
+<attribute NAME="freeplaneGTD.button.select" VALUE="Selecteer nodes"/>
+<attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Niet toegekend"/>
+<attribute NAME="freeplaneGTD.view.when.today" VALUE="Vandaag"/>
+<attribute NAME="freeplaneGTD.view.when.this_week" VALUE="Deze week"/>
+<attribute NAME="freeplaneGTD.actioneditor.title" VALUE="Pas actie aan"/>
+<attribute NAME="freeplaneGTD.actioneditor.action" VALUE="Actie"/>
+<attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Wie"/>
+<attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Context"/>
+<attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Wanneer"/>
+<attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Vandaag"/>
+<attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioriteit"/>
+<attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Klaar"/>
+<attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selectie gekopieerd naar het clipboard"/>
+<attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archief"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1453644080457">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1456079691300">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -743,7 +801,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1453644074575">
+<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1456080279826">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -781,6 +839,7 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 <node TEXT="icons" ID="ID_1422580718" CREATED="1323094256288" MODIFIED="1413298793053" VSHIFT="-20" LINK="zips/icons/"/>
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1413298787850" LINK="zips/lib/"/>
