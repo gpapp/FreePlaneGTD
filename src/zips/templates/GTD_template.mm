@@ -146,7 +146,7 @@
       Icon: Done&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;- Icon to represent a completed task
     </p>
     <p>
-      Icon: Next Action&#160;&#160;&#160;&#160;&#160;- Icon to represent an urgent task
+      Icon: Next action&#160;&#160;&#160;&#160;&#160;- Icon to represent an urgent task
     </p>
     <p>
       
