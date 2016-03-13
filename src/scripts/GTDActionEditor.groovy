@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
+import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
 import groovy.swing.SwingBuilder
 import org.freeplane.plugin.script.proxy.Proxy
@@ -36,6 +37,8 @@ class ActionEditorModel {
     boolean today
     String when
     String priority
+    String waitFor
+    String waitUntil
     boolean done
 
     Proxy.Node node
@@ -55,6 +58,8 @@ class ActionEditorModel {
         today=node.icons.contains(GTDMapReader.instance.iconToday)
         when=node.attributes['When']
         priority=node.attributes['Priority']
+        waitFor=node.attributes['WaitFor']
+        waitUntil=node.attributes['WaitUntil']
         done=node.icons.contains(GTDMapReader.instance.iconDone)
         return true
     }
@@ -71,6 +76,8 @@ class ActionEditorModel {
         !context ? node.attributes.removeAll('Where') : false
         !when ? node.attributes.removeAll('When') : false
         !priority ? node.attributes.removeAll('Priority') : false
+        !waitFor?node.attributes.removeAll('WaitFor'):node.attributes.set('WaitFor',waitFor)
+        !waitUntil?node.attributes.removeAll('WaitUntil'):node.attributes.set('WaitUntil',DateUtil.normalizeDate(waitUntil))
 
         GTDMapReader mapReader = GTDMapReader.instance
         if (node.icons.contains(mapReader.iconToday)!=today) {
@@ -117,6 +124,8 @@ class ActionEditor {
     JTextField whenField
     JTextField priorityField
     JCheckBox  doneField
+    JTextField waitForField
+    JTextField waitUntilField
     JButton doneButton
 
     ActionEditor() {
@@ -148,12 +157,16 @@ class ActionEditor {
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
                         constraints: gbc(gridx:0,gridy:3,ipadx:5,fill:HORIZONTAL))
                     todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
-//                        preferredSize:new Dimension(50,25),
+                        preferredSize:new Dimension(50,25),
                         constraints:gbc(gridx:1,gridy:3,ipadx:5))
                     whenField = textField(preferredSize:new Dimension(250,25),
                         constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
+                    waitForField = textField(preferredSize:new Dimension(250,25),
+                            constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
+                    waitUntilField = textField(preferredSize:new Dimension(250,25),
+                            constraints:gbc(gridx:2,gridy:4,fill:HORIZONTAL))
                     doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                            constraints:gbc(gridx:3,gridy:3,fill:HORIZONTAL))
+                            constraints:gbc(gridx:3,gridy:5,fill:HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
                         constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
@@ -177,6 +190,8 @@ class ActionEditor {
                                 model.today=todayField.selected
                                 model.when=whenField.text
                                 model.priority=priorityField.text
+                                model.waitFor=waitForField.text
+                                model.waitUntil=waitUntilField.text
                                 model.done=doneField.selected
                                 model.updateNode()
                                 mainFrame.setVisible(false)
@@ -208,6 +223,8 @@ class ActionEditor {
         todayField.selected=model.today
         whenField.text=model.when
         priorityField.text=model.priority
+        waitForField.text=model.waitFor
+        waitUntilField.text=model.waitUntil
         doneField.selected=model.done
         mainFrame.pack()
         mainFrame.setLocationRelativeTo(UITools.frame)
