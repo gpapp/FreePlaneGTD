@@ -11,49 +11,49 @@ import org.freeplane.plugin.script.proxy.Proxy
  */
 
 class ReportModel {
-    enum PANES {
-        PROJECT,
-        WHO,
-        CONTEXT,
-        WHEN
-
-        static PANES find(int toFind) {
-            for (p in values()) {
-                if (p.ordinal() == toFind) {
-                    return p;
-                }
-            }
-            return null
-        }
-    }
-
     boolean showNotes
+    String defaultContent
     boolean filterDone
     boolean autoFoldMap
-    PANES selPane = PANES.PROJECT
     Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
+    def taskDate = { task ->
+        def when = task['when']
+        def waitUntil = task['waitUntil']
+        Date today = new Date().clearTime()
+        Date whenDate = null
+        Date waitUntilDate = null
+        if (when == todayText) whenDate = today
+        else if (when instanceof Date) whenDate = when
+        else if (when instanceof ConvertibleDate) whenDate = when.calendar.time
+
+        if (waitUntil instanceof Date) waitUntilDate = waitUntil
+        else if (waitUntil instanceof ConvertibleDate) waitUntilDate = waitUntil.calendar.time
+
+        if (!whenDate && !waitUntilDate) {
+            return thisWeekText
+        }
+        if (whenDate && !waitUntilDate) return whenDate
+        if (!whenDate && waitUntilDate) return waitUntilDate
+        return whenDate < waitUntilDate ? whenDate : waitUntilDate
+    }
     def taskDateComparator = { a, b ->
-        def aw = a['when']
-        def bw = b['when']
+        def aw = a['time']
+        def bw = b['time']
         if ((!aw && !bw) || aw.equals(bw)) {
             return 0
         }
-        Date today = new Date().clearTime()
         Date ad = null
         Date bd = null
-        if (aw == todayText) ad = today
+        Date today = new Date().clearTime()
+        if (aw instanceof Date) ad = aw
         else if (aw == thisWeekText) ad = today + 7
-        else if (aw instanceof Date) ad = aw
-        else if (aw instanceof ConvertibleDate) ad = aw.calendar.time
-        if (bw == todayText) bd = today
+        if (bw instanceof Date) bd = bw
         else if (bw == thisWeekText) bd = today + 7
-        else if (bw instanceof Date) bd = bw
-        else if (bw instanceof ConvertibleDate) bd = bw.calendar.time
         if (!ad && !bd) {
             return aw <=> bw
         }
@@ -61,6 +61,7 @@ class ReportModel {
         if (!ad && bd) return 1
         return ad <=> bd
     }
+
     def taskSortComparator = { a, b ->
         def ap = a['priority'] ?: '5'
         def bp = b['priority'] ?: '5'
@@ -69,7 +70,6 @@ class ReportModel {
         }
         return ap <=> bp
     }
-
 
     ReportModel(Proxy.Node rootNode) {
         this.rootNode = rootNode
@@ -83,14 +83,13 @@ class ReportModel {
         mapReader.convertShorthand(rootNode);
 
         // Get next action lists
-        actionList = mapReader.getActionList(rootNode, filterDone);
+        actionList = mapReader.getActionList(rootNode, filterDone)
+
+        // Fill actionList with next actionable time
+        actionList.each { it['time'] = taskDate(it) }
     }
 
-    int projectCount() {
-        return actionList.size()
-    }
-
-    int delegateCount() {
+    Set delegates() {
         //Filter the missing delegates
         Set delegateGroups = actionList.groupBy({ it['who'] }).keySet()
         Set delegates = []
@@ -98,7 +97,7 @@ class ReportModel {
             def individuals = it?.split(',')
             if (individuals) delegates.addAll(individuals)
         }
-        return delegates.size()
+        return delegates
     }
 
     def projectList() {
@@ -206,7 +205,7 @@ class ReportModel {
         Map retval = [type: 'when']
         List groups = []
         def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
-        def naByGroup = sortedList.groupBy { it['when'] }
+        def naByGroup = sortedList.groupBy { it['time'] }
         naByGroup.each {
             key, value ->
                 List<Map> items = []

@@ -77,7 +77,11 @@ class ActionEditorModel {
         !when ? node.attributes.removeAll('When') : false
         !priority ? node.attributes.removeAll('Priority') : false
         !waitFor?node.attributes.removeAll('WaitFor'):node.attributes.set('WaitFor',waitFor)
-        !waitUntil?node.attributes.removeAll('WaitUntil'):node.attributes.set('WaitUntil',DateUtil.normalizeDate(waitUntil))
+        if (waitUntil){
+            Date waitUntilDate = DateUtil.normalizeDate(waitUntil)
+            node.attributes.set('WaitUntil',waitUntilDate)
+        } else
+            node.attributes.removeAll('WaitUntil')
 
         GTDMapReader mapReader = GTDMapReader.instance
         if (node.icons.contains(mapReader.iconToday)!=today) {
@@ -161,17 +165,23 @@ class ActionEditor {
                         constraints:gbc(gridx:1,gridy:3,ipadx:5))
                     whenField = textField(preferredSize:new Dimension(250,25),
                         constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
-                    waitForField = textField(preferredSize:new Dimension(250,25),
-                            constraints:gbc(gridx:2,gridy:3,fill:HORIZONTAL))
-                    waitUntilField = textField(preferredSize:new Dimension(250,25),
-                            constraints:gbc(gridx:2,gridy:4,fill:HORIZONTAL))
                     doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                            constraints:gbc(gridx:3,gridy:5,fill:HORIZONTAL))
+                            constraints:gbc(gridx:3,gridy:3,fill:HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
+                        constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
+                    waitForField = textField(preferredSize:new Dimension(250,25),
+                            constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
+                        constraints: gbc(gridx:0,gridy:5,ipadx:5,fill:HORIZONTAL))
+                    waitUntilField = textField(preferredSize:new Dimension(250,25),
+                            constraints:gbc(gridx:1,gridy:5,gridwidth:REMAINDER,fill:HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
-                        constraints: gbc(gridx:0,gridy:4,ipadx:5,fill:HORIZONTAL))
+                        constraints: gbc(gridx:0,gridy:6,ipadx:5,fill:HORIZONTAL))
                     priorityField = textField(preferredSize:new Dimension(20,25),
-                        constraints:gbc(gridx:1,gridy:4,gridwidth:REMAINDER,fill:HORIZONTAL))
+                        constraints:gbc(gridx:1,gridy:6,gridwidth:REMAINDER,fill:HORIZONTAL))
 
                 }
 

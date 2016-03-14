@@ -236,6 +236,8 @@ class GTDMapReader {
         String naContext = thisNode['Where'].toString()
         String naWho = thisNode['Who'].toString()
         Object naWhen = thisNode['When']
+        Object naWaitFor = thisNode['WaitFor']
+        Object naWaitUntil = thisNode['WaitUntil']
         String naPriority = thisNode['Priority'].toString()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
@@ -244,6 +246,10 @@ class GTDMapReader {
         } else {
             naWhen = DateUtil.normalizeDate(naWhen)
             thisNode['When'] = naWhen
+        }
+        if (naWaitUntil) {
+            naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
+            thisNode['WaitUntil'] = naWaitUntil
         }
 
         def result = [];
@@ -269,6 +275,8 @@ class GTDMapReader {
                                nodeID  : naNodeID,
                                details : naDetails,
                                notes   : naNotes,
+                               waitFor : naWaitFor,
+                               waitUntil : naWaitUntil,
                                done    : done]
                 }
             }

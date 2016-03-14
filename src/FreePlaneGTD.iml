@@ -6,12 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/zips/lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/scripts" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../test/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.osgi.core-6.0.0" level="application" />
     <orderEntry type="library" name="freeplane" level="application" />
-    <orderEntry type="library" name="flying-saucer-core-9.0.8" level="project" />
-    <orderEntry type="library" name="groovy-2.4.5" level="application" />
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="groovy-2.4.3" level="application" />
   </component>
 </module>
