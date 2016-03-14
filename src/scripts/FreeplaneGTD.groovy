@@ -76,6 +76,7 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
                     '.doneIcon { padding-right: 1em }' +
                     '.priorityIcon { left: 2em; position:absolute; }' +
                     '.contextIcon { padding-left: 1em }' +
+                    '.wait {font-size:9pt; margin-left:32px; margin-top:4px}' +
                     '.details {background-color: rgb(240,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
                     '.note {background-color: rgb(250,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
                     '.overdue {background-color: rgb(250,150,140)}' +
@@ -116,8 +117,9 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
             !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
             !it['context'] ?: wrap.addContent(contextTag)
             !it['project'] ?: wrap.addContent(' for ' + it['project'])
-            !it['waitFor'] ?: wrap.addContent(' wait for ' + it['waitFor'])
-            !it['waitUntil'] ?: wrap.addContent(' wait until ' + it['waitUntil'])
+            if (it['waitFor'] || it['waitUntil']) {
+                wrap.addContent('div', 'wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''), [class: 'wait'])
+            }
             if (showNotes) {
                 if (it['details']) {
                     wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
@@ -136,7 +138,7 @@ def refresh = {
     report.parseMap()
 
     def content
-    report.selectedView= ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+    report.selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
     switch (report.selectedView) {
         case ReportModel.VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, report.showNotes)
             break
@@ -309,7 +311,7 @@ class NodeLink extends LinkListener {
             if (clip != null) {
                 switch (report.selectedView) {
                     case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
-                    case ReportModel.VIEW.WHO:  feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
+                    case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
                     case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
                     case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
