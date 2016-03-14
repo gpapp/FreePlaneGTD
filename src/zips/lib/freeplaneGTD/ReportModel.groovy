@@ -12,14 +12,19 @@ import org.freeplane.plugin.script.proxy.Proxy
 
 class ReportModel {
     boolean showNotes
-    String defaultContent
+    String defaultView
     boolean filterDone
     boolean autoFoldMap
     Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader
+    VIEW selectedView
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
+
+    enum VIEW {
+        PROJECT, WHO, CONTEXT, WHEN, ABOUT
+    }
 
     def taskDate = { task ->
         def when = task['when']
@@ -37,9 +42,11 @@ class ReportModel {
         if (!whenDate && !waitUntilDate) {
             return thisWeekText
         }
-        if (whenDate && !waitUntilDate) return whenDate
-        if (!whenDate && waitUntilDate) return waitUntilDate
-        return whenDate < waitUntilDate ? whenDate : waitUntilDate
+        Date retval
+        if (whenDate && !waitUntilDate) retval= whenDate
+        else if (!whenDate && waitUntilDate) retval= waitUntilDate
+        else retval = whenDate < waitUntilDate ? whenDate : waitUntilDate
+        return retval.equals(today) ? todayText : retval
     }
     def taskDateComparator = { a, b ->
         def aw = a['time']
@@ -51,8 +58,10 @@ class ReportModel {
         Date bd = null
         Date today = new Date().clearTime()
         if (aw instanceof Date) ad = aw
+        else if (aw == todayText) ad = today
         else if (aw == thisWeekText) ad = today + 7
         if (bw instanceof Date) bd = bw
+        else if (bw == todayText) bd = today
         else if (bw == thisWeekText) bd = today + 7
         if (!ad && !bd) {
             return aw <=> bw

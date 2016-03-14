@@ -58,7 +58,7 @@ def panelTitle = { panelT, count = null ->
     return tag
 }
 ReportModel report = new ReportModel(node.map.root)
-report.defaultContent = config.getProperty('freeplaneGTD_default_view')
+report.defaultView = config.getProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 
@@ -76,8 +76,8 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
                     '.doneIcon { padding-right: 1em }' +
                     '.priorityIcon { left: 2em; position:absolute; }' +
                     '.contextIcon { padding-left: 1em }' +
-                    '.details {background-color: rgb(240,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
-                    '.note {background-color: rgb(250,250,240);font-size:10pt; padding-left:2em;padding-top:5px}' +
+                    '.details {background-color: rgb(240,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
+                    '.note {background-color: rgb(250,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
                     '.overdue {background-color: rgb(250,150,140)}' +
                     '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
@@ -98,13 +98,13 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
             if (it['priority']) {
                 wrap.addChild('img', [class: "priorityIcon", src: "builtin:full-" + it['priority']])
             }
-            wrap.addChild('A',[href:'done:'+it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
+            wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
             if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
             wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
 
             Tag contextTag = new Tag('span')
 
-            it['context']?.split(',').each { key ->
+            it['context']?.split(',')?.each { key ->
                 if (contextIcons.keySet().contains(key)) {
                     contextTag.addChild('img', [class: "contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
                 } else {
@@ -136,19 +136,19 @@ def refresh = {
     report.parseMap()
 
     def content
-    switch (contentTypeGroup.selection?.actionCommand) {
-        case "WHO": content = formatList(report.delegateList(), report.mapReader.contextIcons, report.showNotes)
+    report.selectedView= ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+    switch (report.selectedView) {
+        case ReportModel.VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, report.showNotes)
             break
-        case "CONTEXT": content = formatList(report.contextList(), report.mapReader.contextIcons, report.showNotes)
+        case ReportModel.VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, report.showNotes)
             break
-        case "WHEN": content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
+        case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
             break
-        case "ABOUT":
+        case ReportModel.VIEW.ABOUT:
             break
-        case "PROJECT":
+        case ReportModel.VIEW.PROJECT:
         default:
             content = formatList(report.projectList(), report.mapReader.contextIcons, report.showNotes)
-            break
     }
     projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
     cbFilterDone.selected = report.filterDone
@@ -187,39 +187,39 @@ SwingBuilder.edtBuilder {
             contentTypeGroup = buttonGroup()
             projectButton = radioButton(
                     buttonGroup: contentTypeGroup,
-                    actionCommand: "PROJECT",
+                    actionCommand: ReportModel.VIEW.PROJECT.name(),
                     text: TextUtils.getText("freeplaneGTD.tab.project.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
-                    selected: report.defaultContent=="PROJECT",
+                    selected: report.defaultView == "PROJECT",
                     actionPerformed: { refresh() }
             )
             whoButton = radioButton(
                     buttonGroup: contentTypeGroup,
-                    actionCommand: "WHO",
+                    actionCommand: ReportModel.VIEW.WHO.name(),
                     text: TextUtils.getText("freeplaneGTD.tab.who.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
-                    selected: report.defaultContent=="WHO",
+                    selected: report.defaultView == "WHO",
                     actionPerformed: { refresh() }
             )
             contextButton = radioButton(
                     buttonGroup: contentTypeGroup,
-                    actionCommand: "CONTEXT",
+                    actionCommand: ReportModel.VIEW.CONTEXT.name(),
                     text: TextUtils.getText("freeplaneGTD.tab.context.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
-                    selected: report.defaultContent=="CONTEXT",
+                    selected: report.defaultView == "CONTEXT",
                     actionPerformed: { refresh() }
             )
             whenButton = radioButton(
                     buttonGroup: contentTypeGroup,
-                    actionCommand: "WHEN",
+                    actionCommand: ReportModel.VIEW.WHEN.name(),
                     text: TextUtils.getText("freeplaneGTD.tab.when.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
-                    selected: report.defaultContent=="WHEN",
+                    selected: report.defaultView == "WHEN",
                     actionPerformed: { refresh() }
             )
             aboutButton = radioButton(
                     buttonGroup: contentTypeGroup,
-                    actionCommand: "ABOUT",
+                    actionCommand: ReportModel.VIEW.ABOUT.name(),
                     text: TextUtils.getText("freeplaneGTD.tab.about.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
                     actionPerformed: { refresh() }
@@ -241,13 +241,13 @@ SwingBuilder.edtBuilder {
                     })
             button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                     actionPerformed: {
-                        Clipboard clip = projectPanel.getToolkit().getSystemClipboard();
+                        Clipboard clip = projectPane.getToolkit().getSystemClipboard();
                         if (clip != null) {
-                            switch (report.selPane) {
-                                case ReportModel.PANES.PROJECT: curContent = report.projectList(); break;
-                                case ReportModel.PANES.WHO: curContent = report.delegateList(); break;
-                                case ReportModel.PANES.CONTEXT: curContent = report.contextList(); break;
-                                case ReportModel.PANES.WHEN: curContent = report.timelineList(); break;
+                            switch (contentTypeGroup.getSelection().actionCommand) {
+                                case ReportModel.VIEW.PROJECT.name(): curContent = report.projectList(); break;
+                                case ReportModel.VIEW.WHO.name(): curContent = report.delegateList(); break;
+                                case ReportModel.VIEW.CONTEXT.name(): curContent = report.contextList(); break;
+                                case ReportModel.VIEW.WHEN.name(): curContent = report.timelineList(); break;
                                 default: curContent = report.projectList(); break;
                             }
                             clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, report.showNotes), null)
@@ -279,7 +279,7 @@ class NodeLink extends LinkListener {
     ReportModel report
     private final Closure<Boolean> refresh
 
-    NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report,Closure<Boolean> refresh) {
+    NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report, Closure<Boolean> refresh) {
         this.ctrl = ctrl
         this.frame = frame
         this.report = report
@@ -292,8 +292,8 @@ class NodeLink extends LinkListener {
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
 
             if (nodesFound[0] != null) {
-                def node=nodesFound[0]
-                if(node.icons.contains(report.mapReader.iconDone)) {
+                def node = nodesFound[0]
+                if (node.icons.contains(report.mapReader.iconDone)) {
                     node.icons.remove(report.mapReader.iconDone)
                 } else {
                     node.icons.add(report.mapReader.iconDone)
@@ -307,11 +307,11 @@ class NodeLink extends LinkListener {
             Map feeder
             Clipboard clip = panel.getToolkit().getSystemClipboard();
             if (clip != null) {
-                switch (report.selPane) {
-                    case ReportModel.PANES.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
-                    case ReportModel.PANES.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
-                    case ReportModel.PANES.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
-                    case ReportModel.PANES.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+                switch (report.selectedView) {
+                    case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
+                    case ReportModel.VIEW.WHO:  feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
+                    case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
+                    case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
                 clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
@@ -321,11 +321,11 @@ class NodeLink extends LinkListener {
         } else if (uri.startsWith('select:')) {
             int pos = uri.substring(7).toInteger()
             List list
-            switch (report.selPane) {
-                case ReportModel.PANES.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
-                case ReportModel.PANES.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
-                case ReportModel.PANES.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
-                case ReportModel.PANES.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
+            switch (report.selectedView) {
+                case ReportModel.VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
+                case ReportModel.VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
+                case ReportModel.VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
+                case ReportModel.VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
             }
             List ids = list.collect { it['nodeID'] }
@@ -343,7 +343,6 @@ class NodeLink extends LinkListener {
             } else {
                 UITools.informationMessage("Error finding selection");
             }
-
         } else if (uri.startsWith('link:')) {
             String linkNodeID = uri.substring(5)
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
@@ -396,7 +395,7 @@ class NodeLink extends LinkListener {
 
 }
 
-NodeLink nl = new NodeLink(c, mainFrame, report,refresh)
+NodeLink nl = new NodeLink(c, mainFrame, report, refresh)
 projectPane.getMouseTrackingListeners().each {
     if (it instanceof LinkListener) {
         projectPane.removeMouseTrackingListener(it)
