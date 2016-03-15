@@ -271,7 +271,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1456080214870" HGAP="50" VSHIFT="10">
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1457999865942" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
@@ -317,12 +317,14 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Today"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Done"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitFor" VALUE="Wait for"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitUntil" VALUE="Wait until"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selection copied to clipboard."/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archives"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1457991470290" HGAP="50" VSHIFT="10">
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1457999920880" HGAP="50" VSHIFT="10">
 <attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend&#x151;k"/>
@@ -367,6 +369,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Ma"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe1;s"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="K&#xe9;sz"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitFor" VALUE="Kire v&#xe1;r"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitUntil" VALUE="Meddig v&#xe1;r"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="V&#xe1;lasztott elemek a v&#xe1;g&#xf3;lapra m&#xe1;solva."/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Arch&#xed;vum"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="&#xc1;tn&#xe9;zend&#x151;"/>

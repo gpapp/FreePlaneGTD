@@ -43,8 +43,8 @@ class ReportModel {
             return thisWeekText
         }
         Date retval
-        if (whenDate && !waitUntilDate) retval= whenDate
-        else if (!whenDate && waitUntilDate) retval= waitUntilDate
+        if (whenDate && !waitUntilDate) retval = whenDate
+        else if (!whenDate && waitUntilDate) retval = waitUntilDate
         else retval = whenDate < waitUntilDate ? whenDate : waitUntilDate
         return retval.equals(today) ? todayText : retval
     }
@@ -98,17 +98,6 @@ class ReportModel {
         actionList.each { it['time'] = taskDate(it) }
     }
 
-    Set delegates() {
-        //Filter the missing delegates
-        Set delegateGroups = actionList.groupBy({ it['who'] }).keySet()
-        Set delegates = []
-        delegateGroups.each {
-            def individuals = it?.split(',')
-            if (individuals) delegates.addAll(individuals)
-        }
-        return delegates
-    }
-
     def projectList() {
         Map<String, Object> retval = [type: 'project']
         List<Map> groups = []
@@ -119,17 +108,17 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    items << [done    : it['done'],
-                              priority: it['priority'],
-                              action  : it['action'],
-                              nodeID  : it['nodeID'],
-                              who     : it['who'],
-                              when    : it['when'],
-                              context : it['context'],
-                              waitFor : it['waitFor'],
-                              waitUntil : it['waitUntil'],
-                              details : it['details'],
-                              notes   : it['notes']
+                    items << [done     : it['done'],
+                              priority : it['priority'],
+                              action   : it['action'],
+                              nodeID   : it['nodeID'],
+                              who      : it['who'],
+                              when     : it['when'],
+                              context  : it['context'],
+                              waitFor  : it['waitFor'],
+                              waitUntil: it['waitUntil'],
+                              details  : it['details'],
+                              notes    : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -150,23 +139,39 @@ class ReportModel {
                     naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
                 }
         }
+        Map naWaitForGroupFull = actionList.groupBy { it['waitFor'] }
+        naWaitForGroupFull.each {
+            key, value ->
+                if (key) {
+                    def keyList = key.split(',')
+                    keyList.each {
+                        if (!naByGroup[it].contains(value))
+                            naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
+                    }
+                }
+        }
+
+        naByGroup.each { key, value ->
+            naByGroup[key]=value.unique();
+        }
+
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    items << [done    : it['done'],
-                              priority: it['priority'],
-                              action  : it['action'],
-                              nodeID  : it['nodeID'],
-                              when    : it['when'],
-                              context : it['context'],
-                              project : it['project'],
-                              waitFor : it['waitFor'],
-                              waitUntil : it['waitUntil'],
-                              details : it['details'],
-                              notes   : it['notes']
+                    items << [done     : it['done'],
+                              priority : it['priority'],
+                              action   : it['action'],
+                              nodeID   : it['nodeID'],
+                              when     : it['when'],
+                              context  : it['context'],
+                              project  : it['project'],
+                              waitFor  : it['waitFor'],
+                              waitUntil: it['waitUntil'],
+                              details  : it['details'],
+                              notes    : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -197,17 +202,17 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    items << [done    : it['done'],
-                              priority: it['priority'],
-                              action  : it['action'],
-                              nodeID  : it['nodeID'],
-                              when    : it['when'],
-                              who     : it['who'],
-                              project : it['project'],
-                              waitFor : it['waitFor'],
-                              waitUntil : it['waitUntil'],
-                              details : it['details'],
-                              notes   : it['notes']
+                    items << [done     : it['done'],
+                              priority : it['priority'],
+                              action   : it['action'],
+                              nodeID   : it['nodeID'],
+                              when     : it['when'],
+                              who      : it['who'],
+                              project  : it['project'],
+                              waitFor  : it['waitFor'],
+                              waitUntil: it['waitUntil'],
+                              details  : it['details'],
+                              notes    : it['notes']
                     ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
@@ -226,17 +231,17 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    items << [done    : it['done'],
-                              priority: it['priority'],
-                              action  : it['action'],
-                              nodeID  : it['nodeID'],
-                              who     : it['who'],
-                              project : it['project'],
-                              context : it['context'],
-                              waitFor : it['waitFor'],
-                              waitUntil : it['waitUntil'],
-                              details : it['details'],
-                              notes   : it['notes']
+                    items << [done     : it['done'],
+                              priority : it['priority'],
+                              action   : it['action'],
+                              nodeID   : it['nodeID'],
+                              who      : it['who'],
+                              project  : it['project'],
+                              context  : it['context'],
+                              waitFor  : it['waitFor'],
+                              waitUntil: it['waitUntil'],
+                              details  : it['details'],
+                              notes    : it['notes']
                     ]
                 }
                 groups << [title: key, items: items]
