@@ -67,25 +67,24 @@ String formatList(Map list, Map<String, String> contextIcons, boolean showNotes)
     Tag head = html.addChild('head')
     head.addContent('style',
             '/*<![CDATA[*/' +
-                    'body {color:#000000; font-family:Calibri, Verdana, Arial; font-size:13pt; padding: 10px 25px 0px 25px; }' +
-                    'h1 {font-size:20pt; font-weight:bold;}' +
-                    'h2 {font-size:16pt; font-weight:bold;}' +
+                    'body {color:#000000;  }' +
+                    'h1 {font-size:150%; font-weight:bold;}' +
+                    'h2 {font-size:125%; font-weight:bold;}' +
                     'a {text-decoration: none; color:#000077;}' +
                     'ul.actionlist { list-style: none; }' +
-                    'li { padding-left: 1em; text-indent: -2em; padding-bottom:5pt }' +
                     '.doneIcon { padding-right: 1em }' +
                     '.priorityIcon { left: 2em; position:absolute; }' +
                     '.contextIcon { padding-left: 1em }' +
-                    '.wait {font-size:9pt; margin-left:32px; margin-top:4px}' +
-                    '.details {background-color: rgb(240,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
-                    '.note {background-color: rgb(250,250,240);font-size:10pt; margin-left:10px;padding-top:5px}' +
+                    '.wait {font-size:90%; margin-left:32px; margin-top:4px}' +
+                    '.details {margin-left:18px; padding:5px; background-color:rgb(240,250,240);font-size:90%;}' +
+                    '.note    {margin-left:18px; padding:5px; background-color:rgb(250,250,240);font-size:90%;}' +
                     '.overdue {background-color: rgb(250,150,140)}' +
-                    '.buttons {display:inline-block;float:right;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
+                    '.buttons {display:inline-block;float:right;font-size:90%;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
                     '/*]]>*/',
             [type: 'text/css'])
     head.addChild('title')
     Tag body = new Tag('body')
-    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
+//    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
     Date now = Calendar.getInstance().getTime()
     list['groups'].eachWithIndex { it, index ->
         body.addChild('div', [class: 'buttons']).
@@ -190,32 +189,36 @@ SwingBuilder.edtBuilder {
             projectButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.PROJECT.name(),
-                    text: TextUtils.getText("freeplaneGTD.tab.project.title"),
+                    text: "1-" + TextUtils.getText("freeplaneGTD.tab.project.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
+                    mnemonic: "1",
                     selected: report.defaultView == "PROJECT",
                     actionPerformed: { refresh() }
             )
             whoButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.WHO.name(),
-                    text: TextUtils.getText("freeplaneGTD.tab.who.title"),
+                    text: "2-" + TextUtils.getText("freeplaneGTD.tab.who.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
+                    mnemonic: "2",
                     selected: report.defaultView == "WHO",
                     actionPerformed: { refresh() }
             )
             contextButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.CONTEXT.name(),
-                    text: TextUtils.getText("freeplaneGTD.tab.context.title"),
+                    text: "3-" + TextUtils.getText("freeplaneGTD.tab.context.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
+                    mnemonic: "3",
                     selected: report.defaultView == "CONTEXT",
                     actionPerformed: { refresh() }
             )
             whenButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.WHEN.name(),
-                    text: TextUtils.getText("freeplaneGTD.tab.when.title"),
+                    text: "4-" + TextUtils.getText("freeplaneGTD.tab.when.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                    mnemonic: "4",
                     selected: report.defaultView == "WHEN",
                     actionPerformed: { refresh() }
             )

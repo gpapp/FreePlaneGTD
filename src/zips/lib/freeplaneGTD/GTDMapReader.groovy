@@ -295,7 +295,6 @@ class GTDMapReader {
         String retval
         if (HtmlUtils.isHtmlNode(string)) {
             retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1")
-            retval = retval.replaceFirst("(?s)^\\s*<p>\\s*(.*)\\s*</p>\\s*\$", "\$1")
         } else {
             retval = HtmlUtils.toHTMLEscapedText(string)
         }

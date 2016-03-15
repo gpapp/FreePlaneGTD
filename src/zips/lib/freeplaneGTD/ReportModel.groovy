@@ -145,7 +145,7 @@ class ReportModel {
                 if (key) {
                     def keyList = key.split(',')
                     keyList.each {
-                        if (!naByGroup[it].contains(value))
+                        if (!naByGroup[it]?.contains(value))
                             naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
                     }
                 }
