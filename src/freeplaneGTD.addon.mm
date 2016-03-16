@@ -1,6 +1,6 @@
 <map version="freeplane 1.3.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1457984427156" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
+<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1458161295676" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true"/>
@@ -54,11 +54,10 @@
 </hook>
 <attribute_layout NAME_WIDTH="133" VALUE_WIDTH="319"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.8.0"/>
+<attribute NAME="version" VALUE="v1.8.1"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.3.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
-<attribute NAME="updateUrl" VALUE=""/>
 <attribute NAME="downloadUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/"/>
 <attribute NAME="changelogUrl" VALUE=""/>
 <richcontent TYPE="NOTE">
@@ -927,5 +926,6 @@
 </richcontent>
 <node TEXT="flying-saucer-core-9.0.8.jar" ID="ID_1163492533" CREATED="1446325995184" MODIFIED="1446325995186"/>
 </node>
+<node TEXT="" POSITION="right" ID="ID_1633812013" CREATED="1458164291728" MODIFIED="1458164291728"/>
 </node>
 </map>

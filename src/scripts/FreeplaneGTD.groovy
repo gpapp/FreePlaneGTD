@@ -22,6 +22,7 @@ import freeplaneGTD.ClipBoardUtil
 import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
+import groovy.transform.Field
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.FreeplaneIconUtils
 import org.freeplane.core.util.TextUtils
@@ -41,97 +42,30 @@ import java.awt.event.KeyEvent
 import java.awt.image.BufferedImage
 import java.util.List
 
-String title = 'GTD Next Actions'
-String userPath = c.userDirectory.toString()
-String txtVer = '1.8.0'
-String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
+@Field
+static final String title = 'GTD Next Actions'
+@Field
+static final String txtVer = '1.8.1'
+@Field
+static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
+@Field
+static String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
 
-JFrame mainFrame
-ButtonGroup contentTypeGroup
 
-def panelTitle = { panelT, count = null ->
-    Tag tag = new Tag('html')
-    Tag innerChild = tag.addChild('body', [height: '50']).addChild('div', [style: 'font-weight:bold;font-style:italic'])
-    innerChild.addContent(panelT)
-    if (count)
-        innerChild.addContent(new Tag('div', String.valueOf(count), [style: 'font-size:24pt;color:#666666;text-align:center']))
-    return tag
+final String userPath = c.userDirectory.toString()
+final JFrame mainFrame
+final ButtonGroup contentTypeGroup
+
+
+final ReportModel report = new ReportModel(node.map.root)
+try {
+    report.defaultView = ReportModel.VIEW.valueOf(config.getProperty('freeplaneGTD_default_view')).toString()
+} catch (Exception e) {
+    report.defaultView = ReportModel.VIEW.PROJECT
 }
-ReportModel report = new ReportModel(node.map.root)
-report.defaultView = config.getProperty('freeplaneGTD_default_view')
 report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 
-String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-    Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-    Tag head = html.addChild('head')
-    head.addContent('style',
-            '/*<![CDATA[*/' +
-                    'body {color:#000000;  }' +
-                    'h1 {font-size:150%; font-weight:bold;}' +
-                    'h2 {font-size:125%; font-weight:bold;}' +
-                    'a {text-decoration: none; color:#000077;}' +
-                    'ul.actionlist { list-style: none; }' +
-                    '.doneIcon { padding-right: 1em }' +
-                    '.priorityIcon { left: 2em; position:absolute; }' +
-                    '.contextIcon { padding-left: 1em }' +
-                    '.wait {font-size:90%; margin-left:32px; margin-top:4px}' +
-                    '.details {margin-left:18px; padding:5px; background-color:rgb(240,250,240);font-size:90%;}' +
-                    '.note    {margin-left:18px; padding:5px; background-color:rgb(250,250,240);font-size:90%;}' +
-                    '.overdue {background-color: rgb(250,150,140)}' +
-                    '.buttons {display:inline-block;float:right;font-size:90%;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
-                    '/*]]>*/',
-            [type: 'text/css'])
-    head.addChild('title')
-    Tag body = new Tag('body')
-//    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
-    Date now = Calendar.getInstance().getTime()
-    list['groups'].eachWithIndex { it, index ->
-        body.addChild('div', [class: 'buttons']).
-                addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
-                addContent('|').
-                addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
-        body.addContent('h2', it['title'])
-        Tag curItem = body.addChild('ul', ['class': 'actionlist'])
-        it['items'].each {
-            Tag wrap = curItem.addChild('li')
-            if (it['priority']) {
-                wrap.addChild('img', [class: "priorityIcon", src: "builtin:full-" + it['priority']])
-            }
-            wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
-            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
-            wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
-
-            Tag contextTag = new Tag('span')
-
-            it['context']?.split(',')?.each { key ->
-                if (contextIcons.keySet().contains(key)) {
-                    contextTag.addChild('img', [class: "contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
-                } else {
-                    contextTag.addContent('@');
-                    contextTag.addContent(key);
-                }
-            }
-            !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
-            !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
-            !it['context'] ?: wrap.addContent(contextTag)
-            !it['project'] ?: wrap.addContent(' for ' + it['project'])
-            if (it['waitFor'] || it['waitUntil']) {
-                wrap.addContent('div', 'wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''), [class: 'wait'])
-            }
-            if (showNotes) {
-                if (it['details']) {
-                    wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
-                }
-                if (it['notes']) {
-                    wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
-                }
-            }
-        }
-    }
-    html.addContent(body)
-    return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n' + html.toString()
-}
 
 def refresh = {
     report.parseMap()
@@ -146,6 +80,15 @@ def refresh = {
         case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
             break
         case ReportModel.VIEW.ABOUT:
+            Tag html = new Tag('html',
+                    new Tag('body', [style: 'padding-left:25px'])
+                            .addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
+                            .addContent('h2', 'Version ' + txtVer)
+                            .addContent('h4', 'by Gergely Papp')
+                            .addContent('h5', 'based on the original code by Auxilus Systems LLC')
+                            .addContent('h4', 'Licensed under GNU GPL Version 3')
+                            .addContent('a', txtURI, [href: txtURI]))
+            content = HTML_HEADER + html.toString()
             break
         case ReportModel.VIEW.PROJECT:
         default:
@@ -189,7 +132,7 @@ SwingBuilder.edtBuilder {
             projectButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.PROJECT.name(),
-                    text: "1-" + TextUtils.getText("freeplaneGTD.tab.project.title"),
+                    text: "1 - " + TextUtils.getText("freeplaneGTD.tab.project.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
                     mnemonic: "1",
                     selected: report.defaultView == "PROJECT",
@@ -198,7 +141,7 @@ SwingBuilder.edtBuilder {
             whoButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.WHO.name(),
-                    text: "2-" + TextUtils.getText("freeplaneGTD.tab.who.title"),
+                    text: "2 - " + TextUtils.getText("freeplaneGTD.tab.who.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
                     mnemonic: "2",
                     selected: report.defaultView == "WHO",
@@ -207,7 +150,7 @@ SwingBuilder.edtBuilder {
             contextButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.CONTEXT.name(),
-                    text: "3-" + TextUtils.getText("freeplaneGTD.tab.context.title"),
+                    text: "3 - " + TextUtils.getText("freeplaneGTD.tab.context.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
                     mnemonic: "3",
                     selected: report.defaultView == "CONTEXT",
@@ -216,7 +159,7 @@ SwingBuilder.edtBuilder {
             whenButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.WHEN.name(),
-                    text: "4-" + TextUtils.getText("freeplaneGTD.tab.when.title"),
+                    text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
                     mnemonic: "4",
                     selected: report.defaultView == "WHEN",
@@ -225,8 +168,9 @@ SwingBuilder.edtBuilder {
             aboutButton = radioButton(
                     buttonGroup: contentTypeGroup,
                     actionCommand: ReportModel.VIEW.ABOUT.name(),
-                    text: TextUtils.getText("freeplaneGTD.tab.about.title"),
+                    text: "? - " + TextUtils.getText("freeplaneGTD.tab.about.title"),
                     toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
+                    mnemonic: "?",
                     actionPerformed: { refresh() }
             )
         }
@@ -467,3 +411,76 @@ static BufferedImage iconToImage(Icon icon) {
         return image;
     }
 }
+
+static String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
+    Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
+    Tag head = html.addChild('head')
+    head.addContent('style',
+            '/*<![CDATA[*/' +
+                    'body {color:#000000;  }' +
+                    'h1 {font-size:150%; font-weight:bold;}' +
+                    'h2 {font-size:125%; font-weight:bold;}' +
+                    'a {text-decoration: none; color:#000077;}' +
+                    'ul.actionlist { list-style: none; }' +
+                    '.doneIcon { padding-right: 1em }' +
+                    '.priorityIcon { left: 2em; position:absolute; }' +
+                    '.contextIcon { padding-left: 1em }' +
+                    '.wait {font-size:90%; margin-left:32px; margin-top:4px}' +
+                    '.details {margin-left:18px; padding:5px; background-color:rgb(240,250,240);font-size:90%;}' +
+                    '.note    {margin-left:18px; padding:5px; background-color:rgb(250,250,240);font-size:90%;}' +
+                    '.overdue {background-color: rgb(250,150,140)}' +
+                    '.buttons {display:inline-block;float:right;font-size:90%;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
+                    '/*]]>*/',
+            [type: 'text/css'])
+    head.addChild('title')
+    Tag body = new Tag('body')
+//    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
+    Date now = Calendar.getInstance().getTime()
+    list['groups'].eachWithIndex { it, index ->
+        body.addChild('div', [class: 'buttons']).
+                addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
+                addContent('|').
+                addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
+        body.addContent('h2', it['title'])
+        Tag curItem = body.addChild('ul', ['class': 'actionlist'])
+        it['items'].each {
+            Tag wrap = curItem.addChild('li')
+            if (it['priority']) {
+                wrap.addChild('img', [class: "priorityIcon", src: "builtin:full-" + it['priority']])
+            }
+            wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
+            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
+            wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
+
+            Tag contextTag = new Tag('span')
+
+            it['context']?.split(',')?.each { key ->
+                if (contextIcons.keySet().contains(key)) {
+                    contextTag.addChild('img', [class: "contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
+                } else {
+                    contextTag.addContent('@');
+                    contextTag.addContent(key);
+                }
+            }
+            !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
+            !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
+            !it['context'] ?: wrap.addContent(contextTag)
+            !it['project'] ?: wrap.addContent(' for ' + it['project'])
+            if (it['waitFor'] || it['waitUntil']) {
+                wrap.addContent('div', 'wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''), [class: 'wait'])
+            }
+            if (showNotes) {
+                if (it['details']) {
+                    wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
+                }
+                if (it['notes']) {
+                    wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
+                }
+            }
+        }
+    }
+    html.addContent(body)
+
+    return HTML_HEADER + html.toString()
+}
+
