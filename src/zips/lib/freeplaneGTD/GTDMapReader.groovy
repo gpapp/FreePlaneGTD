@@ -321,7 +321,7 @@ class GTDMapReader {
         }
         if (toParse =~ /#\d/) {
             fields['priority'] = toParse.replaceAll('^.*#(\\d).*$', '$1').trim()
-            toParse = toParse.replaceAll('#\\d', '').trim()
+            toParse = toParse.replaceAll('#\\d', ' ').trim()
         }
         def contexts = []
         while (toParse =~ '^[^@]*@([^@\\s\\*]+).*') {
