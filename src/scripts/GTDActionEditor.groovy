@@ -58,7 +58,7 @@ class ActionEditorModel {
         today = node.icons.contains(GTDMapReader.instance.iconToday)
         when = node.attributes['When']
         priority = node.attributes['Priority']
-        waitFor = node.attributes['WaitFor']
+        waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
         waitUntil = node.attributes['WaitUntil']
         done = node.icons.contains(GTDMapReader.instance.iconDone)
         return true
