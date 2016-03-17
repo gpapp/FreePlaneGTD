@@ -141,27 +141,34 @@ class ReportModel {
     def delegateList() {
         Map retval = [type: 'who']
         List groups = []
-        Map naByGroupFull = actionList.groupBy { it['who'] } + actionList.groupBy { it['waitFor'] }
-        Map naByGroup = [:]
-        naByGroupFull.each {
+        Map naByWhoFull = actionList.groupBy({ it['who'] })
+        Map naByWaitForFull = actionList.groupBy({ it['waitFor'] })
+        Map naByDelegate = [:]
+        naByWhoFull.each {
             key, value ->
-				if (key) {
-					def keyList = key.split(',')*.trim()
-					keyList.each {
-						naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
-					}
-				}                
+                if (key) {
+                    def keyList = key.split(',')*.trim()
+                    keyList.each {
+                        naByDelegate.put(it, naByDelegate[it] ? (naByDelegate[it] + value).unique() : value)
+                    }
+                }
+        }
+        naByWaitForFull.each {
+            key, value ->
+                if (key) {
+                    def keyList = key.split(',')*.trim()
+                    keyList.each {
+                        naByDelegate.put(it, naByDelegate[it] ? (naByDelegate[it] + value).unique() : value)
+                    }
+                }
         }
 
-        naByGroup.each { key, value ->
-            naByGroup[key] = value.unique();
-        }
 
-        naByGroup = naByGroup.sort { it.toString().toLowerCase() }
-        naByGroup.each {
+        naByDelegate = naByDelegate.sort { it.toString().toLowerCase() }
+        naByDelegate.each {
             key, value ->
                 List<Map> items = []
-                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
                                    priority : it['priority'],
@@ -174,10 +181,10 @@ class ReportModel {
                                    details  : it['details'],
                                    notes    : it['notes']
                     ]
-                    if (it['who'] && it['who'].trim()!=key) {
+                    if (it['who'] && it['who'].trim() != key) {
                         newItem['who'] = it['who']
                     }
-                    if (it['waitFor'] && it['waitFor'].trim()!=key) {
+                    if (it['waitFor'] && it['waitFor'].trim() != key) {
                         newItem['waitFor'] = it['waitFor']
                     }
                     items << newItem
