@@ -45,7 +45,7 @@ import java.util.List
 @Field
 static final String title = 'GTD Next Actions'
 @Field
-static final String txtVer = '1.8.1'
+static final String txtVer = '1.8.2'
 @Field
 static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 @Field
