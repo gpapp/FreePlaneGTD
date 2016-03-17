@@ -145,10 +145,12 @@ class ReportModel {
         Map naByGroup = [:]
         naByGroupFull.each {
             key, value ->
-                def keyList = key?.split(',')*.trim()
-                keyList.each {
-                    naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
-                }
+				if (key) {
+					def keyList = key.split(',')*.trim()
+					keyList.each {
+						naByGroup.put(it, naByGroup[it] ? naByGroup[it] + value : value)
+					}
+				}                
         }
 
         naByGroup.each { key, value ->
