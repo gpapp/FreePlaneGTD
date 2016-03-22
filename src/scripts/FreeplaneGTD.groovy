@@ -40,6 +40,7 @@ import java.awt.datatransfer.Clipboard
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.image.BufferedImage
+import java.util.Date
 import java.util.List
 
 @Field
@@ -435,7 +436,7 @@ static String formatList(Map list, Map<String, String> contextIcons, boolean sho
     head.addChild('title')
     Tag body = new Tag('body')
 //    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
-    Date now = Calendar.getInstance().getTime()
+    Date now = new Date().clearTime()
     list['groups'].eachWithIndex { it, index ->
         body.addChild('div', [class: 'buttons']).
                 addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
@@ -449,7 +450,7 @@ static String formatList(Map list, Map<String, String> contextIcons, boolean sho
                 wrap.addChild('img', [class: "priorityIcon", src: "builtin:full-" + it['priority']])
             }
             wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
-            if (it['when'] instanceof FormattedDate && !((FormattedDate) it['when']).after(now)) wrap.addProperty('class', 'overdue')
+            if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
             wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
 
             Tag contextTag = new Tag('span')
