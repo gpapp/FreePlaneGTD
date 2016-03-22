@@ -120,6 +120,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              time     : it['time'],
                               priority : it['priority'],
                               action   : it['action'],
                               nodeID   : it['nodeID'],
@@ -171,6 +172,7 @@ class ReportModel {
                 def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
+                                   time     : it['time'],
                                    priority : it['priority'],
                                    action   : it['action'],
                                    nodeID   : it['nodeID'],
@@ -218,6 +220,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              time     : it['time'],
                               priority : it['priority'],
                               action   : it['action'],
                               nodeID   : it['nodeID'],
@@ -247,6 +250,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done    : it['done'],
+                                   time    : it['time'],
                                    priority: it['priority'],
                                    action  : it['action'],
                                    nodeID  : it['nodeID'],
