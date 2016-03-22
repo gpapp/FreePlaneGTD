@@ -43,8 +43,8 @@ class ReportModel {
         if (waitUntil instanceof Date) waitUntilDate = waitUntil
         else if (waitUntil instanceof ConvertibleDate) waitUntilDate = waitUntil.calendar.time
 
-        if (!whenDate && !waitUntilDate) {
-            return thisWeekText
+        if (!whenDate && !waitUntilDate) {		
+            return waitUntil?: (when?: thisWeekText)
         }
         Date retval
         if (whenDate && !waitUntilDate) retval = whenDate
