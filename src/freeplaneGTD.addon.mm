@@ -1,24 +1,28 @@
-<map version="freeplane 1.3.0">
+<map version="freeplane 1.5.9">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1458242798754" BACKGROUND_COLOR="#97c7dc" LINK="http://www.itworks.hu/freeplanegtd-release/">
+<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1480964887657" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
-    <properties show_icon_for_attributes="true" show_note_icons="true"/>
+    <properties fit_to_viewport="false;" show_icon_for_attributes="true" show_note_icons="true"/>
 
 <map_styles>
-<stylenode LOCALIZED_TEXT="styles.root_node">
-<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right">
-<stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent" MAX_WIDTH="600" MIN_WIDTH="1">
+<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
+<font SIZE="24"/>
+<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent" MAX_WIDTH="600.0 px" MIN_WIDTH="1.0 px">
 <font NAME="SansSerif" SIZE="12" BOLD="false" ITALIC="false"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.details"/>
+<stylenode LOCALIZED_TEXT="defaultstyle.attributes">
+<font SIZE="9"/>
+</stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.note"/>
 <stylenode LOCALIZED_TEXT="defaultstyle.floating">
 <edge STYLE="hide_edge"/>
 <cloud COLOR="#f0f0f0" SHAPE="ROUND_RECT"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right">
+<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.topic" COLOR="#18898b" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="12" BOLD="true"/>
 </stylenode>
@@ -32,7 +36,7 @@
 <icon BUILTIN="yes"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right">
+<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#000000">
 <font SIZE="20"/>
 </stylenode>
@@ -52,9 +56,9 @@
 </stylenode>
 </map_styles>
 </hook>
-<attribute_layout NAME_WIDTH="133" VALUE_WIDTH="319"/>
+<attribute_layout NAME_WIDTH="99.74999702721843 pt" VALUE_WIDTH="239.24999286979457 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.8.2"/>
+<attribute NAME="version" VALUE="v1.9.0"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.3.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -97,7 +101,7 @@
 </html>
 </richcontent>
 <edge COLOR="#999999"/>
-<node TEXT="description" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1456082248398">
+<node TEXT="description" FOLDED="true" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1456082248398">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -118,7 +122,7 @@
   </body>
 </html>
 </richcontent>
-<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1453650197342" HGAP="-170" VSHIFT="-100" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
+<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1453650197342" HGAP_QUANTITY="-170.0 px" VSHIFT_QUANTITY="-100.0 px" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
 
 <html>
   <head>
@@ -179,7 +183,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="license" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1456082248434">
+<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1456082248434">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -200,11 +204,11 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 3 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xa;GNU General Public License for more details." ID="ID_1763974336" CREATED="1323057303679" MODIFIED="1323093766804" HGAP="90">
+<node TEXT="This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 3 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xa;GNU General Public License for more details." ID="ID_1763974336" CREATED="1323057303679" MODIFIED="1323093766804" HGAP_QUANTITY="90.0 px">
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1456082248445">
+<node TEXT="preferences.xml" FOLDED="true" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1456082248445">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -222,9 +226,9 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;PROJECT&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHO&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;CONTEXT&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHEN&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1457991202803"/>
+<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;PROJECT&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHO&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;CONTEXT&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHEN&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_remember_last_position&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1480965679776"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1457991211287">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1480965690350">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -239,10 +243,11 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout NAME_WIDTH="170" VALUE_WIDTH="173"/>
+<attribute_layout NAME_WIDTH="127.49999620020401 pt" VALUE_WIDTH="129.74999613314878 pt"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
 <attribute NAME="freeplaneGTD_default_view" VALUE="PROJECT" OBJECT="org.freeplane.features.format.FormattedObject|PROJECT|number:decimal:#0.####"/>
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
+<attribute NAME="freeplaneGTD_remember_last_position" VALUE="true"/>
 </node>
 <node TEXT="translations" POSITION="left" ID="ID_170932006" CREATED="1323057303757" MODIFIED="1456082248463">
 <edge COLOR="#999999" WIDTH="3"/>
@@ -270,8 +275,8 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1457999865942" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1480975130265" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Next action list"/>
@@ -321,10 +326,11 @@
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selection copied to clipboard."/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archives"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
+<attribute NAME="freeplaneGTD_remember_last_position" VALUE="Remember last position"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1457999920880" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1480975171871" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend&#x151;k"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="Feladatok l&#xe9;trehoz&#xe1;sa r&#xf6;vid&#xed;t&#xe9;sb&#x151;l"/>
@@ -373,10 +379,11 @@
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="V&#xe1;lasztott elemek a v&#xe1;g&#xf3;lapra m&#xe1;solva."/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Arch&#xed;vum"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="&#xc1;tn&#xe9;zend&#x151;"/>
+<attribute NAME="freeplaneGTD_remember_last_position" VALUE="Utols&#xf3; ablakpoz&#xed;ci&#xf3; megjegyz&#xe9;se"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1456080054770" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1480975727437" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
@@ -405,10 +412,10 @@
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Aktualisieren"/>
 <attribute NAME="freeplaneGTD.button.print" VALUE="Drucken"/>
 <attribute NAME="freeplaneGTD.button.copy" VALUE="Kopieren"/>
-<attribute NAME="freeplaneGTD.button.cancel" VALUE="Schlie&#xdf;en"/>
+<attribute NAME="freeplaneGTD.button.cancel" VALUE="Abbruch"/>
 <attribute NAME="freeplaneGTD.button.filter_done" VALUE="Erledigte herausfiltern"/>
 <attribute NAME="freeplaneGTD.button.show_notes" VALUE="Notizen darstellen"/>
-<attribute NAME="freeplaneGTD.button.done" VALUE="Erledigt"/>
+<attribute NAME="freeplaneGTD.button.done" VALUE="Speichern"/>
 <attribute NAME="freeplaneGTD.button.select" VALUE="Knoten in Map ausw&#xe4;hlen"/>
 <attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Nicht zugewiesen"/>
 <attribute NAME="freeplaneGTD.view.when.today" VALUE="Heute"/>
@@ -421,13 +428,15 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Heute"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorit&#xe4;t"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Erledigt"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitFor" VALUE="Warten auf"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitUntil" VALUE="Warten bis"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Auswahl wurde in den Zwischenspeicher abgelegt."/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archiv"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="R&#xfc;ckblick"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1456080252314" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1456080252314" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Liste des prochaines actions"/>
@@ -477,8 +486,8 @@
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Revue"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="es" ID="ID_1393937145" CREATED="1323057303773" MODIFIED="1456079691297" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="es" ID="ID_1393937145" CREATED="1323057303773" MODIFIED="1480975410029" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="198.7499940767886 pt" VALUE_WIDTH="234.74999300390502 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
@@ -523,13 +532,15 @@
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Hoy"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
 <attribute NAME="freeplaneGTD.actioneditor.done" VALUE="Hecho"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitFor" VALUE="Esperar a"/>
+<attribute NAME="freeplaneGTD.actioneditor.waitUntil" VALUE="Esperar hasta"/>
 <attribute NAME="freeplaneGTD.message.copy_ok" VALUE="Selecci\u00F3n copiada al portapapeles"/>
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archivo"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Revisar"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="nl" ID="ID_1763629932" CREATED="1323057303773" MODIFIED="1456080263018" HGAP="50" VSHIFT="10">
-<attribute_layout NAME_WIDTH="277" VALUE_WIDTH="294"/>
+<node TEXT="nl" ID="ID_1763629932" CREATED="1323057303773" MODIFIED="1456080263018" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lijst met eerstvolgende acties"/>
@@ -595,7 +606,7 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout NAME_WIDTH="60" VALUE_WIDTH="483"/>
+<attribute_layout NAME_WIDTH="44.999998658895535 pt" VALUE_WIDTH="362.24998920410906 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneGTD.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneShorthand.groovy"/>
@@ -615,7 +626,10 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/GTDReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/DoneMover.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1456082248492">
+<node TEXT="" POSITION="left" ID="ID_756567769" CREATED="1480969324113" MODIFIED="1480969324113"/>
+<node TEXT="" POSITION="left" ID="ID_1232397104" CREATED="1480969373734" MODIFIED="1480969373734"/>
+<node TEXT="" POSITION="left" ID="ID_1661609774" CREATED="1480973011759" MODIFIED="1480973011759"/>
+<node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1456082248492">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -738,8 +752,8 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="FreeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1447782976148" HGAP="30">
-<attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
+<node TEXT="FreeplaneGTD.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1447782976148" HGAP_QUANTITY="30.0 px">
+<attribute_layout NAME_WIDTH="206.24999385327118 pt" VALUE_WIDTH="158.99999526143088 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.listActions"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -751,8 +765,8 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="FreeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1447782976146" HGAP="30">
-<attribute_layout NAME_WIDTH="275" VALUE_WIDTH="212"/>
+<node TEXT="FreeplaneShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1447782976146" HGAP_QUANTITY="30.0 px">
+<attribute_layout NAME_WIDTH="206.24999385327118 pt" VALUE_WIDTH="158.99999526143088 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.parseShorthand"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -765,7 +779,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="GTDActionEditor.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1447782976145">
-<attribute_layout NAME_WIDTH="287" VALUE_WIDTH="208"/>
+<attribute_layout NAME_WIDTH="215.2499935850503 pt" VALUE_WIDTH="155.99999535083785 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.editAction"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -777,7 +791,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 <node TEXT="GTDReviewTask.groovy" ID="ID_1165981840" CREATED="1453634472702" MODIFIED="1453635023181">
-<attribute_layout NAME_WIDTH="291" VALUE_WIDTH="200"/>
+<attribute_layout NAME_WIDTH="218.24999349564334 pt" VALUE_WIDTH="149.99999552965178 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.reviewTask"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -789,7 +803,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 <node TEXT="GTDArchiveTask.groovy" ID="ID_1222024407" CREATED="1453634472702" MODIFIED="1453635033484">
-<attribute_layout NAME_WIDTH="291" VALUE_WIDTH="200"/>
+<attribute_layout NAME_WIDTH="218.24999349564334 pt" VALUE_WIDTH="149.99999552965178 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.archiveTask"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -801,7 +815,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1456082263793">
+<node TEXT="zips" FOLDED="true" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1456082263793">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -840,11 +854,11 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="icons" ID="ID_1422580718" CREATED="1323094256288" MODIFIED="1413298793053" VSHIFT="-20" LINK="zips/icons/"/>
+<node TEXT="icons" ID="ID_1422580718" CREATED="1323094256288" MODIFIED="1413298793053" LINK="zips/icons/" VSHIFT_QUANTITY="-20.0 px"/>
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1413298787850" LINK="zips/lib/"/>
 <node TEXT="templates" ID="ID_1096097283" CREATED="1446325478471" MODIFIED="1446325502332" LINK="zips/templates"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1456082250782"><richcontent TYPE="NOTE">
+<node TEXT="images" FOLDED="true" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1456082250782"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -887,7 +901,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1456082250746"><richcontent TYPE="NOTE">
+<node TEXT="lib" FOLDED="true" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1456082250746"><richcontent TYPE="NOTE">
 
 <html>
   <head>

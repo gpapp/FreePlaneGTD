@@ -15,6 +15,7 @@ class ReportModel {
     String defaultView
     boolean filterDone
     boolean autoFoldMap
+
     Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader

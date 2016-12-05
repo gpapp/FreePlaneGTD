@@ -1,22 +1,26 @@
-<map version="freeplane 1.3.0">
+<map version="freeplane 1.5.9">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node LOCALIZED_TEXT="new_mindmap" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1283093380553"><hook NAME="MapStyle">
-    <properties show_icon_for_attributes="true" show_note_icons="true"/>
+<node LOCALIZED_TEXT="new_mindmap" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1283093380553"><hook NAME="MapStyle">
+    <properties show_icon_for_attributes="true" show_note_icons="true" fit_to_viewport="false;"/>
 
 <map_styles>
-<stylenode LOCALIZED_TEXT="styles.root_node">
-<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right">
-<stylenode LOCALIZED_TEXT="default" MAX_WIDTH="600" COLOR="#000000" STYLE="as_parent">
+<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
+<font SIZE="24"/>
+<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="default" MAX_WIDTH="600.0 px" COLOR="#000000" STYLE="as_parent">
 <font NAME="SansSerif" SIZE="10" BOLD="false" ITALIC="false"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.details"/>
+<stylenode LOCALIZED_TEXT="defaultstyle.attributes">
+<font SIZE="9"/>
+</stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.note"/>
 <stylenode LOCALIZED_TEXT="defaultstyle.floating">
 <edge STYLE="hide_edge"/>
 <cloud COLOR="#f0f0f0" SHAPE="ROUND_RECT"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right">
+<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.topic" COLOR="#18898b" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="10" BOLD="true"/>
 </stylenode>
@@ -30,7 +34,7 @@
 <icon BUILTIN="yes"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right">
+<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#000000">
 <font SIZE="18"/>
 </stylenode>
@@ -50,8 +54,8 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="9"/>
-<node TEXT="Action tests" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
+<hook NAME="AutomaticEdgeColor" COUNTER="9" RULE="ON_BRANCH_CREATION"/>
+<node TEXT="Action tests" FOLDED="true" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
 
@@ -144,7 +148,7 @@
 <node TEXT="* abc @bde [me] {v1.0}" ID="ID_591419351" CREATED="1413839958312" MODIFIED="1413839972030"/>
 <node TEXT="* KILLER &lt;&gt;" ID="ID_1764118338" CREATED="1425073942429" MODIFIED="1425073952727"/>
 </node>
-<node TEXT="Shorthand tests" POSITION="right" ID="ID_1488226184" CREATED="1413840469105" MODIFIED="1413840511178">
+<node TEXT="Shorthand tests" FOLDED="true" POSITION="right" ID="ID_1488226184" CREATED="1413840469105" MODIFIED="1413840511178">
 <edge COLOR="#ff00ff"/>
 <richcontent TYPE="NOTE">
 
@@ -173,12 +177,12 @@
 <node TEXT="* aa #3" ID="ID_743874059" CREATED="1421399779261" MODIFIED="1421399790869"/>
 <node TEXT="* #43 dodo" ID="ID_973470716" CREATED="1421399792202" MODIFIED="1421399807938"/>
 <node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1421403498651">
-<attribute_layout VALUE_WIDTH="435"/>
+<attribute_layout VALUE_WIDTH="326.2499902769926 pt"/>
 <attribute NAME="i" VALUE="=(node.text.matches(&apos;#\\d&apos;)"/>
 <attribute NAME="j" VALUE="=node.text"/>
 </node>
 </node>
-<node TEXT="Context icon tests" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
+<node TEXT="Context icon tests" FOLDED="true" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
 <edge COLOR="#7c0000"/>
 <node TEXT="* doit @Home" ID="ID_1683724110" CREATED="1414538189836" MODIFIED="1414538207409"/>
 <node TEXT="doit" ID="ID_1820217533" CREATED="1414538208273" MODIFIED="1414538278587">
@@ -186,7 +190,7 @@
 <icon BUILTIN="help"/>
 <icon BUILTIN="yes"/>
 </node>
-<node TEXT="" ID="ID_394864049" CREATED="1414538256765" MODIFIED="1414538264744">
+<node TEXT="" FOLDED="true" ID="ID_394864049" CREATED="1414538256765" MODIFIED="1414538264744">
 <icon BUILTIN="button_cancel"/>
 <node TEXT="doit" ID="ID_787199979" CREATED="1414538208273" MODIFIED="1414538229521">
 <icon BUILTIN="gohome"/>
@@ -197,13 +201,13 @@
 </node>
 </node>
 </node>
-<node TEXT="Priority icon tests" POSITION="right" ID="ID_1127701216" CREATED="1421401059533" MODIFIED="1421401066512">
+<node TEXT="Priority icon tests" FOLDED="true" POSITION="right" ID="ID_1127701216" CREATED="1421401059533" MODIFIED="1421401066512">
 <edge COLOR="#007c00"/>
 <node TEXT="ny&#xfa;l" ID="ID_7975647" CREATED="1421400996628" MODIFIED="1421401036596">
 <icon BUILTIN="full-1"/>
 <icon BUILTIN="yes"/>
 </node>
-<node TEXT="" ID="ID_790305926" CREATED="1414538256765" MODIFIED="1414538264744">
+<node TEXT="" FOLDED="true" ID="ID_790305926" CREATED="1414538256765" MODIFIED="1414538264744">
 <icon BUILTIN="button_cancel"/>
 <node TEXT="ny&#xfa;l" ID="ID_867782640" CREATED="1421400996628" MODIFIED="1421401053162">
 <icon BUILTIN="full-1"/>
@@ -275,8 +279,9 @@
 <node TEXT="* Parse short {10/11}" ID="ID_445647609" CREATED="1413839788226" MODIFIED="1425007730756"/>
 <node TEXT="* Parse short {10.12}" ID="ID_1346902296" CREATED="1413839788228" MODIFIED="1425007736038"/>
 <node TEXT="* Parse short {10.13.}" ID="ID_216964866" CREATED="1413839788230" MODIFIED="1425007740912"/>
+<node TEXT="* Parse unknown {someday}" ID="ID_1423365175" CREATED="1480975832304" MODIFIED="1480975848005"/>
 </node>
-<node TEXT="Icon lookup" POSITION="left" ID="ID_1531552782" CREATED="1413841021577" MODIFIED="1413841028966">
+<node TEXT="Icon lookup" FOLDED="true" POSITION="left" ID="ID_1531552782" CREATED="1413841021577" MODIFIED="1413841028966">
 <edge COLOR="#ffff00"/>
 <node TEXT="= &quot;Icons: &quot; + node.icons.icons" ID="ID_968337881" CREATED="1413841030747" MODIFIED="1413841041673">
 <icon BUILTIN="messagebox_warning"/>
@@ -285,7 +290,7 @@
 <icon BUILTIN="clanbomber"/>
 </node>
 </node>
-<node TEXT="Config" POSITION="left" ID="ID_1683616886" CREATED="1412442290868" MODIFIED="1412442749954">
+<node TEXT="Config" FOLDED="true" POSITION="left" ID="ID_1683616886" CREATED="1412442290868" MODIFIED="1412442749954">
 <edge COLOR="#ffff00"/>
 <richcontent TYPE="NOTE">
 
