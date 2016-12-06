@@ -47,8 +47,7 @@ import java.util.List
 
 class ReportWindow {
     static final String title = 'GTD Next Actions'
-    static
-    final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
+    static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
     static final String txtVer = '1.9.0'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
@@ -59,9 +58,20 @@ class ReportWindow {
     static JCheckBox cbFilterDone
     static boolean rememberLastPosition
 
-    static JFrame getMainFrame(ConfigProperties config, ControllerProxy c, ReportModel reportModel) {
+    static JFrame getMainFrame(ConfigProperties config, Proxy.Controller c, ReportModel reportModel) {
         report = reportModel
         if (!mainFrame) {
+			ImageResourceLoader imageLoader = new ImageResourceLoader() {
+				@Override
+				public synchronized ImageResource get(final String uri, final int width, final int height) {
+					if (uri.startsWith("builtin:")) {
+						Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
+						return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
+					}
+					return super.get(uri, width, height)
+				}
+			}
+		
             Dimension screenSize = Toolkit.defaultToolkit.screenSize
             int tPosX = (int) (screenSize.width / 16 * 3)
             int tPosY = (int) (screenSize.height / 16 * 3)
@@ -74,24 +84,16 @@ class ReportWindow {
             int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_x', tSizeX) : tSizeX
             int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_y', tSizeY) : tSizeY
 
-            String userPath = c.userDirectory.toString()
             SwingBuilder.edtBuilder {
-
-                ImageResourceLoader imageLoader = new ImageResourceLoader() {
-                    @Override
-                    public synchronized ImageResource get(final String uri, final int width, final int height) {
-                        if (uri.startsWith("builtin:")) {
-                            Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
-                            return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
-                        }
-                        return super.get(uri, width, height)
-                    }
-                }
-
-                iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
-                iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
-
-                // make the frame half the height and width
+				String userPath = c.userDirectory.toString()
+				def iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
+				def iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
+                mainFrame = frame(title: title,
+                        iconImage: iconFrame,
+                        defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
+                        show: false) {
+                    borderLayout()
+				}
 
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
@@ -196,8 +198,7 @@ class ReportWindow {
                     }
                 }
             }
-
-            NodeLink nl = new NodeLink(c, mainFrame, report, refreshContent)
+            NodeLink nl = new NodeLink(c, mainFrame, report, refreshContent)			
             projectPane.getMouseTrackingListeners().each {
                 if (it instanceof LinkListener) {
                     projectPane.removeMouseTrackingListener(it)
@@ -205,7 +206,7 @@ class ReportWindow {
             }
             projectPane.addMouseTrackingListener(nl);
 
-// on ESC key close frame
+			// on ESC key close frame
             mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                     KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"));
             mainFrame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"),
@@ -226,6 +227,7 @@ class ReportWindow {
         }
         return mainFrame
     }
+	
     static def refreshContent = {
         report.parseMap()
 
@@ -256,7 +258,6 @@ class ReportWindow {
         projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
         cbFilterDone.selected = report.filterDone
     }
-
 
     static BufferedImage iconToImage(Icon icon) {
         if (icon instanceof ImageIcon) {
@@ -362,8 +363,9 @@ class ReportWindow {
         return HTML_HEADER + html.toString()
     }
 
-    static def refresh(ReportModel report) {
-        ReportWindow.refreshContent(report)
+    static void refresh(ReportModel reportModel) {
+		report=reportModel
+        refreshContent()
         projectPane.scrollTo(new Point(0, 0))
     }
 }
@@ -529,7 +531,6 @@ class CloseAction extends AbstractAction {
 System.setProperty("xr.text.aa-smoothing-level", "1")
 System.setProperty("xr.text.aa-fontsize-threshhold", "1")
 System.setProperty("xr.text.aa-rendering-hint", "RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT")
-
 
 JFrame frameinstance = ReportWindow.getMainFrame(config, c, report)
 frameinstance.visible = true
