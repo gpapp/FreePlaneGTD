@@ -92,4 +92,4 @@ The addon is based on the v0.8 FreeplaneGTD addon by Auxilus.
 
 ## Versions
 
-Versions can be found on the official [release page](www.itworks.hu/freeplanegtd-release) or on [GitHub release page](https://github.com/gpapp/FreePlaneGTD/releases)
+Versions can be found on the official [release page](https://www.itworks.hu/freeplanegtd-release) or on [GitHub release page](https://github.com/gpapp/FreePlaneGTD/releases)
