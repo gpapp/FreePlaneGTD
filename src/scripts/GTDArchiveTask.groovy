@@ -34,7 +34,7 @@ class ArchiveTask extends DoneMover {
         final String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
 
         Proxy.Node archiveNode = rootNode.children.find {
-            it.text==archiveDirName
+            it.transformedText==archiveDirName
         }
         if(!archiveNode) {
             archiveNode = rootNode.createChild()
