@@ -91,7 +91,7 @@
 
 </richcontent>
 </node>
-<node TEXT="Archive" LOCALIZED_STYLE_REF="AutomaticLayout.level,1" POSITION="left" ID="ID_1068479685" CREATED="1427225933330" MODIFIED="1453649700929">
+<node TEXT="=textUtils.getText('freeplaneGTD.config.archiveDirName')" LOCALIZED_STYLE_REF="AutomaticLayout.level,1" POSITION="left" ID="ID_1068479685" CREATED="1427225933330" MODIFIED="1453649700929">
 <icon BUILTIN="folder"/>
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">
@@ -231,7 +231,7 @@
 
 </richcontent>
 </node>
-<node TEXT="Review" LOCALIZED_STYLE_REF="AutomaticLayout.level,1" POSITION="right" ID="ID_117855996" CREATED="1427225917881" MODIFIED="1453649693945">
+<node TEXT="=textUtils.getText('freeplaneGTD.config.reviewDirName')" LOCALIZED_STYLE_REF="AutomaticLayout.level,1" POSITION="right" ID="ID_117855996" CREATED="1427225917881" MODIFIED="1453649693945">
 <icon BUILTIN="revision"/>
 <edge COLOR="#00ff00"/>
 <richcontent TYPE="DETAILS" HIDDEN="true">

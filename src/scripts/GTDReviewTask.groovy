@@ -33,7 +33,7 @@ class ReviewTask extends DoneMover {
         final String reviewDirName = TextUtils.getText("freeplaneGTD.config.reviewDirName")
 
         Proxy.Node archiveNode = rootNode.children.find {
-            it.text==reviewDirName
+            it.transformedText==reviewDirName
         }
         if(!archiveNode) {
             archiveNode = rootNode.createChild()
