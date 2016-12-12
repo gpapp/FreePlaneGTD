@@ -185,10 +185,12 @@ class ReportWindow {
                                     mainFrame.visible = false
                                     mainFrame.dispose()
                                 })
+								boolean lastFilterDone =config.getBooleanProperty('freeplaneGTD_filter_done')
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
-                                selected: report.filterDone,
+                                selected: lastFilterDone,
                                 actionPerformed: {
-                                    report.filterDone = it.source.selected; ReportWindow.refreshContent()
+									config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
+									ReportWindow.refreshContent()
                                 })
                         cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
                                 selected: report.showNotes,
@@ -229,7 +231,7 @@ class ReportWindow {
     }
 	
     static def refreshContent = {
-        report.parseMap()
+        report.parseMap(cbFilterDone.selected)
 
         def content
         report.selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
@@ -256,7 +258,6 @@ class ReportWindow {
                 content = formatList(report.projectList(), report.mapReader.contextIcons, report.showNotes)
         }
         projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
-        cbFilterDone.selected = report.filterDone
     }
 
     static BufferedImage iconToImage(Icon icon) {
@@ -377,7 +378,6 @@ try {
 } catch (Exception e) {
     report.defaultView = ReportModel.VIEW.PROJECT
 }
-report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 
 //---------------------------------------------------------
