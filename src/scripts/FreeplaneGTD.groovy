@@ -243,6 +243,7 @@ class ReportWindow {
             case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
                 break
             case ReportModel.VIEW.ABOUT:
+
                 Tag html = new Tag('html',
                         new Tag('body', [style: 'padding-left:25px'])
                                 .addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
