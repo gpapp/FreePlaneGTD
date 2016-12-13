@@ -51,6 +51,7 @@ class ReportWindow {
     static final String txtVer = '1.9.0'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
+	static ConfigProperties config
     static ReportModel report
     static JFrame mainFrame
     static XHTMLPanel projectPane
@@ -58,8 +59,9 @@ class ReportWindow {
     static JCheckBox cbFilterDone
     static boolean rememberLastPosition
 
-    static JFrame getMainFrame(ConfigProperties config, Proxy.Controller c, ReportModel reportModel) {
+    static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c, ReportModel reportModel) {
         report = reportModel
+		config = configModel
         if (!mainFrame) {
 			ImageResourceLoader imageLoader = new ImageResourceLoader() {
 				@Override
@@ -185,9 +187,8 @@ class ReportWindow {
                                     mainFrame.visible = false
                                     mainFrame.dispose()
                                 })
-								boolean lastFilterDone =config.getBooleanProperty('freeplaneGTD_filter_done')
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
-                                selected: lastFilterDone,
+                                selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
 									config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
 									ReportWindow.refreshContent()
@@ -231,6 +232,7 @@ class ReportWindow {
     }
 	
     static def refreshContent = {
+		cbFilterDone.selected=config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
         def content
