@@ -13,7 +13,6 @@ import org.freeplane.plugin.script.proxy.Proxy
 class ReportModel {
     boolean showNotes
     String defaultView
-    boolean filterDone
     boolean autoFoldMap
 
     Proxy.Node rootNode
@@ -99,7 +98,7 @@ class ReportModel {
 
     //--------------------------------------------------------------
     // parse the GTD mind map
-    void parseMap() {
+    void parseMap(boolean filterDone) {
         // Expand any nodes with next action shorthand
         mapReader.convertShorthand(rootNode);
 

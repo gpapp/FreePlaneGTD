@@ -51,6 +51,7 @@ class ReportWindow {
     static final String txtVer = '1.9.0'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
+	static ConfigProperties config
     static ReportModel report
     static JFrame mainFrame
     static XHTMLPanel projectPane
@@ -58,8 +59,9 @@ class ReportWindow {
     static JCheckBox cbFilterDone
     static boolean rememberLastPosition
 
-    static JFrame getMainFrame(ConfigProperties config, Proxy.Controller c, ReportModel reportModel) {
+    static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c, ReportModel reportModel) {
         report = reportModel
+		config = configModel
         if (!mainFrame) {
 			ImageResourceLoader imageLoader = new ImageResourceLoader() {
 				@Override
@@ -186,9 +188,10 @@ class ReportWindow {
                                     mainFrame.dispose()
                                 })
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
-                                selected: report.filterDone,
+                                selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
-                                    report.filterDone = it.source.selected; ReportWindow.refreshContent()
+									config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
+									ReportWindow.refreshContent()
                                 })
                         cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
                                 selected: report.showNotes,
@@ -229,7 +232,8 @@ class ReportWindow {
     }
 	
     static def refreshContent = {
-        report.parseMap()
+		cbFilterDone.selected=config.getBooleanProperty('freeplaneGTD_filter_done')
+        report.parseMap(cbFilterDone.selected)
 
         def content
         report.selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
@@ -241,6 +245,7 @@ class ReportWindow {
             case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
                 break
             case ReportModel.VIEW.ABOUT:
+
                 Tag html = new Tag('html',
                         new Tag('body', [style: 'padding-left:25px'])
                                 .addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
@@ -256,7 +261,6 @@ class ReportWindow {
                 content = formatList(report.projectList(), report.mapReader.contextIcons, report.showNotes)
         }
         projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
-        cbFilterDone.selected = report.filterDone
     }
 
     static BufferedImage iconToImage(Icon icon) {
@@ -377,7 +381,6 @@ try {
 } catch (Exception e) {
     report.defaultView = ReportModel.VIEW.PROJECT
 }
-report.filterDone = config.getBooleanProperty('freeplaneGTD_filter_done')
 report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
 
 //---------------------------------------------------------
