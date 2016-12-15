@@ -20,6 +20,7 @@
 //=========================================================
 package freeplaneGTD
 
+import java.util.Date
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
@@ -41,9 +42,11 @@ class GTDMapReader {
     public String iconProject
     public String iconToday
     public String iconDone
+	public Date today
     public Map contextIcons
 
     static GTDMapReader getInstance() {
+		instance.today=new Date().clearTime()
         return instance
     }
 
@@ -192,7 +195,6 @@ class GTDMapReader {
                 }
             }
 
-
             thisNode.icons.each {
                 if (it ==~ /^full\-\d$/) {
                     thisNode.icons.remove(it)
@@ -244,9 +246,15 @@ class GTDMapReader {
         if (!naWhen) {
             naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
         } else {
-            naWhen = DateUtil.normalizeDate(naWhen)
+            naWhen = DateUtil.normalizeDate(naWhen)			
             thisNode['When'] = naWhen
-        }
+        }		
+		if ((naWhen!=null) && (naWhen instanceof Date)){
+			if(today.equals(naWhen.clearTime())) {
+				naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+			}
+		}
+		
         if (naWaitUntil) {
             naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
             thisNode['WaitUntil'] = naWaitUntil
