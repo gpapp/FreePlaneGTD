@@ -48,7 +48,7 @@ import java.util.List
 class ReportWindow {
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
-    static final String txtVer = '1.9.0'
+    static final String txtVer = '1.9.1'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 	static ConfigProperties config
@@ -57,23 +57,25 @@ class ReportWindow {
     static XHTMLPanel projectPane
     static ButtonGroup contentTypeGroup
     static JCheckBox cbFilterDone
-    static boolean rememberLastPosition
+	
+	
+	static boolean showNotes  
+	static ReportModel.VIEW selectedView	
+    static boolean autoFoldMap
 
     static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c, ReportModel reportModel) {
         report = reportModel
 		config = configModel
+	    boolean rememberLastPosition
         if (!mainFrame) {
-			ImageResourceLoader imageLoader = new ImageResourceLoader() {
-				@Override
-				public synchronized ImageResource get(final String uri, final int width, final int height) {
-					if (uri.startsWith("builtin:")) {
-						Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
-						return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
-					}
-					return super.get(uri, width, height)
-				}
+			String defaultView
+ 			try {
+				defaultView = ReportModel.VIEW.valueOf(config.getProperty('freeplaneGTD_default_view')).toString()
+			} catch (Exception e) {
+				defaultView = ReportModel.VIEW.PROJECT.toString()
 			}
-		
+			autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
+				
             Dimension screenSize = Toolkit.defaultToolkit.screenSize
             int tPosX = (int) (screenSize.width / 16 * 3)
             int tPosY = (int) (screenSize.height / 16 * 3)
@@ -86,6 +88,17 @@ class ReportWindow {
             int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_x', tSizeX) : tSizeX
             int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_y', tSizeY) : tSizeY
 
+			ImageResourceLoader imageLoader = new ImageResourceLoader() {
+				@Override
+				public synchronized ImageResource get(final String uri, final int width, final int height) {
+					if (uri.startsWith("builtin:")) {
+						Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
+						return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
+					}
+					return super.get(uri, width, height)
+				}
+			}
+		
             SwingBuilder.edtBuilder {
 				String userPath = c.userDirectory.toString()
 				def iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
@@ -111,7 +124,7 @@ class ReportWindow {
                                 text: "1 - " + TextUtils.getText("freeplaneGTD.tab.project.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
                                 mnemonic: "1",
-                                selected: report.defaultView == "PROJECT",
+                                selected: defaultView == "PROJECT",
                                 actionPerformed: { ReportWindow.refreshContent() }
                         )
                         whoButton = radioButton(
@@ -120,7 +133,7 @@ class ReportWindow {
                                 text: "2 - " + TextUtils.getText("freeplaneGTD.tab.who.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
                                 mnemonic: "2",
-                                selected: report.defaultView == "WHO",
+                                selected: defaultView == "WHO",
                                 actionPerformed: { ReportWindow.refreshContent() }
                         )
                         contextButton = radioButton(
@@ -129,7 +142,7 @@ class ReportWindow {
                                 text: "3 - " + TextUtils.getText("freeplaneGTD.tab.context.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
                                 mnemonic: "3",
-                                selected: report.defaultView == "CONTEXT",
+                                selected: defaultView == "CONTEXT",
                                 actionPerformed: { ReportWindow.refreshContent() }
                         )
                         whenButton = radioButton(
@@ -138,7 +151,7 @@ class ReportWindow {
                                 text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
                                 mnemonic: "4",
-                                selected: report.defaultView == "WHEN",
+                                selected: defaultView == "WHEN",
                                 actionPerformed: { ReportWindow.refreshContent() }
                         )
                         aboutButton = radioButton(
@@ -175,7 +188,7 @@ class ReportWindow {
                                             case ReportModel.VIEW.WHEN.name(): curContent = report.timelineList(); break;
                                             default: curContent = report.projectList(); break;
                                         }
-                                        clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, report.showNotes), null)
+                                        clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, showNotes), null)
                                         UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                                     }
                                     mainFrame.toFront();
@@ -194,9 +207,9 @@ class ReportWindow {
 									ReportWindow.refreshContent()
                                 })
                         cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
-                                selected: report.showNotes,
+                                selected: showNotes,
                                 actionPerformed: {
-                                    report.showNotes = it.source.selected; ReportWindow.refreshContent()
+                                    showNotes = it.source.selected; ReportWindow.refreshContent()
                                 })
                     }
                 }
@@ -216,12 +229,13 @@ class ReportWindow {
                     new CloseAction(mainFrame));
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
-                    if (rememberLastPosition) {
+                    if (config.getBooleanProperty('freeplaneGTD_remember_last_position')) {
                         config.properties.setProperty('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
                         config.properties.setProperty('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
                         config.properties.setProperty('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
                         config.properties.setProperty('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
+					ReportWindow.mainFrame=null
                     super.windowClosing(e)
                 }
             })
@@ -236,13 +250,13 @@ class ReportWindow {
         report.parseMap(cbFilterDone.selected)
 
         def content
-        report.selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
-        switch (report.selectedView) {
-            case ReportModel.VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, report.showNotes)
+        selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+        switch (selectedView) {
+            case ReportModel.VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
                 break
-            case ReportModel.VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, report.showNotes)
+            case ReportModel.VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
                 break
-            case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, report.showNotes)
+            case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
                 break
             case ReportModel.VIEW.ABOUT:
 
@@ -258,7 +272,7 @@ class ReportWindow {
                 break
             case ReportModel.VIEW.PROJECT:
             default:
-                content = formatList(report.projectList(), report.mapReader.contextIcons, report.showNotes)
+                content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
         projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
     }
@@ -376,12 +390,7 @@ class ReportWindow {
 
 
 final ReportModel report = new ReportModel(node.map.root)
-try {
-    report.defaultView = ReportModel.VIEW.valueOf(config.getProperty('freeplaneGTD_default_view')).toString()
-} catch (Exception e) {
-    report.defaultView = ReportModel.VIEW.PROJECT
-}
-report.autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
+
 
 //---------------------------------------------------------
 // Process hyperlink to map node
@@ -420,21 +429,21 @@ class NodeLink extends LinkListener {
             Map feeder
             Clipboard clip = panel.getToolkit().getSystemClipboard();
             if (clip != null) {
-                switch (report.selectedView) {
+                switch (ReportWindow.selectedView) {
                     case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
                     case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
                     case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
                     case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
-                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, report.showNotes), null)
+                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, ReportWindow.showNotes), null)
                 UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                 frame.toFront()
             }
         } else if (uri.startsWith('select:')) {
             int pos = uri.substring(7).toInteger()
             List list
-            switch (report.selectedView) {
+            switch (ReportWindow.selectedView) {
                 case ReportModel.VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
                 case ReportModel.VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
                 case ReportModel.VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
@@ -444,7 +453,7 @@ class NodeLink extends LinkListener {
             List ids = list.collect { it['nodeID'] }
             def nodesFound = ctrl.find { ids.contains(it.nodeID) }
             if (nodesFound.size() > 0) {
-                if (report.autoFoldMap) {
+                if (ReportWindow.autoFoldMap) {
                     FoldToTop(nodesFound[0])
                 }
                 nodesFound.each {
@@ -461,7 +470,7 @@ class NodeLink extends LinkListener {
             def nodesFound = ctrl.find { it.nodeID == linkNodeID }
 
             if (nodesFound[0] != null) {
-                if (report.autoFoldMap) {
+                if (ReportWindow.autoFoldMap) {
                     FoldToTop(nodesFound[0])
                 }
                 UnfoldBranch(nodesFound[0])

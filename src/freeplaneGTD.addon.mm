@@ -1,6 +1,6 @@
 <map version="freeplane 1.5.9">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1481060340842" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
+<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1482842865047" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties fit_to_viewport="false;" show_icon_for_attributes="true" show_note_icons="true"/>
@@ -58,7 +58,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="99.74999702721843 pt" VALUE_WIDTH="239.24999286979457 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v1.9.0"/>
+<attribute NAME="version" VALUE="v1.9.1"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.3.10"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -680,9 +680,6 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/GTDReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/DoneMover.groovy"/>
 </node>
-<node TEXT="" POSITION="left" ID="ID_756567769" CREATED="1480969324113" MODIFIED="1480969324113"/>
-<node TEXT="" POSITION="left" ID="ID_1232397104" CREATED="1480969373734" MODIFIED="1480969373734"/>
-<node TEXT="" POSITION="left" ID="ID_1661609774" CREATED="1480973011759" MODIFIED="1480973011759"/>
 <node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1456082248492">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
@@ -994,6 +991,5 @@
 </richcontent>
 <node TEXT="flying-saucer-core-9.0.8.jar" ID="ID_1163492533" CREATED="1446325995184" MODIFIED="1446325995186"/>
 </node>
-<node TEXT="" POSITION="right" ID="ID_1633812013" CREATED="1458164291728" MODIFIED="1458164291728"/>
 </node>
 </map>

@@ -11,14 +11,10 @@ import org.freeplane.plugin.script.proxy.Proxy
  */
 
 class ReportModel {
-    boolean showNotes
-    String defaultView
-    boolean autoFoldMap
-
     Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader
-    VIEW selectedView
+
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
