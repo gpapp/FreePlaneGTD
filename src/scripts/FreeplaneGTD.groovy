@@ -116,7 +116,7 @@ class ReportWindow {
                         show: false) {
                     borderLayout()
                     buttonPanel = panel(constraints: BorderLayout.NORTH) {
-                        gridLayout(cols: 1, rows: 1)
+                        gridLayout(columns: 1, rows: 1)
                         contentTypeGroup = buttonGroup()
                         projectButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -164,7 +164,7 @@ class ReportWindow {
                         )
                     }
                     reportPanel = panel(constraints: BorderLayout.CENTER) {
-                        gridLayout(cols: 1, rows: 1)
+                        gridLayout(columns: 1, rows: 1)
                     }
                     projectPane = new XHTMLPanel()
                     reportPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(projectPane))
