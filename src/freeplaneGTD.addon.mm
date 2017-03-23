@@ -383,21 +383,21 @@
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="Utols&#xf3; ablakpoz&#xed;ci&#xf3; megjegyz&#xe9;se"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1480975727437" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
+<node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1490294088116" HGAP_QUANTITY="50.0 px" VSHIFT_QUANTITY="10.0 px">
 <attribute_layout NAME_WIDTH="207.7499938085677 pt" VALUE_WIDTH="220.4999934285881 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
-<attribute NAME="addons.${name}.parseShorthand" VALUE="OPL-Punkt Kurzschreibweise verarbeiten"/>
-<attribute NAME="addons.${name}.editAction" VALUE="OPL-Punkt bearbeiten"/>
-<attribute NAME="addons.${name}.archiveTask" VALUE="Bewegung abgeschlossen zu archivieren"/>
-<attribute NAME="addons.${name}.reviewTask" VALUE="Bewegung abgeschlossen Meinung"/>
+<attribute NAME="addons.${name}.parseShorthand" VALUE="Kurzschreibweise f&#xfc;r Aktivit&#xe4;t verarbeiten"/>
+<attribute NAME="addons.${name}.editAction" VALUE="Aktivit&#xe4;t bearbeiten"/>
+<attribute NAME="addons.${name}.archiveTask" VALUE="verschiebe Aktivit&#xe4;t ins Archiv"/>
+<attribute NAME="addons.${name}.reviewTask" VALUE="verschiebe Aktivit&#xe4;t zum Review"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
 <attribute NAME="OptionPanel.freeplaneGTD_filter_done" VALUE="Voreinstellung: Erledigte Punkte herausfiltern"/>
 <attribute NAME="OptionPanel.freeplaneGTD_default_view" VALUE="Voreinstellung f&#xfc;r OPL-Ansicht"/>
 <attribute NAME="OptionPanel.freeplaneGTD_auto_fold_map" VALUE="Map falten, um OPL-Punkte hervorzuheben"/>
 <attribute NAME="freeplaneGTD_view_project" VALUE="Projekt"/>
-<attribute NAME="freeplaneGTD_view_who" VALUE="Wer"/>
+<attribute NAME="freeplaneGTD_view_who" VALUE="Bearbeiter"/>
 <attribute NAME="freeplaneGTD_view_context" VALUE="Kontext"/>
 <attribute NAME="freeplaneGTD_view_when" VALUE="Wann"/>
 <attribute NAME="freeplaneGTD.tab.project.title" VALUE="projektorientiert"/>
@@ -414,16 +414,16 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Drucken"/>
 <attribute NAME="freeplaneGTD.button.copy" VALUE="Kopieren"/>
 <attribute NAME="freeplaneGTD.button.cancel" VALUE="Abbruch"/>
-<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Erledigte herausfiltern"/>
+<attribute NAME="freeplaneGTD.button.filter_done" VALUE="Erledigte Aktivit&#xe4;ten herausfiltern"/>
 <attribute NAME="freeplaneGTD.button.show_notes" VALUE="Notizen darstellen"/>
 <attribute NAME="freeplaneGTD.button.done" VALUE="Speichern"/>
-<attribute NAME="freeplaneGTD.button.select" VALUE="Knoten in Map ausw&#xe4;hlen"/>
+<attribute NAME="freeplaneGTD.button.select" VALUE="Knoten in Map selektieren"/>
 <attribute NAME="freeplaneGTD.view.context.unassigned" VALUE="Nicht zugewiesen"/>
 <attribute NAME="freeplaneGTD.view.when.today" VALUE="Heute"/>
 <attribute NAME="freeplaneGTD.view.when.this_week" VALUE="Diese Woche"/>
-<attribute NAME="freeplaneGTD.actioneditor.title" VALUE="OPL-Punkt bearbeiten"/>
+<attribute NAME="freeplaneGTD.actioneditor.title" VALUE="Aktivit&#xe4;t bearbeiten"/>
 <attribute NAME="freeplaneGTD.actioneditor.action" VALUE="T&#xe4;tigkeit / Aktivit&#xe4;t"/>
-<attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Wer"/>
+<attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Bearbeiter"/>
 <attribute NAME="freeplaneGTD.actioneditor.context" VALUE="Kontext f&#xfc;r Aktivit&#xe4;t"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Wann"/>
 <attribute NAME="freeplaneGTD.actioneditor.today" VALUE="Heute"/>
