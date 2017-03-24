@@ -48,7 +48,7 @@ import java.util.List
 class ReportWindow {
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
-    static final String txtVer = '1.9.2'
+    static final String txtVer = '1.9.3'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
 	static ConfigProperties config
