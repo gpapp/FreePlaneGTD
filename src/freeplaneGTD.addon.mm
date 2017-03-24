@@ -6,10 +6,10 @@
     <properties fit_to_viewport="false;" show_icon_for_attributes="true" show_note_icons="true"/>
 
 <map_styles>
-<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
+<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true">
 <font SIZE="24"/>
 <stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
-<stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent" MAX_WIDTH="600.0 px" MIN_WIDTH="1.0 px">
+<stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent">
 <font NAME="SansSerif" SIZE="12" BOLD="false" ITALIC="false"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.details"/>
@@ -123,7 +123,7 @@
   </body>
 </html>
 </richcontent>
-<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1453650197342" HGAP_QUANTITY="-170.0 px" VSHIFT_QUANTITY="-100.0 px" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
+<node ID="ID_833172562" CREATED="1323057648210" MODIFIED="1453650197342" BACKGROUND_COLOR="#ffff99"><richcontent TYPE="NODE">
 
 <html>
   <head>
