@@ -8,7 +8,7 @@ v1.0
     Added global preference to filter completed tasks
     Added global preference to select default task view
     Added action to convert shortcuts to tasks (alt-h)
-    Added task editor (F4)
+    Added task freeplaneGTD.editor (F4)
     Rewritten copy to clipboard function of action view, to support text and formatted content
     Added context icon support (convert icons to context)
     Added Hungarian translation

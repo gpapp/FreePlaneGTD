@@ -292,7 +292,7 @@
 </richcontent>
 </node>
 </node>
-<node TEXT="Add editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1415057112663">
+<node TEXT="Add freeplaneGTD.editor form for creating, modifying actions" ID="ID_1606846197" CREATED="1412769115066" MODIFIED="1415057112663">
 <icon BUILTIN="yes"/>
 <icon BUILTIN="button_ok"/>
 <attribute NAME="Where" VALUE="Coding"/>
@@ -632,7 +632,7 @@
       
     </p>
     <p>
-      http://www.javaworld.com/article/2076334/java-se/start-customizing-swing-s-editor-pane----patch-the-swing-htmleditorkit.html
+      http://www.javaworld.com/article/2076334/java-se/start-customizing-swing-s-freeplaneGTD.editor-pane----patch-the-swing-htmleditorkit.html
     </p>
   </body>
 </html>

@@ -1,23 +1,5 @@
-// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.editAction]"})
-//=========================================================
-// Freeplane GTD+
-//
-// Copyright (c)2014 Gergely Papp
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-//=========================================================
+package freeplaneGTD.editor
+
 import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
 import groovy.swing.SwingBuilder
@@ -25,103 +7,111 @@ import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 
-import javax.swing.*
-import java.awt.*
+import javax.swing.AbstractAction
+import javax.swing.BorderFactory
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JComponent
+import javax.swing.JDialog
+import javax.swing.JFrame
+import javax.swing.JTextField
+import javax.swing.KeyStroke
+import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 
-class ActionEditorModel {
-    String action
-    String delegate
-    String context
-    boolean today
-    String when
-    String priority
-    String waitFor
-    String waitUntil
-    boolean done
-
-    Proxy.Node node
-
-    boolean setNode(Proxy.Node node) {
-        this.node = node
-        GTDMapReader mapReader = GTDMapReader.instance
-        mapReader.findIcons(node.map.root)
-        mapReader.internalConvertShorthand(node)
-        if (!node.icons.contains(mapReader.iconNextAction)) {
-            UITools.errorMessage('Selected node is not a task')
-            return false
-        }
-        action = node.text
-        delegate = node.attributes['Who']?.replaceAll(',', ', ')
-        context = node.attributes['Where']?.replaceAll(',', ', ')
-        today = node.icons.contains(GTDMapReader.instance.iconToday)
-        when = node.attributes['When']
-        priority = node.attributes['Priority']
-        waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
-        waitUntil = node.attributes['WaitUntil']
-        done = node.icons.contains(GTDMapReader.instance.iconDone)
-        return true
-    }
-
-    void updateNode() {
-        String localContext = ' @' + (context.split(',')*.trim()).join(' @')
-        node.text = "* $action " +
-                (context?.trim() ? "$localContext" : '') +
-                (delegate?.trim() ? "[$delegate]" : '') +
-                (when?.trim() ? "{$when}" : '') +
-                (priority?.trim() ? "#$priority" : '')
-
-        !delegate ? node.attributes.removeAll('Who') : false
-        !context ? node.attributes.removeAll('Where') : false
-        !when ? node.attributes.removeAll('When') : false
-        !priority ? node.attributes.removeAll('Priority') : false
-        if (waitFor) {
-            node.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
-        } else
-            node.attributes.removeAll('WaitFor')
-
-        if (waitUntil) {
-            def waitUntilDate = DateUtil.normalizeDate(waitUntil)
-            node.attributes.set('WaitUntil', waitUntilDate)
-        } else
-            node.attributes.removeAll('WaitUntil')
-
-        GTDMapReader mapReader = GTDMapReader.instance
-        if (node.icons.contains(mapReader.iconToday) != today) {
-            if (!today) {
-                node.icons.remove(mapReader.iconToday)
-            } else {
-                node.icons.add(mapReader.iconToday)
-            }
-        }
-        if (node.icons.contains(mapReader.iconDone) != done) {
-            if (!done) {
-                node.icons.remove(mapReader.iconDone)
-            } else {
-                node.icons.add(mapReader.iconDone)
-            }
-        }
-        // Find icons in the entire map
-        mapReader.findIcons(node.map.root)
-        // Remove priority icons that are to be re-added by the shorthand conversion
-        node.icons.each {
-            if (it ==~ /^full\-\d$/) {
-                node.icons.remove(it)
-            }
-        }
-        // Remove all existing context icons, that are to be re-added by the shorthand conversion
-        node.icons.each {
-            if (mapReader.contextIcons.containsValue(it)) {
-                node.icons.remove(it)
-            }
-        }
-        // Only re-parse the current node
-        mapReader.internalConvertShorthand(node)
-    }
-}
-
 class ActionEditor {
+    class ActionEditorModel {
+        String action
+        String delegate
+        String context
+        boolean today
+        String when
+        String priority
+        String waitFor
+        String waitUntil
+        boolean done
+
+        Proxy.Node node
+
+        boolean setNode(Proxy.Node node) {
+            this.node = node
+            GTDMapReader mapReader = GTDMapReader.instance
+            mapReader.findIcons(node.map.root)
+            mapReader.internalConvertShorthand(node)
+            if (!node.icons.contains(mapReader.iconNextAction)) {
+                UITools.errorMessage('Selected node is not a task')
+                return false
+            }
+            action = node.text
+            delegate = node.attributes['Who']?.replaceAll(',', ', ')
+            context = node.attributes['Where']?.replaceAll(',', ', ')
+            today = node.icons.contains(GTDMapReader.instance.iconToday)
+            when = node.attributes['When']
+            priority = node.attributes['Priority']
+            waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
+            waitUntil = node.attributes['WaitUntil']
+            done = node.icons.contains(GTDMapReader.instance.iconDone)
+            return true
+        }
+
+        void updateNode() {
+            String localContext = ' @' + (context.split(',')*.trim()).join(' @')
+            node.text = "* $action " +
+                    (context?.trim() ? "$localContext" : '') +
+                    (delegate?.trim() ? "[$delegate]" : '') +
+                    (when?.trim() ? "{$when}" : '') +
+                    (priority?.trim() ? "#$priority" : '')
+
+            !delegate ? node.attributes.removeAll('Who') : false
+            !context ? node.attributes.removeAll('Where') : false
+            !when ? node.attributes.removeAll('When') : false
+            !priority ? node.attributes.removeAll('Priority') : false
+            if (waitFor) {
+                node.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
+            } else
+                node.attributes.removeAll('WaitFor')
+
+            if (waitUntil) {
+                def waitUntilDate = DateUtil.normalizeDate(waitUntil)
+                node.attributes.set('WaitUntil', waitUntilDate)
+            } else
+                node.attributes.removeAll('WaitUntil')
+
+            GTDMapReader mapReader = GTDMapReader.instance
+            if (node.icons.contains(mapReader.iconToday) != today) {
+                if (!today) {
+                    node.icons.remove(mapReader.iconToday)
+                } else {
+                    node.icons.add(mapReader.iconToday)
+                }
+            }
+            if (node.icons.contains(mapReader.iconDone) != done) {
+                if (!done) {
+                    node.icons.remove(mapReader.iconDone)
+                } else {
+                    node.icons.add(mapReader.iconDone)
+                }
+            }
+            // Find icons in the entire map
+            mapReader.findIcons(node.map.root)
+            // Remove priority icons that are to be re-added by the shorthand conversion
+            node.icons.each {
+                if (it ==~ /^full\-\d$/) {
+                    node.icons.remove(it)
+                }
+            }
+            // Remove all existing context icons, that are to be re-added by the shorthand conversion
+            node.icons.each {
+                if (mapReader.contextIcons.containsValue(it)) {
+                    node.icons.remove(it)
+                }
+            }
+            // Only re-parse the current node
+            mapReader.internalConvertShorthand(node)
+        }
+    }
     ActionEditorModel model = new ActionEditorModel();
 
     JDialog mainFrame;
@@ -245,6 +235,3 @@ class ActionEditor {
         mainFrame.setVisible(true)
     }
 }
-
-ActionEditor editor = new ActionEditor()
-editor.editNode(node)

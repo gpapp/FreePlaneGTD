@@ -1,6 +1,8 @@
 package freeplaneGTD
 
 import com.thoughtworks.xstream.core.util.ArrayIterator
+import org.freeplane.core.ui.LengthUnits
+import org.freeplane.core.util.Quantity
 import org.freeplane.features.filter.condition.ICondition
 import org.freeplane.plugin.script.proxy.Convertible
 import org.freeplane.plugin.script.proxy.Proxy
@@ -18,7 +20,7 @@ import org.junit.Test
 
 import java.util.Map.Entry
 
-class MyAttributes implements Proxy.Attributes {
+class MyAttributes implements Attributes {
     java.util.Map<String, Object> attributes = [:]
 
     @Override
@@ -63,6 +65,10 @@ class MyAttributes implements Proxy.Attributes {
     @Override
     public Object getFirst(String arg0) {
         return attributes.get(arg0);
+    }
+
+    boolean containsKey(String s) {
+        return false
     }
 
     @Override
@@ -115,6 +121,10 @@ class MyAttributes implements Proxy.Attributes {
     public Iterator<Entry<String, Object>> iterator() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    void optimizeWidths() {
+
     }
 
     @Override
@@ -192,6 +202,14 @@ class MyIcons implements Proxy.Icons {
     @Override
     public void add(String arg0) {
         icons.add(arg0)
+    }
+
+    void addAll(Collection<String> collection) {
+
+    }
+
+    void addAll(Proxy.IconsRO iconsRO) {
+
     }
 
     @Override
@@ -445,6 +463,10 @@ class MyNode implements Proxy.Node {
         return null;
     }
 
+    String getHtmlText() {
+        return null
+    }
+
     @Override
     public Node getPrevious() {
         // TODO Auto-generated method stub
@@ -540,6 +562,22 @@ class MyNode implements Proxy.Node {
         return false;
     }
 
+    int getCountNodesSharingContent() {
+        return 0
+    }
+
+    int getCountNodesSharingContentAndSubtree() {
+        return 0
+    }
+
+    List<Node> getNodesSharingContent() {
+        return null
+    }
+
+    List<Node> getNodesSharingContentAndSubtree() {
+        return null
+    }
+
     @Override
     public boolean isRoot() {
         // TODO Auto-generated method stub
@@ -568,6 +606,18 @@ class MyNode implements Proxy.Node {
     public Node appendBranch(NodeRO arg0) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    Node appendAsCloneWithSubtree(NodeRO nodeRO) {
+        return null
+    }
+
+    Node appendAsCloneWithoutSubtree(NodeRO nodeRO) {
+        return null
+    }
+
+    void pasteAsClone() {
+
     }
 
     @Override
@@ -725,6 +775,14 @@ class MyNode implements Proxy.Node {
 
     }
 
+    void setHorizontalShift(Quantity<LengthUnits> quantity) {
+
+    }
+
+    void setHorizontalShift(String s) {
+
+    }
+
     @Override
     public void setLastModifiedAt(Date arg0) {
         // TODO Auto-generated method stub
@@ -740,6 +798,18 @@ class MyNode implements Proxy.Node {
     @Override
     public void setMinimalDistanceBetweenChildren(int arg0) {
         // TODO Auto-generated method stub
+
+    }
+
+    void setMinimalDistanceBetweenChildren(Quantity<LengthUnits> quantity) {
+
+    }
+
+    void setMinimalDistanceBetweenChildren(String s) {
+
+    }
+
+    void sortChildrenBy(Closure<Comparable<Object>> closure) {
 
     }
 
@@ -778,6 +848,13 @@ class MyNode implements Proxy.Node {
 
     }
 
+    void setVerticalShift(Quantity<LengthUnits> quantity) {
+
+    }
+
+    void setVerticalShift(String s) {
+
+    }
 }
 
 class GTDMapReaderTest {

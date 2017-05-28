@@ -22,11 +22,7 @@
 //=========================================================
 // references
 //=========================================================
-import freeplaneGTD.GTDMapReader
-
 //=========================================================
 // script
 //=========================================================
-// Get icon keys for next actions and projects
-// Expand any nodes with next action shorthand
-GTDMapReader.instance.convertShorthand(node.map.root);
+ReportWindow.refresh(node.map.root)

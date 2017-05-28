@@ -5,7 +5,7 @@ import org.freeplane.plugin.script.proxy.ConvertibleDate
 import org.freeplane.plugin.script.proxy.Proxy
 
 /**
- * Model for the report pane.
+ * Model for the freeplaneGTD.report pane.
  *
  * Created by gpapp on 2015.03.05..
  */
@@ -53,8 +53,8 @@ class ReportModel {
      * Compare tasks based on the task date calculated above
      */
     def taskDateComparator = { a, b ->
-        def aw = a['time']
-        def bw = b['time']
+        def aw = a['when']
+        def bw = b['when']
         if ((!aw && !bw) || aw.equals(bw)) {
             return 0
         }
@@ -67,7 +67,7 @@ class ReportModel {
         if (bw instanceof Date) bd = bw
         else if (bw == todayText) bd = today
         else if (bw == thisWeekText) bd = today + 7
-        if (!ad && !bd) {
+        if (ad==null && bd==null) {
             return aw <=> bw
         }
         if (ad && !bd) return -1

@@ -22,18 +22,18 @@ import freeplaneGTD.ClipBoardUtil
 import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
+import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
+import javafx.event.EventHandler
+import javafx.scene.Scene
+import javafx.scene.web.WebEvent
+import javafx.scene.web.WebView
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.FreeplaneIconUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass.ConfigProperties
-import org.freeplane.plugin.script.proxy.ControllerProxy
 import org.freeplane.plugin.script.proxy.Proxy
-import org.xhtmlrenderer.resource.ImageResource
-import org.xhtmlrenderer.simple.FSScrollPane
-import org.xhtmlrenderer.simple.XHTMLPanel
-import org.xhtmlrenderer.simple.extend.XhtmlNamespaceHandler
-import org.xhtmlrenderer.swing.*
 
 import javax.swing.*
 import java.awt.*
@@ -43,39 +43,39 @@ import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.awt.image.BufferedImage
-import java.util.List
 
 class ReportWindow {
+
     static final String title = 'GTD Next Actions'
-    static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
-    static final String txtVer = '1.9.3'
+    static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
+            '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
+    static final String txtVer = '1.10.0'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
-	static ConfigProperties config
+    static ConfigProperties config
     static ReportModel report
     static JFrame mainFrame
-    static XHTMLPanel projectPane
+    static JFXPanel projectPane
+    static WebView webView;
     static ButtonGroup contentTypeGroup
     static JCheckBox cbFilterDone
-	
-	
-	static boolean showNotes  
-	static ReportModel.VIEW selectedView	
+
+    static boolean showNotes
+    static ReportModel.VIEW selectedView
     static boolean autoFoldMap
 
-    static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c, ReportModel reportModel) {
-        report = reportModel
-		config = configModel
-	    boolean rememberLastPosition
+    static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c) {
+        config = configModel
+        boolean rememberLastPosition
         if (!mainFrame) {
-			String defaultView
- 			try {
-				defaultView = ReportModel.VIEW.valueOf(config.getProperty('freeplaneGTD_default_view')).toString()
-			} catch (Exception e) {
-				defaultView = ReportModel.VIEW.PROJECT.toString()
-			}
-			autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
-				
+            String defaultView
+            try {
+                defaultView = ReportModel.VIEW.valueOf(config.getProperty('freeplaneGTD_default_view')).toString()
+            } catch (Exception e) {
+                defaultView = ReportModel.VIEW.PROJECT.toString()
+            }
+            autoFoldMap = config.getBooleanProperty('freeplaneGTD_auto_fold_map')
+
             Dimension screenSize = Toolkit.defaultToolkit.screenSize
             int tPosX = (int) (screenSize.width / 16 * 3)
             int tPosY = (int) (screenSize.height / 16 * 3)
@@ -88,27 +88,16 @@ class ReportWindow {
             int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_x', tSizeX) : tSizeX
             int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_y', tSizeY) : tSizeY
 
-			ImageResourceLoader imageLoader = new ImageResourceLoader() {
-				@Override
-				public synchronized ImageResource get(final String uri, final int width, final int height) {
-					if (uri.startsWith("builtin:")) {
-						Icon standardIcon = FreeplaneIconUtils.createStandardIcon(uri.replaceFirst("builtin:(.*)", "\$1"))
-						return new ImageResource(uri, new AWTFSImage.NewAWTFSImage(iconToImage(standardIcon)))
-					}
-					return super.get(uri, width, height)
-				}
-			}
-		
             SwingBuilder.edtBuilder {
-				String userPath = c.userDirectory.toString()
-				def iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
-				def iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
+                String userPath = c.userDirectory.toString()
+                def iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
+                def iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
                         defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
                         show: false) {
                     borderLayout()
-				}
+                }
 
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
@@ -125,7 +114,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
                                 mnemonic: "1",
                                 selected: defaultView == "PROJECT",
-                                actionPerformed: { ReportWindow.refreshContent() }
+                                actionPerformed: { refreshContent() }
                         )
                         whoButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -134,7 +123,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
                                 mnemonic: "2",
                                 selected: defaultView == "WHO",
-                                actionPerformed: { ReportWindow.refreshContent() }
+                                actionPerformed: { refreshContent() }
                         )
                         contextButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -143,7 +132,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
                                 mnemonic: "3",
                                 selected: defaultView == "CONTEXT",
-                                actionPerformed: { ReportWindow.refreshContent() }
+                                actionPerformed: { refreshContent() }
                         )
                         whenButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -152,7 +141,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
                                 mnemonic: "4",
                                 selected: defaultView == "WHEN",
-                                actionPerformed: { ReportWindow.refreshContent() }
+                                actionPerformed: { refreshContent() }
                         )
                         aboutButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -160,38 +149,43 @@ class ReportWindow {
                                 text: "? - " + TextUtils.getText("freeplaneGTD.tab.about.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
                                 mnemonic: "?",
-                                actionPerformed: { ReportWindow.refreshContent() }
+                                actionPerformed: { refreshContent() }
                         )
                     }
                     reportPanel = panel(constraints: BorderLayout.CENTER) {
                         gridLayout(columns: 1, rows: 1)
                     }
-                    projectPane = new XHTMLPanel()
-                    reportPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), new FSScrollPane(projectPane))
+                    projectPane = new JFXPanel()
+                    Platform.runLater({
+                        webView = new WebView()
+                        projectPane.setScene(new Scene(webView))
+                        webView.getEngine().loadContent("TODO: no content")
+                    })
+                    reportPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), projectPane)
 
-                    projectPane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(projectPane, imageLoader))
+                    //projectPane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(projectPane, imageLoader))
 
                     panel(constraints: BorderLayout.SOUTH) {
                         boxLayout(axis: BoxLayout.X_AXIS)
                         button(text: TextUtils.getText("freeplaneGTD.button.refresh"),
                                 actionPerformed: {
-                                    ReportWindow.refreshContent()
+                                    refreshContent()
                                 })
                         button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                                 actionPerformed: {
-                                    Clipboard clip = projectPane.getToolkit().getSystemClipboard();
+                                    Clipboard clip = projectPane.getToolkit().getSystemClipboard()
                                     if (clip != null) {
                                         switch (contentTypeGroup.getSelection().actionCommand) {
-                                            case ReportModel.VIEW.PROJECT.name(): curContent = report.projectList(); break;
-                                            case ReportModel.VIEW.WHO.name(): curContent = report.delegateList(); break;
-                                            case ReportModel.VIEW.CONTEXT.name(): curContent = report.contextList(); break;
-                                            case ReportModel.VIEW.WHEN.name(): curContent = report.timelineList(); break;
-                                            default: curContent = report.projectList(); break;
+                                            case ReportModel.VIEW.PROJECT.name(): curContent = report.projectList(); break
+                                            case ReportModel.VIEW.WHO.name(): curContent = report.delegateList(); break
+                                            case ReportModel.VIEW.CONTEXT.name(): curContent = report.contextList(); break
+                                            case ReportModel.VIEW.WHEN.name(): curContent = report.timelineList(); break
+                                            default: curContent = report.projectList(); break
                                         }
                                         clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, showNotes), null)
                                         UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
                                     }
-                                    mainFrame.toFront();
+                                    mainFrame.toFront()
                                 })
                         button(
                                 name: "button_cancel",
@@ -203,30 +197,37 @@ class ReportWindow {
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
-									config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
-									ReportWindow.refreshContent()
+                                    config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
+                                    refreshContent()
                                 })
                         cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
                                 selected: showNotes,
                                 actionPerformed: {
-                                    showNotes = it.source.selected; ReportWindow.refreshContent()
+                                    showNotes = it.source.selected; refreshContent()
                                 })
                     }
                 }
             }
-            NodeLink nl = new NodeLink(c, mainFrame, report, refreshContent)			
+/*
+http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
+            JSObject win = (JSObject) webEngine.executeScript("window");
+            win.setMember("app", new JavaApp());
+
+           TODO Ide kell a Nodelink helyett berakni, a JS handlereket
+
+            NodeLink nl = new NodeLink(c, mainFrame, report, refreshContent)
             projectPane.getMouseTrackingListeners().each {
                 if (it instanceof LinkListener) {
                     projectPane.removeMouseTrackingListener(it)
                 }
             }
-            projectPane.addMouseTrackingListener(nl);
-
-			// on ESC key close frame
+            projectPane.addMouseTrackingListener(nl)
+*/
+            // on ESC key close frame
             mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"));
+                    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"))
             mainFrame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"),
-                    new CloseAction(mainFrame));
+                    new CloseAction(mainFrame))
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
                     if (config.getBooleanProperty('freeplaneGTD_remember_last_position')) {
@@ -235,18 +236,18 @@ class ReportWindow {
                         config.properties.setProperty('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
                         config.properties.setProperty('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
-					ReportWindow.mainFrame=null
+                    mainFrame=null
                     super.windowClosing(e)
                 }
             })
             mainFrame.setLocation(posX, posY)
-            mainFrame.setSize(sizeY, sizeY)
+            mainFrame.setSize(sizeX, sizeY)
         }
         return mainFrame
     }
-	
-    static def refreshContent = {
-		cbFilterDone.selected=config.getBooleanProperty('freeplaneGTD_filter_done')
+
+    static refreshContent() {
+        cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
         def content
@@ -274,47 +275,127 @@ class ReportWindow {
             default:
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
-        projectPane.setDocumentFromString(content, null, new XhtmlNamespaceHandler())
+        Platform.runLater({
+            webView.getEngine().loadContent(content)
+        })
     }
 
-    static BufferedImage iconToImage(Icon icon) {
-        if (icon instanceof ImageIcon) {
-            Image img = ((ImageIcon) icon).image;
-            if (img instanceof BufferedImage) {
-                return (BufferedImage) img;
+    private static class MyURLStreamHandlerFactory implements URLStreamHandlerFactory {
+        static class MyURLHandler extends URLStreamHandler {
+
+            @Override
+            protected URLConnection openConnection(URL url) throws IOException {
+                return new MyURLConnection(url);
             }
 
-            // Create a buffered image with transparency
-            BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        }
 
-            // Draw the image on to the buffered image
-            Graphics2D bGr = bimage.createGraphics();
-            bGr.drawImage(img, 0, 0, null);
-            bGr.dispose();
+        static class MyURLConnection extends URLConnection {
+            protected MyURLConnection(URL url) {
+                super(url)
+            }
 
-            // Return the buffered image
-            return bimage;
-        } else {
-            int w = icon.getIconWidth();
-            int h = icon.getIconHeight();
-            GraphicsEnvironment ge =
-                    GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gd = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gd.getDefaultConfiguration();
-            BufferedImage image = gc.createCompatibleImage(w, h);
-            Graphics2D g = image.createGraphics();
-            icon.paintIcon(null, g, 0, 0);
-            g.dispose();
-            return image;
+            void connect() throws IOException {
+                if (connected) {
+                    return;
+                }
+                loadImage();
+                connected = true;
+            }
+
+            int getContentLength() {
+                return data.length;
+            }
+
+
+            InputStream getInputStream() throws IOException {
+                connect();
+                if ("builtin".equals(url.protocol)) {
+                    Icon standardIcon = FreeplaneIconUtils.createStandardIcon(url.toExternalForm().replaceFirst("builtin:(.*)", "\$1"))
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream()
+                    ImageIO.write(iconToImage(standardIcon), "png", baos)
+                    return new ByteArrayInputStream(baos.toByteArray())
+                }
+                return super.get(uri, width, height)
+            }
+        }
+
+        static BufferedImage iconToImage(Icon icon) {
+            if (icon instanceof ImageIcon) {
+                Image img = ((ImageIcon) icon).image
+                if (img instanceof BufferedImage) {
+                    return (BufferedImage) img
+                }
+
+                // Create a buffered image with transparency
+                BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB)
+
+                // Draw the image on to the buffered image
+                Graphics2D bGr = bimage.createGraphics()
+                bGr.drawImage(img, 0, 0, null)
+                bGr.dispose()
+
+                // Return the buffered image
+                return bimage
+            } else {
+                int w = icon.getIconWidth()
+                int h = icon.getIconHeight()
+                GraphicsEnvironment ge =
+                        GraphicsEnvironment.getLocalGraphicsEnvironment()
+                GraphicsDevice gd = ge.getDefaultScreenDevice()
+                GraphicsConfiguration gc = gd.getDefaultConfiguration()
+                BufferedImage image = gc.createCompatibleImage(w, h)
+                Graphics2D g = image.createGraphics()
+                icon.paintIcon(null, g, 0, 0)
+                g.dispose()
+                return image
+            }
+        }
+
+        URLStreamHandler createURLStreamHandler(String protocol) {
+            if (protocol.equals("myapp")) {
+                return new MyURLHandler();
+            }
+            return null;
+        }
+
+    }
+
+
+    private static class CloseAction extends AbstractAction {
+        JFrame frame
+
+        CloseAction(frame) {
+            this.frame = frame
+        }
+
+        private recurseComponent(Component c) {
+            if (c.name == "button_cancel") {
+                ((JButton) c).doClick()
+            } else if (c instanceof Container) {
+                ((Container) c).components.each {
+                    recurseComponent(it)
+                }
+            }
+        }
+
+        void actionPerformed(ActionEvent e) {
+            recurseComponent(frame.rootPane)
         }
     }
+
 
     static String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
         Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
         head.addContent('style',
                 '/*<![CDATA[*/' +
-                        'body {color:#000000;  }' +
+
+                        'body {' +
+                        '   color:#000000;' +
+                        '   font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;' +
+                        '   font-size: 13px;' +
+                        '}' +
                         'h1 {font-size:150%; font-weight:bold;}' +
                         'h2 {font-size:125%; font-weight:bold;}' +
                         'a {text-decoration: none; color:#000077;}' +
@@ -347,7 +428,7 @@ class ReportWindow {
                 }
                 wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
                 if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
-                wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String);
+                wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String)
 
                 Tag contextTag = new Tag('span')
 
@@ -355,8 +436,8 @@ class ReportWindow {
                     if (contextIcons.keySet().contains(key)) {
                         contextTag.addChild('img', [class: "contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
                     } else {
-                        contextTag.addContent('@');
-                        contextTag.addContent(key);
+                        contextTag.addContent('@')
+                        contextTag.addContent(key)
                     }
                 }
                 !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
@@ -381,169 +462,138 @@ class ReportWindow {
         return HTML_HEADER + html.toString()
     }
 
-    static void refresh(ReportModel reportModel) {
-		report=reportModel
-        refreshContent()
-        projectPane.scrollTo(new Point(0, 0))
-    }
-}
-
-
-final ReportModel report = new ReportModel(node.map.root)
-
-
-//---------------------------------------------------------
-// Process hyperlink to map node
-//---------------------------------------------------------
-class NodeLink extends LinkListener {
-    Proxy.Controller ctrl
-    JFrame frame
-    ReportModel report
-    private final Closure<Boolean> refresh
-
-    NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report, Closure<Boolean> refresh) {
-        this.ctrl = ctrl
-        this.frame = frame
-        this.report = report
-        this.refresh = refresh
+    static void refresh(Proxy.Node root) {
+        report = new ReportModel(root)
+        if (mainFrame?.visible) {
+            refreshContent()
+        }
     }
 
-    public void linkClicked(BasicPanel panel, String uri) {
-        if (uri.startsWith('done:')) {
-            String linkNodeID = uri.substring(5)
-            def nodesFound = ctrl.find { it.nodeID == linkNodeID }
+    static class NodeLink implements EventHandler<WebEvent> {
+        Proxy.Controller ctrl
+        JFrame frame
+        ReportModel report
+        private final Closure<Boolean> refresh
 
-            if (nodesFound[0] != null) {
-                def node = nodesFound[0]
-                if (node.icons.contains(report.mapReader.iconDone)) {
-                    node.icons.remove(report.mapReader.iconDone)
+        NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report, Closure<Boolean> refresh) {
+            this.ctrl = ctrl
+            this.frame = frame
+            this.report = report
+            this.refresh = refresh
+        }
+
+        void handle(WebEvent event) {
+            //TODO FUCKIT
+            uri = event.data.toString()
+            if (uri.startsWith('done:')) {
+                String linkNodeID = uri.substring(5)
+                def nodesFound = ctrl.find { it.nodeID == linkNodeID }
+
+                if (nodesFound[0] != null) {
+                    def node = nodesFound[0]
+                    if (node.icons.contains(report.mapReader.iconDone)) {
+                        node.icons.remove(report.mapReader.iconDone)
+                    } else {
+                        node.icons.add(report.mapReader.iconDone)
+                    }
+                    refresh(report)
                 } else {
-                    node.icons.add(report.mapReader.iconDone)
+                    UITools.informationMessage("Cannot find node to mark as done")
                 }
-                refresh(report)
-            } else {
-                UITools.informationMessage("Cannot find node to mark as done");
-            }
-        } else if (uri.startsWith('copy:')) {
-            int pos = uri.substring(5).toInteger()
-            Map feeder
-            Clipboard clip = panel.getToolkit().getSystemClipboard();
-            if (clip != null) {
-                switch (ReportWindow.selectedView) {
-                    case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break;
-                    case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break;
-                    case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break;
-                    case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break;
+            } else if (uri.startsWith('copy:')) {
+                int pos = uri.substring(5).toInteger()
+                Map feeder
+                Clipboard clip = panel.getToolkit().getSystemClipboard()
+                if (clip != null) {
+                    switch (freeplaneGTD.report.ReportWindow.selectedView) {
+                        case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
+                        case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
+                        case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
+                        case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
+                        default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
+                    }
+                    clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, freeplaneGTD.report.ReportWindow.showNotes), null)
+                    UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
+                    frame.toFront()
+                }
+            } else if (uri.startsWith('select:')) {
+                int pos = uri.substring(7).toInteger()
+                java.util.List list
+                switch (freeplaneGTD.report.ReportWindow.selectedView) {
+                    case ReportModel.VIEW.PROJECT: list = (java.util.List) report.projectList()['groups'][pos]['items']; break
+                    case ReportModel.VIEW.WHO: list = (java.util.List) report.delegateList()['groups'][pos]['items']; break
+                    case ReportModel.VIEW.CONTEXT: list = (java.util.List) report.contextList()['groups'][pos]['items']; break
+                    case ReportModel.VIEW.WHEN: list = (java.util.List) report.timelineList()['groups'][pos]['items']; break
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
-                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, ReportWindow.showNotes), null)
-                UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
-                frame.toFront()
-            }
-        } else if (uri.startsWith('select:')) {
-            int pos = uri.substring(7).toInteger()
-            List list
-            switch (ReportWindow.selectedView) {
-                case ReportModel.VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break;
-                case ReportModel.VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break;
-                case ReportModel.VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break;
-                case ReportModel.VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break;
-                default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
-            }
-            List ids = list.collect { it['nodeID'] }
-            def nodesFound = ctrl.find { ids.contains(it.nodeID) }
-            if (nodesFound.size() > 0) {
-                if (ReportWindow.autoFoldMap) {
-                    FoldToTop(nodesFound[0])
+                java.util.List ids = list.collect { it['nodeID'] }
+                def nodesFound = ctrl.find { ids.contains(it.nodeID) }
+                if (nodesFound.size() > 0) {
+                    if (freeplaneGTD.report.ReportWindow.autoFoldMap) {
+                        FoldToTop(nodesFound[0])
+                    }
+                    nodesFound.each {
+                        UnfoldBranch(it)
+                    }
+                    ctrl.selectMultipleNodes(nodesFound)
+                    frame.visible = false
+                    frame.dispose()
+                } else {
+                    UITools.informationMessage("Error finding selection")
                 }
-                nodesFound.each {
-                    UnfoldBranch(it)
-                }
-                ctrl.selectMultipleNodes(nodesFound)
-                frame.visible = false
-                frame.dispose()
-            } else {
-                UITools.informationMessage("Error finding selection");
-            }
-        } else if (uri.startsWith('link:')) {
-            String linkNodeID = uri.substring(5)
-            def nodesFound = ctrl.find { it.nodeID == linkNodeID }
+            } else if (uri.startsWith('link:')) {
+                String linkNodeID = uri.substring(5)
+                def nodesFound = ctrl.find { it.nodeID == linkNodeID }
 
-            if (nodesFound[0] != null) {
-                if (ReportWindow.autoFoldMap) {
-                    FoldToTop(nodesFound[0])
-                }
-                UnfoldBranch(nodesFound[0])
-                ctrl.select(nodesFound[0])
-                ctrl.centerOnNode(nodesFound[0])
-                ctrl.centerOnNode(nodesFound[0])
-                frame.visible = false
-                frame.dispose()
-            } else {
-                UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list");
-            }
-        } else {
-            URI uriLink = new URI(uri);
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    Desktop.getDesktop().browse(uriLink);
-                } catch (IOException e) {
-                    UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
+                if (nodesFound[0] != null) {
+                    if (freeplaneGTD.report.ReportWindow.autoFoldMap) {
+                        FoldToTop(nodesFound[0])
+                    }
+                    UnfoldBranch(nodesFound[0])
+                    ctrl.select(nodesFound[0])
+                    ctrl.centerOnNode(nodesFound[0])
+                    ctrl.centerOnNode(nodesFound[0])
+                    frame.visible = false
+                    frame.dispose()
+                } else {
+                    UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
                 }
             } else {
-                UITools.informationMessage('Error opening link: Desktop is not supported')
+                URI uriLink = new URI(uri)
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(uriLink)
+                    } catch (IOException e) {
+                        UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
+                    }
+                } else {
+                    UITools.informationMessage('Error opening link: Desktop is not supported')
+                }
             }
         }
-    }
 
-    // recursive unfolding of branch
-    private void UnfoldBranch(Proxy.Node thisNode) {
-        Proxy.Node rootNode = thisNode.getMap().getRoot();
-        if (thisNode != rootNode) {
-            thisNode.setFolded(false);
-            UnfoldBranch(thisNode.getParent());
-        }
-    }
-
-    // fold to first level
-    private void FoldToTop(Proxy.Node thisNode) {
-        Proxy.Node rootNode = thisNode.getMap().getRoot();
-        def Nodes = ctrl.findAll();
-        Nodes.each {
-            it.setFolded(true);
-        }
-        rootNode.setFolded(false);
-    }
-
-}
-
-
-class CloseAction extends AbstractAction {
-    JFrame frame
-
-    CloseAction(frame) {
-        this.frame = frame
-    }
-
-    private recurseComponent(Component c) {
-        if (c.name == "button_cancel") {
-            ((JButton) c).doClick()
-        } else if (c instanceof Container) {
-            ((Container) c).components.each {
-                recurseComponent(it)
+        // recursive unfolding of branch
+        private void UnfoldBranch(Proxy.Node thisNode) {
+            Proxy.Node rootNode = thisNode.getMap().getRoot()
+            if (thisNode != rootNode) {
+                thisNode.setFolded(false)
+                UnfoldBranch(thisNode.getParent())
             }
         }
-    }
 
-    public void actionPerformed(ActionEvent e) {
-        recurseComponent(frame.rootPane)
+        // fold to first level
+        private void FoldToTop(Proxy.Node thisNode) {
+            Proxy.Node rootNode = thisNode.getMap().getRoot()
+            def Nodes = ctrl.findAll()
+            Nodes.each {
+                it.setFolded(true)
+            }
+            rootNode.setFolded(false)
+        }
+
     }
 }
 
-System.setProperty("xr.text.aa-smoothing-level", "1")
-System.setProperty("xr.text.aa-fontsize-threshhold", "1")
-System.setProperty("xr.text.aa-rendering-hint", "RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT")
-
-JFrame frameinstance = ReportWindow.getMainFrame(config, c, report)
+JFrame frameinstance = ReportWindow.getMainFrame(config, c)
 frameinstance.visible = true
-ReportWindow.refresh(report)
+ReportWindow.refresh(node.map.root)

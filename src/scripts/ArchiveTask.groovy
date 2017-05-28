@@ -1,9 +1,3 @@
-import freeplaneGTD.DoneMover
-import freeplaneGTD.GTDMapReader
-import org.freeplane.core.ui.components.UITools
-import org.freeplane.core.util.TextUtils
-import org.freeplane.plugin.script.proxy.Proxy
-
 // @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.archiveTask]"})
 /*
 =========================================================
@@ -27,23 +21,6 @@ import org.freeplane.plugin.script.proxy.Proxy
 =========================================================
 */
 
-class ArchiveTask extends DoneMover {
 
-    public Proxy.Node findOrCreateArchiveDir (Proxy.Node node){
-        final Proxy.Node rootNode = node.map.root
-        final String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
-
-        Proxy.Node archiveNode = rootNode.children.find {
-            it.transformedText==archiveDirName
-        }
-        if(!archiveNode) {
-            archiveNode = rootNode.createChild()
-            archiveNode.text=archiveDirName
-        }
-        return archiveNode
-    }
-}
-
-ArchiveTask archiveTask = new ArchiveTask()
-archiveTask.execute(archiveTask.findOrCreateArchiveDir(node), node)
+archiveTask.execute(ArchiveTask.findOrCreateArchiveDir(node), node)
 
