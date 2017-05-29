@@ -90,8 +90,7 @@ class ReportWindow {
 
             SwingBuilder.edtBuilder {
                 String userPath = c.userDirectory.toString()
-                def iconFrame = imageIcon(userPath + "/icons/fpgtdIcon.png").image
-                def iconLogo = imageIcon(userPath + "/resources/images/fpgtdLogo.png")
+                def iconFrame = imageIcon(userPath + "/resources/images/freeplaneGTD-icon.png").image
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
                         defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,

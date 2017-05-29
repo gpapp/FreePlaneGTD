@@ -20,7 +20,6 @@
 //=========================================================
 package freeplaneGTD
 
-import java.util.Date
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
@@ -38,12 +37,12 @@ import org.freeplane.plugin.script.proxy.Proxy
 class GTDMapReader {
     private static GTDMapReader instance = new GTDMapReader()
 
-    public String iconNextAction
-    public String iconProject
-    public String iconToday
-    public String iconDone
-	public Date today
-    public Map contextIcons
+    String iconNextAction
+    String iconProject
+    String iconToday
+    String iconDone
+	Date today
+    Map contextIcons
 
     static GTDMapReader getInstance() {
 		instance.today=new Date().clearTime()
@@ -63,7 +62,7 @@ class GTDMapReader {
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
-    public void convertShorthand(Proxy.Node rootNode) {
+    void convertShorthand(Proxy.Node rootNode) {
         findIcons(rootNode)
         internalConvertShorthand(rootNode)
     }
@@ -102,14 +101,14 @@ class GTDMapReader {
         }
     }
 
-    public List getActionList(Proxy.Node rootNode, boolean filterDone) {
+    List getActionList(Proxy.Node rootNode, boolean filterDone) {
         return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
     }
 
     //Get icon key names from Settings/Icons nodes
     private void internalFindIcons(Proxy.Node thisNode) {
-        String firstIcon = thisNode.icons.first;
-        String nodeText = thisNode.text.trim();
+        String firstIcon = thisNode.icons.first
+        String nodeText = thisNode.text.trim()
 
         if (nodeText =~ '^Icon:') {
             if (firstIcon ==~ /^full\-\d$/) {
@@ -124,13 +123,13 @@ class GTDMapReader {
             } else if (nodeText == 'Icon: Done') {
                 iconDone = firstIcon
             } else if (nodeText =~ '^Icon: @') {
-                String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1');
+                String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1')
                 contextIcons[context] = firstIcon
             }
         }
 
         thisNode.children.each {
-            internalFindIcons(it);
+            internalFindIcons(it)
         }
     }
 
@@ -144,17 +143,17 @@ class GTDMapReader {
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
-    public void internalConvertShorthand(Proxy.Node thisNode) {
-        String nodeText = thisNode.text.trim();
+    void internalConvertShorthand(Proxy.Node thisNode) {
+        String nodeText = thisNode.text.trim()
 
         if (nodeText.length() > 0 && nodeText.charAt(0) == (char) '?') {
-            nodeText = nodeText.substring(1).trim();
-            thisNode.text = nodeText;
-            thisNode.icons.add('help');
+            nodeText = nodeText.substring(1).trim()
+            thisNode.text = nodeText
+            thisNode.icons.add('help')
         }
         if ((nodeText.length() > 0 && nodeText.charAt(0) == (char) '*') || (thisNode.icons.icons.contains(iconNextAction))) {
-            Map fields = parseShorthand(nodeText);
-            thisNode.text = fields['action'];
+            Map fields = parseShorthand(nodeText)
+            thisNode.text = fields['action']
 
             def nodeAttr = [:] as Map<String, Object>
             thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
@@ -181,16 +180,16 @@ class GTDMapReader {
                 }
             }
 
-            thisNode.attributes = nodeAttr;
+            thisNode.attributes = nodeAttr
             if (!thisNode.icons.icons.contains(iconNextAction)) {
-                thisNode.icons.add(iconNextAction);
+                thisNode.icons.add(iconNextAction)
             }
 
             contexts.each {
                 if (contextIcons.keySet().contains(it)) {
                     String contextIcon = contextIcons[it]
                     if (!thisNode.icons.icons.contains(contextIcon)) {
-                        thisNode.icons.add(contextIcon);
+                        thisNode.icons.add(contextIcon)
                     }
                 }
             }
@@ -201,38 +200,38 @@ class GTDMapReader {
                 }
             }
             if (nodeAttr['Priority']) {
-                String priorityIcon = 'full-' + nodeAttr['Priority'];
-                thisNode.icons.add(priorityIcon);
+                String priorityIcon = 'full-' + nodeAttr['Priority']
+                thisNode.icons.add(priorityIcon)
             }
         }
 
         thisNode.children.each {
-            internalConvertShorthand(it);
+            internalConvertShorthand(it)
         }
     }
     //--------------------------------------------------------------
     // find parent for the next action, either direct (task) or indirect (project)
     private static String findNextActionProject(Proxy.Node thisNode, String iconProject) {
-        Proxy.Node parentNode = thisNode.getParent();
+        Proxy.Node parentNode = thisNode.getParent()
         String retval = ''
         if (parentNode != null && thisNode.isDescendantOf(parentNode)) {
-            Proxy.Node walker = parentNode;
+            Proxy.Node walker = parentNode
             while (walker) {
                 if (walker.icons.contains(iconProject)) {
-                    retval = stripHTMLTags(walker.text) + (retval ? '/' + retval : '');
+                    retval = stripHTMLTags(walker.text) + (retval ? '/' + retval : '')
                 }
-                walker = walker.parent;
+                walker = walker.parent
             }
         }
-        return retval ? retval : stripHTMLTags(parentNode.text);
+        return retval ? retval : stripHTMLTags(parentNode.text)
     }
 
     //--------------------------------------------------------------
     // recursive walk through nodes to find Next Actions
     private
     def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone) {
-        def icons = thisNode.icons.icons;
-        def naNodeID = thisNode.id;
+        def icons = thisNode.icons.icons
+        def naNodeID = thisNode.id
 
         // use index method to get attributes
         String naContext = thisNode['Where'].toString()
@@ -260,16 +259,16 @@ class GTDMapReader {
             thisNode['WaitUntil'] = naWaitUntil
         }
 
-        def result = [];
+        def result = []
         // include result if it has next action icon and its not the icon setting node for next actions
         if (icons.contains(iconNextAction)) {
-            String naAction = stripHTMLTags(thisNode.text);
+            String naAction = stripHTMLTags(thisNode.text)
             if (!(naAction =~ /Icon:/)) {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
-                String naProject = findNextActionProject(thisNode, iconProject);
+                String naProject = findNextActionProject(thisNode, iconProject)
                 if (icons.contains(iconToday)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
+                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
                 }
                 boolean done = icons.contains(iconDone)
                 if (!(filterDone && done)) {
@@ -293,7 +292,7 @@ class GTDMapReader {
         thisNode.children.each {
             result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone))
         }
-        return result;
+        return result
     }
 
     private static final String stripHTMLTags(String string) {
@@ -340,6 +339,6 @@ class GTDMapReader {
             fields['context'] = contexts.unique().join(',')
         }
         fields['action'] = toParse.replaceAll('^\\s*\\*\\s*', '').trim()
-        return fields;
+        return fields
     }
 }
