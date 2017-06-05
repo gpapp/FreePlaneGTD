@@ -23,13 +23,17 @@ import freeplaneGTD.ReportModel
 import freeplaneGTD.Tag
 import groovy.swing.SwingBuilder
 import javafx.application.Platform
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
-import javafx.event.EventHandler
 import javafx.scene.Scene
-import javafx.scene.web.WebEvent
+import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
+import netscape.javascript.JSObject
+import org.freeplane.core.resources.ResourceBundles
+import org.freeplane.core.resources.ResourceController
 import org.freeplane.core.ui.components.UITools
-import org.freeplane.core.util.FreeplaneIconUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass.ConfigProperties
@@ -42,27 +46,64 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.awt.image.BufferedImage
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.util.logging.Level
+import java.util.logging.Logger
+
+import static javafx.application.Platform.runLater
 
 class ReportWindow {
 
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
             '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
-    static final String txtVer = '1.10.0'
+    static final String txtVer = '2.0.0'
     static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
 
     static ConfigProperties config
     static ReportModel report
     static JFrame mainFrame
     static JFXPanel projectPane
-    static WebView webView;
+    static WebView webView
     static ButtonGroup contentTypeGroup
     static JCheckBox cbFilterDone
 
     static boolean showNotes
     static ReportModel.VIEW selectedView
     static boolean autoFoldMap
+
+    static {
+        ResourceController resourceController = ResourceController.getResourceController()
+        try {
+            Field handlersField = URL.class.getDeclaredField("handlers");
+            handlersField.setAccessible(true);
+            Hashtable handlers = handlersField.get(null) as Hashtable;
+            //this is extremely ugly, I have to add a custom protocol handler,
+            // because I cannot use the "bundle:" protocol in the knopflerfish due
+            // to some weird JavaFX bug
+            // wasted about a week worth of progress on this alone
+            handlers.put("fpgtd", new URLStreamHandler() {
+                @Override
+                protected URLConnection openConnection(URL u) throws IOException {
+                    return resourceController.getResource("/images/icons/" + u.getPath()).openConnection()
+                }
+            })
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // load i18n resources
+
+        try {
+            for (lang in [ "de","es","fr", "hu", "nl", "ru"]) {
+                ((ResourceBundles) (resourceController.resources)).
+                        addResources(lang,
+                                resourceController.getResource("../translations/freeplaneGTD_" + lang + ".properties"))
+            }
+        } catch (Exception e) {
+            Logger.anonymousLogger.log(Level.WARNING, "Could not load i18 resource:" + e.getMessage())
+        }
+    }
 
     static JFrame getMainFrame(ConfigProperties configModel, Proxy.Controller c) {
         config = configModel
@@ -91,12 +132,6 @@ class ReportWindow {
             SwingBuilder.edtBuilder {
                 String userPath = c.userDirectory.toString()
                 def iconFrame = imageIcon(userPath + "/resources/images/freeplaneGTD-icon.png").image
-                mainFrame = frame(title: title,
-                        iconImage: iconFrame,
-                        defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
-                        show: false) {
-                    borderLayout()
-                }
 
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
@@ -113,7 +148,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
                                 mnemonic: "1",
                                 selected: defaultView == "PROJECT",
-                                actionPerformed: { refreshContent() }
+                                actionPerformed: { refreshContent(c) }
                         )
                         whoButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -122,7 +157,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
                                 mnemonic: "2",
                                 selected: defaultView == "WHO",
-                                actionPerformed: { refreshContent() }
+                                actionPerformed: { refreshContent(c) }
                         )
                         contextButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -131,7 +166,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
                                 mnemonic: "3",
                                 selected: defaultView == "CONTEXT",
-                                actionPerformed: { refreshContent() }
+                                actionPerformed: { refreshContent(c) }
                         )
                         whenButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -140,7 +175,7 @@ class ReportWindow {
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
                                 mnemonic: "4",
                                 selected: defaultView == "WHEN",
-                                actionPerformed: { refreshContent() }
+                                actionPerformed: { refreshContent(c) }
                         )
                         aboutButton = radioButton(
                                 buttonGroup: contentTypeGroup,
@@ -148,27 +183,38 @@ class ReportWindow {
                                 text: "? - " + TextUtils.getText("freeplaneGTD.tab.about.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
                                 mnemonic: "?",
-                                actionPerformed: { refreshContent() }
+                                actionPerformed: { refreshContent(c) }
                         )
                     }
                     reportPanel = panel(constraints: BorderLayout.CENTER) {
                         gridLayout(columns: 1, rows: 1)
                     }
                     projectPane = new JFXPanel()
-                    Platform.runLater({
+                    Platform.setImplicitExit(false)
+                    runLater({
                         webView = new WebView()
                         projectPane.setScene(new Scene(webView))
-                        webView.getEngine().loadContent("TODO: no content")
+                        WebEngine engine = webView.getEngine()
+                        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+                            @Override
+                            void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                                if (newValue == Worker.State.SUCCEEDED) {
+                                    JSObject win = engine.executeScript("window") as JSObject
+                                    win.setMember("app", new JSHandler(report, c,
+                                            ReportWindow.getMethod('refreshContent', Proxy.Controller.class)))
+                                }
+                            }
+                        })
+                        engine.loadContent("TODO: no content")
                     })
-                    reportPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), projectPane)
 
-                    //projectPane.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(projectPane, imageLoader))
+                    reportPanel.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), projectPane)
 
                     panel(constraints: BorderLayout.SOUTH) {
                         boxLayout(axis: BoxLayout.X_AXIS)
                         button(text: TextUtils.getText("freeplaneGTD.button.refresh"),
                                 actionPerformed: {
-                                    refreshContent()
+                                    refreshContent(c)
                                 })
                         button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                                 actionPerformed: {
@@ -190,43 +236,32 @@ class ReportWindow {
                                 name: "button_cancel",
                                 text: TextUtils.getText("freeplaneGTD.button.cancel"),
                                 actionPerformed: {
-                                    mainFrame.visible = false
-                                    mainFrame.dispose()
+                                    mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING))
                                 })
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
                                     config.properties.setProperty('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
-                                    refreshContent()
+                                    refreshContent(c)
                                 })
                         cbShowNotes = checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
                                 selected: showNotes,
                                 actionPerformed: {
-                                    showNotes = it.source.selected; refreshContent()
+                                    showNotes = it.source.selected; refreshContent(c)
                                 })
                     }
                 }
             }
-/*
-http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
-            JSObject win = (JSObject) webEngine.executeScript("window");
-            win.setMember("app", new JavaApp());
-
-           TODO Ide kell a Nodelink helyett berakni, a JS handlereket
-
-            NodeLink nl = new NodeLink(c, mainFrame, report, refreshContent)
-            projectPane.getMouseTrackingListeners().each {
-                if (it instanceof LinkListener) {
-                    projectPane.removeMouseTrackingListener(it)
-                }
-            }
-            projectPane.addMouseTrackingListener(nl)
-*/
             // on ESC key close frame
             mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                     KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"))
             mainFrame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"),
-                    new CloseAction(mainFrame))
+                    new AbstractAction() {
+                        @Override
+                        void actionPerformed(ActionEvent e) {
+                            mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING))
+                        }
+                    })
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
                     if (config.getBooleanProperty('freeplaneGTD_remember_last_position')) {
@@ -235,17 +270,18 @@ http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
                         config.properties.setProperty('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
                         config.properties.setProperty('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
-                    mainFrame=null
-                    super.windowClosing(e)
+                    mainFrame.visible = false
                 }
             })
+
             mainFrame.setLocation(posX, posY)
             mainFrame.setSize(sizeX, sizeY)
         }
         return mainFrame
     }
 
-    static refreshContent() {
+
+    static refreshContent(Proxy.Controller c) {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
@@ -274,115 +310,11 @@ http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
             default:
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
-        Platform.runLater({
-            webView.getEngine().loadContent(content)
+        runLater({
+            webView.engine.loadContent(content)
+            webView.engine.reload()
         })
     }
-
-    private static class MyURLStreamHandlerFactory implements URLStreamHandlerFactory {
-        static class MyURLHandler extends URLStreamHandler {
-
-            @Override
-            protected URLConnection openConnection(URL url) throws IOException {
-                return new MyURLConnection(url);
-            }
-
-        }
-
-        static class MyURLConnection extends URLConnection {
-            protected MyURLConnection(URL url) {
-                super(url)
-            }
-
-            void connect() throws IOException {
-                if (connected) {
-                    return;
-                }
-                loadImage();
-                connected = true;
-            }
-
-            int getContentLength() {
-                return data.length;
-            }
-
-
-            InputStream getInputStream() throws IOException {
-                connect();
-                if ("builtin".equals(url.protocol)) {
-                    Icon standardIcon = FreeplaneIconUtils.createStandardIcon(url.toExternalForm().replaceFirst("builtin:(.*)", "\$1"))
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream()
-                    ImageIO.write(iconToImage(standardIcon), "png", baos)
-                    return new ByteArrayInputStream(baos.toByteArray())
-                }
-                return super.get(uri, width, height)
-            }
-        }
-
-        static BufferedImage iconToImage(Icon icon) {
-            if (icon instanceof ImageIcon) {
-                Image img = ((ImageIcon) icon).image
-                if (img instanceof BufferedImage) {
-                    return (BufferedImage) img
-                }
-
-                // Create a buffered image with transparency
-                BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB)
-
-                // Draw the image on to the buffered image
-                Graphics2D bGr = bimage.createGraphics()
-                bGr.drawImage(img, 0, 0, null)
-                bGr.dispose()
-
-                // Return the buffered image
-                return bimage
-            } else {
-                int w = icon.getIconWidth()
-                int h = icon.getIconHeight()
-                GraphicsEnvironment ge =
-                        GraphicsEnvironment.getLocalGraphicsEnvironment()
-                GraphicsDevice gd = ge.getDefaultScreenDevice()
-                GraphicsConfiguration gc = gd.getDefaultConfiguration()
-                BufferedImage image = gc.createCompatibleImage(w, h)
-                Graphics2D g = image.createGraphics()
-                icon.paintIcon(null, g, 0, 0)
-                g.dispose()
-                return image
-            }
-        }
-
-        URLStreamHandler createURLStreamHandler(String protocol) {
-            if (protocol.equals("myapp")) {
-                return new MyURLHandler();
-            }
-            return null;
-        }
-
-    }
-
-
-    private static class CloseAction extends AbstractAction {
-        JFrame frame
-
-        CloseAction(frame) {
-            this.frame = frame
-        }
-
-        private recurseComponent(Component c) {
-            if (c.name == "button_cancel") {
-                ((JButton) c).doClick()
-            } else if (c instanceof Container) {
-                ((Container) c).components.each {
-                    recurseComponent(it)
-                }
-            }
-        }
-
-        void actionPerformed(ActionEvent e) {
-            recurseComponent(frame.rootPane)
-        }
-    }
-
 
     static String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
         Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
@@ -411,29 +343,28 @@ http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
                 [type: 'text/css'])
         head.addChild('title')
         Tag body = new Tag('body')
-//    body.addContent('h1', TextUtils.getText('freeplaneGTD_view_' + list['type']))
         Date now = new Date().clearTime()
         list['groups'].eachWithIndex { it, index ->
             body.addChild('div', [class: 'buttons']).
-                    addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: 'copy:' + index]).
+                    addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: '#', onclick: 'app.copyToClipboard(' + index + ')']).
                     addContent('|').
-                    addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: 'select:' + index])
+                    addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: '#', onclick: 'app.selectOnMap(' + index + ')'])
             body.addContent('h2', it['title'])
             Tag curItem = body.addChild('ul', ['class': 'actionlist'])
             it['items'].each {
                 Tag wrap = curItem.addChild('li')
                 if (it['priority']) {
-                    wrap.addChild('img', [class: "priorityIcon", src: "builtin:full-" + it['priority']])
+                    wrap.addChild('img', [class: "priorityIcon", src: "fpgtd:full-" + it['priority'] + ".png"])
                 }
-                wrap.addChild('A', [href: 'done:' + it['nodeID']]).addChild('img', [class: "doneIcon", src: "builtin:" + (it['done'] ? "" : "un") + "checked"])
+                wrap.addChild('A', [href: '#', onclick: 'app.toggleDone("' + it['nodeID'] + '")']).addChild('img', [class: "doneIcon", src: "fpgtd:" + (it['done'] ? "" : "un") + "checked" + ".png"])
                 if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
-                wrap.addChild('a', [href: 'link:' + it['nodeID']]).addPreformatted(it['action'] as String)
+                wrap.addChild('A', [href: '#', onclick: 'app.followLink("' + it['nodeID'] + '")']).addPreformatted(it['action'] as String)
 
                 Tag contextTag = new Tag('span')
 
                 it['context']?.split(',')?.each { key ->
                     if (contextIcons.keySet().contains(key)) {
-                        contextTag.addChild('img', [class: "contextIcon", src: "builtin:" + contextIcons.get(key), "title": key])
+                        contextTag.addChild('img', [class: "contextIcon", src: "fpgtd:" + contextIcons.get(key) + ".png", "title": key])
                     } else {
                         contextTag.addContent('@')
                         contextTag.addContent(key)
@@ -461,138 +392,140 @@ http://docs.oracle.com/javafx/2/webview/jfxpub-webview.htm
         return HTML_HEADER + html.toString()
     }
 
-    static void refresh(Proxy.Node root) {
+    static void refresh(Proxy.Controller c, Proxy.Node root) {
         report = new ReportModel(root)
         if (mainFrame?.visible) {
-            refreshContent()
+            refreshContent(c)
         }
     }
 
-    static class NodeLink implements EventHandler<WebEvent> {
-        Proxy.Controller ctrl
-        JFrame frame
-        ReportModel report
-        private final Closure<Boolean> refresh
+}
 
-        NodeLink(Proxy.Controller ctrl, JFrame frame, ReportModel report, Closure<Boolean> refresh) {
-            this.ctrl = ctrl
-            this.frame = frame
-            this.report = report
-            this.refresh = refresh
-        }
+class JSHandler {
+    private final ReportModel report
+    private final Proxy.Controller ctrl
+    private final Method refresh
 
-        void handle(WebEvent event) {
-            //TODO FUCKIT
-            uri = event.data.toString()
-            if (uri.startsWith('done:')) {
-                String linkNodeID = uri.substring(5)
-                def nodesFound = ctrl.find { it.nodeID == linkNodeID }
+    JSHandler(ReportModel report, Proxy.Controller ctrl, Method refresh) {
+        this.refresh = refresh
+        this.ctrl = ctrl
+        this.report = report
+    }
 
-                if (nodesFound[0] != null) {
-                    def node = nodesFound[0]
-                    if (node.icons.contains(report.mapReader.iconDone)) {
-                        node.icons.remove(report.mapReader.iconDone)
-                    } else {
-                        node.icons.add(report.mapReader.iconDone)
-                    }
-                    refresh(report)
+    void toggleDone(String linkNodeID) {
+
+        try {
+
+            def nodesFound = ctrl.find {
+                it.id == linkNodeID
+            }
+
+            if (nodesFound[0] != null) {
+                def node = nodesFound[0]
+                if (node.icons.contains(report.mapReader.iconDone)) {
+                    node.icons.remove(report.mapReader.iconDone)
                 } else {
-                    UITools.informationMessage("Cannot find node to mark as done")
+                    node.icons.add(report.mapReader.iconDone)
                 }
-            } else if (uri.startsWith('copy:')) {
-                int pos = uri.substring(5).toInteger()
-                Map feeder
-                Clipboard clip = panel.getToolkit().getSystemClipboard()
-                if (clip != null) {
-                    switch (freeplaneGTD.report.ReportWindow.selectedView) {
-                        case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
-                        case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
-                        case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
-                        case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
-                        default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
-                    }
-                    clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, freeplaneGTD.report.ReportWindow.showNotes), null)
-                    UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
-                    frame.toFront()
-                }
-            } else if (uri.startsWith('select:')) {
-                int pos = uri.substring(7).toInteger()
-                java.util.List list
-                switch (freeplaneGTD.report.ReportWindow.selectedView) {
-                    case ReportModel.VIEW.PROJECT: list = (java.util.List) report.projectList()['groups'][pos]['items']; break
-                    case ReportModel.VIEW.WHO: list = (java.util.List) report.delegateList()['groups'][pos]['items']; break
-                    case ReportModel.VIEW.CONTEXT: list = (java.util.List) report.contextList()['groups'][pos]['items']; break
-                    case ReportModel.VIEW.WHEN: list = (java.util.List) report.timelineList()['groups'][pos]['items']; break
+                refresh.invoke(null, ctrl)
+            } else {
+                UITools.informationMessage("Cannot find node to mark as done")
+            }
+        } catch (Exception e) {
+            System.err.println(e)
+        }
+    }
+
+    void followLink(String linkNodeID) {
+        def nodesFound = ctrl.find { it.id == linkNodeID }
+
+        if (nodesFound[0] != null) {
+            if (ReportWindow.autoFoldMap) {
+                FoldToTop(nodesFound[0])
+            }
+            UnfoldBranch(nodesFound[0])
+            ctrl.select(nodesFound[0])
+            ctrl.centerOnNode(nodesFound[0])
+            ctrl.centerOnNode(nodesFound[0])
+        } else {
+            UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
+        }
+    }
+
+    void copyToClipboard(int pos) {
+        try {
+            Map feeder
+            Clipboard clip = panel.getToolkit().getSystemClipboard()
+            if (clip != null) {
+                switch (ReportWindow.selectedView) {
+                    case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
+                    case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
+                    case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
+                    case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
                     default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
                 }
-                java.util.List ids = list.collect { it['nodeID'] }
-                def nodesFound = ctrl.find { ids.contains(it.nodeID) }
-                if (nodesFound.size() > 0) {
-                    if (freeplaneGTD.report.ReportWindow.autoFoldMap) {
-                        FoldToTop(nodesFound[0])
-                    }
-                    nodesFound.each {
-                        UnfoldBranch(it)
-                    }
-                    ctrl.selectMultipleNodes(nodesFound)
-                    frame.visible = false
-                    frame.dispose()
-                } else {
-                    UITools.informationMessage("Error finding selection")
-                }
-            } else if (uri.startsWith('link:')) {
-                String linkNodeID = uri.substring(5)
-                def nodesFound = ctrl.find { it.nodeID == linkNodeID }
-
-                if (nodesFound[0] != null) {
-                    if (freeplaneGTD.report.ReportWindow.autoFoldMap) {
-                        FoldToTop(nodesFound[0])
-                    }
-                    UnfoldBranch(nodesFound[0])
-                    ctrl.select(nodesFound[0])
-                    ctrl.centerOnNode(nodesFound[0])
-                    ctrl.centerOnNode(nodesFound[0])
-                    frame.visible = false
-                    frame.dispose()
-                } else {
-                    UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
-                }
-            } else {
-                URI uriLink = new URI(uri)
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(uriLink)
-                    } catch (IOException e) {
-                        UITools.informationMessage('Cannot open link ' + uri + ' in browser: ' + e.message)
-                    }
-                } else {
-                    UITools.informationMessage('Error opening link: Desktop is not supported')
-                }
+                clip.setContents(ClipBoardUtil.createTransferable(feeder, report.mapReader, freeplaneGTD.report.ReportWindow.showNotes), null)
+                UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
+                frame.toFront()
             }
+        } catch (Exception e) {
+            System.err.println(e)
         }
-
-        // recursive unfolding of branch
-        private void UnfoldBranch(Proxy.Node thisNode) {
-            Proxy.Node rootNode = thisNode.getMap().getRoot()
-            if (thisNode != rootNode) {
-                thisNode.setFolded(false)
-                UnfoldBranch(thisNode.getParent())
-            }
-        }
-
-        // fold to first level
-        private void FoldToTop(Proxy.Node thisNode) {
-            Proxy.Node rootNode = thisNode.getMap().getRoot()
-            def Nodes = ctrl.findAll()
-            Nodes.each {
-                it.setFolded(true)
-            }
-            rootNode.setFolded(false)
-        }
-
     }
+
+    void selectOnMap(int pos) {
+        try {
+            java.util.List list
+            switch (ReportWindow.selectedView) {
+                case ReportModel.VIEW.PROJECT: list = (java.util.List) report.projectList()['groups'][pos]['items']; break
+                case ReportModel.VIEW.WHO: list = (java.util.List) report.delegateList()['groups'][pos]['items']; break
+                case ReportModel.VIEW.CONTEXT: list = (java.util.List) report.contextList()['groups'][pos]['items']; break
+                case ReportModel.VIEW.WHEN: list = (java.util.List) report.timelineList()['groups'][pos]['items']; break
+                default: throw new UnsupportedOperationException("Invalid selection pane: " + report.selPane)
+            }
+            java.util.List ids = list.collect { it['nodeID'] }
+            def nodesFound = ctrl.find { ids.contains(it.id) }
+            if (nodesFound.size() > 0) {
+                if (freeplaneGTD.report.ReportWindow.autoFoldMap) {
+                    FoldToTop(nodesFound[0])
+                }
+                nodesFound.each {
+                    UnfoldBranch(it)
+                }
+                ctrl.selectMultipleNodes(nodesFound)
+                frame.visible = false
+                frame.dispose()
+            } else {
+                UITools.informationMessage("Error finding selection")
+            }
+        }
+
+        catch (Exception e) {
+            System.err.println(e)
+        }
+    }
+
+// recursive unfolding of branch
+    private void UnfoldBranch(Proxy.Node thisNode) {
+        Proxy.Node rootNode = thisNode.getMap().getRoot()
+        if (thisNode != rootNode) {
+            thisNode.setFolded(false)
+            UnfoldBranch(thisNode.getParent())
+        }
+    }
+
+// fold to first level
+    private void FoldToTop(Proxy.Node thisNode) {
+        Proxy.Node rootNode = thisNode.getMap().getRoot()
+        def Nodes = ctrl.findAll()
+        Nodes.each {
+            it.setFolded(true)
+        }
+        rootNode.setFolded(false)
+    }
+
 }
 
 JFrame frameinstance = ReportWindow.getMainFrame(config, c)
 frameinstance.visible = true
-ReportWindow.refresh(node.map.root)
+ReportWindow.refresh(c, node.map.root)
