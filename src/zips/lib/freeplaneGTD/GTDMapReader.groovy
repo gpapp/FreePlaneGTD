@@ -24,6 +24,7 @@ import java.util.Date
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
+import freeplaneGTD.GTDChangeListener
 
 //=========================================================
 // references
@@ -66,6 +67,8 @@ class GTDMapReader {
     public void convertShorthand(Proxy.Node rootNode) {
         findIcons(rootNode)
         internalConvertShorthand(rootNode)
+        //stupid..
+        GTDChangeListener.register(rootNode)
     }
 
     //--------------------------------------------------------------
