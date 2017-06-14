@@ -105,6 +105,7 @@ class GTDMapReader {
         }
     }
 
+    // FYI: may use for server callback
     public List getActionList(Proxy.Node rootNode, boolean filterDone) {
         return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
     }
@@ -231,6 +232,19 @@ class GTDMapReader {
     }
 
     //--------------------------------------------------------------
+    // substitutes multiline text to its first line + "..."
+    private
+    def trunc(String str) {
+        def splitted = str.split("\n")
+        def res = splitted[0]
+
+        if (splitted.size() > 1) {
+            res += "..."
+        }
+        return res
+    }
+
+    //--------------------------------------------------------------
     // recursive walk through nodes to find Next Actions
     private
     def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone) {
@@ -266,7 +280,7 @@ class GTDMapReader {
         def result = [];
         // include result if it has next action icon and its not the icon setting node for next actions
         if (icons.contains(iconNextAction)) {
-            String naAction = stripHTMLTags(thisNode.text);
+            String naAction = stripHTMLTags(trunc(thisNode.text))
             if (!(naAction =~ /Icon:/)) {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
