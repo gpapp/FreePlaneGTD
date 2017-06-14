@@ -64,7 +64,7 @@
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
 <attribute NAME="downloadUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/"/>
 <attribute NAME="changelogUrl" VALUE=""/>
-<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/version.properties" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/version.properties"/>
+<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/version.properties" OBJECT="java.net.URL|http://www.itworks.hu/freeplanegtd-release/version.properties"/>
 <richcontent TYPE="NOTE">
 
 <html>
