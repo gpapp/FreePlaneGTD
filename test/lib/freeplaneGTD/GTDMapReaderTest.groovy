@@ -1,25 +1,11 @@
 package freeplaneGTD
 
-import com.thoughtworks.xstream.core.util.ArrayIterator
-import freeeplaneHarness.MyNode
-import org.freeplane.core.ui.LengthUnits
-import org.freeplane.core.util.Quantity
-import org.freeplane.features.filter.condition.ICondition
-import org.freeplane.plugin.script.proxy.Convertible
+import org.freeplane.features.map.MapModel
+import org.freeplane.features.map.NodeModel
+import org.freeplane.plugin.script.ScriptContext
 import org.freeplane.plugin.script.proxy.Proxy
-import org.freeplane.plugin.script.proxy.Proxy.Attributes
-import org.freeplane.plugin.script.proxy.Proxy.Cloud
-import org.freeplane.plugin.script.proxy.Proxy.Connector
-import org.freeplane.plugin.script.proxy.Proxy.ExternalObject
-import org.freeplane.plugin.script.proxy.Proxy.Link
-import org.freeplane.plugin.script.proxy.Proxy.Map
-import org.freeplane.plugin.script.proxy.Proxy.Node
-import org.freeplane.plugin.script.proxy.Proxy.NodeRO
-import org.freeplane.plugin.script.proxy.Proxy.NodeStyle
-import org.freeplane.plugin.script.proxy.Proxy.Reminder
+import org.freeplane.plugin.script.proxy.ProxyFactory
 import org.junit.Test
-
-import java.util.Map.Entry
 
 class GTDMapReaderTest {
 
@@ -75,21 +61,21 @@ class GTDMapReaderTest {
 
     @Test
     public void testConvertShortHand() {
-        MyNode rootNode = new MyNode()
+        Proxy.Node rootNode = ProxyFactory.createNode(new NodeModel(new MapModel()),new ScriptContext())
         rootNode.icons.add('aa')
         rootNode.text = 'aa'
-        MyNode child1 = rootNode.createChild();
+        Proxy.Node child1 = rootNode.createChild();
         child1.text = 'bb'
-        MyNode child2 = rootNode.createChild();
+        Proxy.Node child2 = rootNode.createChild();
         child2.text = 'cc'
-        MyNode child3 = rootNode.createChild();
+        Proxy.Node child3 = rootNode.createChild();
         child3.text = 'dd'
         assert rootNode.text == 'aa'
         assert child1.text == 'bb'
         assert child2.text == 'cc'
         assert child3.text == 'dd'
 
-        MyNode configNode = rootNode.createChild();
+        Proxy.Node configNode = rootNode.createChild();
         configNode.text = 'Config'
         List config = [
                 [text: 'Icon: Project', icon: 'project'],
@@ -100,7 +86,7 @@ class GTDMapReaderTest {
                 [text: 'Icon: @Email', icon: 'email'],
         ];
         config.each {
-            MyNode n = configNode.createChild()
+            Proxy.Node n = configNode.createChild()
             n.text = it['text']
             n.icons.add(it['icon'])
         }
@@ -132,7 +118,7 @@ class GTDMapReaderTest {
                 ]
 
         testvalues.each {
-            MyNode n = child1.createChild()
+            Proxy.Node n = child1.createChild()
             n.text = it['orig']
             mapreader.convertShorthand(rootNode)
             assert n.text == it['action']

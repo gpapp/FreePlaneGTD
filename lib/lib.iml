@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../out/production/FreePlaneGTD/zips/lib" />
+    <output-test url="file://$MODULE_DIR$/../out/test/lib" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="freeplane-plugins" level="project" />
+    <orderEntry type="library" name="freeplane" level="application" />
+    <orderEntry type="library" name="groovy-2.4.8" level="application" />
+    <orderEntry type="inheritedJdk" />
+  </component>
+</module>

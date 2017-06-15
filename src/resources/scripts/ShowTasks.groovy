@@ -1,4 +1,4 @@
-// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.editAction]"})
+// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.listNextActions]"})
 //=========================================================
 // Freeplane GTD+
 //
@@ -19,9 +19,15 @@
 //
 //=========================================================
 import freeplaneGTD.ReportWindow
-import freeplaneGTD.editor.ActionEditor
 import org.freeplane.features.mode.Controller
 import org.freeplane.features.mode.ModeController
 
-ActionEditor editor = new ActionEditor()
-editor.editNode(node)
+Controller currentController = Controller.currentController
+ModeController reportWindow = currentController.getModeController(ReportWindow.canonicalName)
+if (!reportWindow) {
+    reportWindow = new ReportWindow(currentController)
+    currentController.addModeController(reportWindow)
+}
+
+reportWindow.show(config)
+reportWindow.refresh(node.map.root)

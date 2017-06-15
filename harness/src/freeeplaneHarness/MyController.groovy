@@ -52,6 +52,7 @@ import org.freeplane.view.swing.map.MapViewController
 import javax.swing.*
 import java.awt.dnd.DragGestureListener
 import java.awt.dnd.DropTargetListener
+import java.awt.event.ActionEvent
 import java.awt.event.KeyListener
 import java.awt.event.MouseWheelListener
 
@@ -441,5 +442,10 @@ class MyController extends Controller implements Proxy.Controller {
     @Override
     void export(Proxy.Map map, File file, String s, boolean b) {
 
+    }
+
+    @Override
+    void quit(ActionEvent actionEvent) {
+        System.exit(0)
     }
 }

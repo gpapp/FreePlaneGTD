@@ -1,5 +1,7 @@
-def groovletContext = context(filetypes: ['groovy'], scope: scriptScope())
 
+
+def groovletContext = context(filetypes: ['groovy'], scope: scriptScope())
+ 
 contributor(groovletContext) {
     provider = 'Freeplane'
 
