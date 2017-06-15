@@ -18,10 +18,6 @@ class ReportModel {
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
-    enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, ABOUT
-    }
-
     /**
      * Calculate the next time the action should be taken care of
      * (either waitUntil date, or the due date, whichever comes first)

@@ -32,6 +32,9 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 class ReportWindow extends ModeController {
+	static enum VIEW {
+			PROJECT, WHO, CONTEXT, WHEN, ABOUT
+		}
 
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
@@ -71,7 +74,7 @@ class ReportWindow extends ModeController {
     private JCheckBox cbFilterDone
 
     protected boolean showNotes
-    protected ReportModel.VIEW selectedView
+    protected VIEW selectedView
 
     ReportWindow(Controller controller) {
         super(controller)
@@ -85,14 +88,7 @@ class ReportWindow extends ModeController {
     {
         ResourceController resourceController = ResourceController.getResourceController()
         try {
-            Field handlersField = URL.class.getDeclaredField("handlers")
-            handlersField.setAccessible(true)
-            Hashtable handlers = handlersField.get(null) as Hashtable
-            //this is extremely ugly, I have to add a custom protocol handler,
-            // because I cannot use the "bundle:" protocol in the knopflerfish due
-            // to some weird JavaFX bug
-            // wasted about a week worth of progress on this alone
-            handlers.put("fpgtd", new URLStreamHandler() {
+            Field handlersField = URL.handlers.put("fpgtd", new URLStreamHandler() {
                 @Override
                 protected URLConnection openConnection(URL u) throws IOException {
                     return resourceController.getResource("/images/icons/" + u.getPath()).openConnection()
@@ -109,9 +105,9 @@ class ReportWindow extends ModeController {
         if (!mainFrame) {
             String defaultView
             try {
-                defaultView = ReportModel.VIEW.valueOf(config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
+                defaultView = VIEW.valueOf(config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
             } catch (Exception e) {
-                defaultView = ReportModel.VIEW.PROJECT.toString()
+                defaultView = VIEW.PROJECT.toString()
                 Logger.getAnonymousLogger().log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
             }
 
@@ -141,7 +137,7 @@ class ReportWindow extends ModeController {
                         contentTypeGroup = buttonGroup()
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: ReportModel.VIEW.PROJECT.name(),
+                                actionCommand: VIEW.PROJECT.name(),
                                 text: "1 - " + TextUtils.getText("freeplaneGTD.tab.project.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
                                 mnemonic: "1",
@@ -150,7 +146,7 @@ class ReportWindow extends ModeController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: ReportModel.VIEW.WHO.name(),
+                                actionCommand: VIEW.WHO.name(),
                                 text: "2 - " + TextUtils.getText("freeplaneGTD.tab.who.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
                                 mnemonic: "2",
@@ -159,7 +155,7 @@ class ReportWindow extends ModeController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: ReportModel.VIEW.CONTEXT.name(),
+                                actionCommand: VIEW.CONTEXT.name(),
                                 text: "3 - " + TextUtils.getText("freeplaneGTD.tab.context.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
                                 mnemonic: "3",
@@ -168,7 +164,7 @@ class ReportWindow extends ModeController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: ReportModel.VIEW.WHEN.name(),
+                                actionCommand: VIEW.WHEN.name(),
                                 text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
                                 mnemonic: "4",
@@ -177,7 +173,7 @@ class ReportWindow extends ModeController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: ReportModel.VIEW.ABOUT.name(),
+                                actionCommand: VIEW.ABOUT.name(),
                                 text: "? - " + TextUtils.getText("freeplaneGTD.tab.about.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
                                 mnemonic: "?",
@@ -219,10 +215,10 @@ class ReportWindow extends ModeController {
                                     Clipboard clip = projectPane.getToolkit().getSystemClipboard()
                                     if (clip != null) {
                                         switch (contentTypeGroup.getSelection().actionCommand) {
-                                            case ReportModel.VIEW.PROJECT.name(): curContent = report.projectList(); break
-                                            case ReportModel.VIEW.WHO.name(): curContent = report.delegateList(); break
-                                            case ReportModel.VIEW.CONTEXT.name(): curContent = report.contextList(); break
-                                            case ReportModel.VIEW.WHEN.name(): curContent = report.timelineList(); break
+                                            case VIEW.PROJECT.name(): curContent = report.projectList(); break
+                                            case VIEW.WHO.name(): curContent = report.delegateList(); break
+                                            case VIEW.CONTEXT.name(): curContent = report.contextList(); break
+                                            case VIEW.WHEN.name(): curContent = report.timelineList(); break
                                             default: curContent = report.projectList(); break
                                         }
                                         clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, showNotes), null)
@@ -284,15 +280,15 @@ class ReportWindow extends ModeController {
         report.parseMap(cbFilterDone.selected)
 
         String content
-        selectedView = ReportModel.VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+        selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
         switch (selectedView) {
-            case ReportModel.VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
+            case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
                 break
-            case ReportModel.VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
+            case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
                 break
-            case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
+            case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
                 break
-            case ReportModel.VIEW.ABOUT:
+            case VIEW.ABOUT:
 
                 Tag html = new Tag('html').
                         addChild('head').addContent('style', BASE_CSS, [type: 'text/css'])
@@ -305,7 +301,7 @@ class ReportWindow extends ModeController {
                         .addContent('a', txtURI, [href: txtURI])
                 content = HTML_HEADER + html.toString()
                 break
-            case ReportModel.VIEW.PROJECT:
+            case VIEW.PROJECT:
             default:
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }

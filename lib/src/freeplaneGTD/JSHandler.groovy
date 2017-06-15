@@ -69,10 +69,10 @@ class JSHandler {
             Map feeder
             ClipboardController clip = ClipboardController.controller
             switch (target.selectedView) {
-                case ReportModel.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
-                case ReportModel.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
-                case ReportModel.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
-                case ReportModel.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
+                case ReportWindow.VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
+                case ReportWindow.VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
+                case ReportWindow.VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
+                case ReportWindow.VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
             }
             clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, target.showNotes)
@@ -86,10 +86,10 @@ class JSHandler {
         try {
             List list
             switch (target.selectedView) {
-                case ReportModel.VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break
-                case ReportModel.VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break
-                case ReportModel.VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break
-                case ReportModel.VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break
+                case ReportWindow.VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break
+                case ReportWindow.VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break
+                case ReportWindow.VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break
+                case ReportWindow.VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
             }
             List ids = list.collect { it['nodeID'] }
