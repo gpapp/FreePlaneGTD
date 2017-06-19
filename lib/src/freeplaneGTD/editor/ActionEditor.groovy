@@ -114,13 +114,14 @@ class ActionEditor {
             // Only re-parse the current node
             mapReader.internalConvertShorthand(node)
 
-
-            Controller currentController = Controller.currentController
-            ModeController reportWindow = currentController.getModeController(ReportWindow.canonicalName)
-            if (!reportWindow) {
-                reportWindow = new ReportWindow(currentController)
-                currentController.addModeController(reportWindow)
-            }
+			Controller currentController = Controller.currentController
+			def reportWindow
+			try{
+				reportWindow = currentController.getGtdReportWindow()
+			} catch (Exception e) {
+				reportWindow = new ReportWindow(currentController)
+				currentController.metaClass.getGtdReportWindow = { reportWindow }
+			}
             reportWindow.refresh(node.map.root)
         }
     }
