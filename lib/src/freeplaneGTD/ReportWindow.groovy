@@ -31,7 +31,7 @@ import java.lang.reflect.Field
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class ReportWindow extends ModeController {
+class ReportWindow {
 	static enum VIEW {
 			PROJECT, WHO, CONTEXT, WHEN, ABOUT
 		}
@@ -76,16 +76,7 @@ class ReportWindow extends ModeController {
     protected boolean showNotes
     protected VIEW selectedView
 
-    ReportWindow(Controller controller) {
-        super(controller)
-    }
-
-    @Override
-    String getModeName() {
-        return ReportWindow.canonicalName
-    }
-
-    {
+    ReportWindow() {
         ResourceController resourceController = ResourceController.getResourceController()
         try {
             Field handlersField = URL.handlers.put("fpgtd", new URLStreamHandler() {
@@ -388,6 +379,4 @@ class ReportWindow extends ModeController {
     boolean getAutoFoldMap() {
         return config.getBooleanProperty('freeplaneGTD_auto_fold_map')
     }
-
-
 }
