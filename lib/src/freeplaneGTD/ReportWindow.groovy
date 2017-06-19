@@ -57,7 +57,7 @@ class ReportWindow extends ModeController {
             '.doneIcon { padding-right: 1em }' +
             '.priorityIcon { left: 2em; position:absolute; }' +
             '.contextIcon { padding-left: 2pt; padding-right:2pt }' +
-            '.contextTitleIcon { padding-left: 2pt; padding-right:2pt; width:32px; height:32px}' +
+            '.contextTitleIcon { padding-left: 2pt; padding-right:2pt; width:24px;}' +
             '.wait {font-size:90%; margin-left:32px; margin-top:4px}' +
             '.details {margin-left:18px; padding:5px; background-color:rgb(240,250,240);font-size:90%;}' +
             '.note    {margin-left:18px; padding:5px; background-color:rgb(250,250,240);font-size:90%;}' +
@@ -235,7 +235,7 @@ class ReportWindow extends ModeController {
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
-                                    ScriptUtils.c().properties.put('freeplaneGTD_filter_done', Boolean.toString(it.source.selected))
+                                    config.properties['freeplaneGTD_filter_done']=Boolean.toString(it.source.selected)
                                     refreshContent()
                                 })
                         checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
