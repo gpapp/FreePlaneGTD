@@ -1,8 +1,8 @@
-// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.parseShorthand]"})
+// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.listNextActions]"})
 //=========================================================
 // Freeplane GTD+
 //
-// Copyright (c)2016 Gergely Papp
+// Copyright (c)2014 Gergely Papp
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-
-
 import freeplaneGTD.ReportWindow
 import org.freeplane.features.mode.Controller
 import org.freeplane.features.mode.ModeController
@@ -32,4 +30,6 @@ try{
     reportWindow = new ReportWindow(currentController)
     currentController.metaClass.getGtdReportWindow = { reportWindow }
 }
+
+reportWindow.show(config)
 reportWindow.refresh(node.map.root)
