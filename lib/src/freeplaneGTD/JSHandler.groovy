@@ -40,7 +40,7 @@ class JSHandler {
                 UITools.informationMessage("Cannot find node to mark as done")
             }
         } catch (Exception e) {
-            System.err.println(e)
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Error in toggling as done", e)
         }
     }
 

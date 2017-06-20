@@ -1,6 +1,6 @@
 <map version="freeplane 1.5.9">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1496660973871" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
+<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1497989165567" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" fit_to_viewport="false;" show_note_icons="true"/>
@@ -56,15 +56,15 @@
 </stylenode>
 </map_styles>
 </hook>
-<attribute_layout NAME_WIDTH="55.49999834597116 pt" VALUE_WIDTH="134.24999599903833 pt"/>
+<attribute_layout NAME_WIDTH="129.74999613314878 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
 <attribute NAME="version" VALUE="v2.0.0-alpha"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
-<attribute NAME="freeplaneVersionFrom" VALUE="1.3.10"/>
+<attribute NAME="freeplaneVersionFrom" VALUE="1.5.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
 <attribute NAME="downloadUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/"/>
 <attribute NAME="changelogUrl" VALUE=""/>
-<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/version.properties" OBJECT="java.net.URL|http://www.itworks.hu/freeplanegtd-release/version.properties"/>
+<attribute NAME="updateUrl" VALUE="http://www.itworks.hu/freeplanegtd-release/version.properties" OBJECT="java.net.URI|http://www.itworks.hu/freeplanegtd-release/version.properties"/>
 <richcontent TYPE="NOTE">
 
 <html>
@@ -250,7 +250,7 @@
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="true"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1496660973911"><richcontent TYPE="NOTE">
+<node TEXT="translations" FOLDED="true" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1496660973911"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -699,7 +699,7 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ArchiveTask.groovy"/>
 </node>
-<node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1496660973934">
+<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1496660973934">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -848,11 +848,11 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="EditTask.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1495225309012">
+<node TEXT="EditTask.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1497989300199">
 <attribute_layout NAME_WIDTH="120.74999640136969 pt" VALUE_WIDTH="86.99999740719802 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.editAction"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
-<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="executionMode" VALUE="on_selected_node"/>
 <attribute NAME="keyboardShortcut" VALUE="F4" OBJECT="org.freeplane.features.format.FormattedObject|F4|number:decimal:#0.####"/>
 <attribute NAME="execute_scripts_without_asking" VALUE="true"/>
 <attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>

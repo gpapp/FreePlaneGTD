@@ -19,6 +19,18 @@
 //
 //=========================================================
 import freeplaneGTD.editor.ActionEditor
+import freeplaneGTD.editor.MultinodeActionEditor
+import org.freeplane.core.ui.components.UITools
+import org.freeplane.plugin.script.proxy.Proxy
 
-ActionEditor editor = new ActionEditor()
-editor.editNode(node)
+
+List<Node> selecteds = c.getSelecteds()
+if (selecteds.size()==1) {
+    ActionEditor editor = new ActionEditor()
+    editor.editNode(node)
+} else if(selecteds.size()>1) {
+    MultinodeActionEditor editor = new MultinodeActionEditor()
+    editor.editNodes(selecteds)
+} else {
+    UITools.informationMessage("Nothing selected")
+}

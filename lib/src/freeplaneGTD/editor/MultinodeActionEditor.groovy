@@ -12,8 +12,9 @@ import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
+import java.util.List
 
-class ActionEditor {
+class MultinodeActionEditor {
     class ActionEditorModel {
         String action
         String delegate
@@ -25,7 +26,7 @@ class ActionEditor {
         String waitUntil
         boolean done
 
-        Proxy.Node editedNodes
+       List< Proxy.Node> editedNodes
 
         boolean setNode(Proxy.Node node) {
             this.editedNodes = node
@@ -120,7 +121,7 @@ class ActionEditor {
     JTextField waitUntilField
     JButton doneButton
 
-    ActionEditor() {
+    MultinodeActionEditor() {
         SwingBuilder.edtBuilder {
             mainFrame = dialog(
                     title: TextUtils.getText("freeplaneGTD.actioneditor.title"),
@@ -211,8 +212,8 @@ class ActionEditor {
                 });
     }
 
-    void editNode(Proxy.Node node) {
-        if (!model.setNode(node)) {
+    void editNodes(List<Proxy.Node> nodes) {
+        if (!model.setEditedNodes(nodes)) {
             return
         }
         actionField.text = model.action
@@ -228,4 +229,5 @@ class ActionEditor {
         mainFrame.setLocationRelativeTo(UITools.frame)
         mainFrame.setVisible(true)
     }
+
 }
