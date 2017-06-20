@@ -114,14 +114,7 @@ class ActionEditor {
             // Only re-parse the current node
             mapReader.internalConvertShorthand(node)
 
-
-            Controller currentController = Controller.currentController
-            ModeController reportWindow = currentController.getModeController(ReportWindow.canonicalName)
-            if (!reportWindow) {
-                reportWindow = new ReportWindow(currentController)
-                currentController.addModeController(reportWindow)
-            }
-            reportWindow.refresh(node.map.root)
+			ReportWindow.instance.refresh(node.map.root)
         }
     }
     ActionEditorModel model = new ActionEditorModel();
