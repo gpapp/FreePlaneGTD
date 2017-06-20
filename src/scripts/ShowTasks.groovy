@@ -22,14 +22,6 @@ import freeplaneGTD.ReportWindow
 import org.freeplane.features.mode.Controller
 import org.freeplane.features.mode.ModeController
 
-Controller currentController = Controller.currentController
-def reportWindow
-try{
-	reportWindow = currentController.getGtdReportWindow()
-} catch (Exception e) {
-    reportWindow = new ReportWindow(currentController)
-    currentController.metaClass.getGtdReportWindow = { reportWindow }
-}
-
+def reportWindow = ReportWindow.instance;
 reportWindow.show(config)
 reportWindow.refresh(node.map.root)
