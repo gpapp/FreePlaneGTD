@@ -258,6 +258,7 @@ class GTDMapReader {
         Object naWaitFor = thisNode['WaitFor']
         Object naWaitUntil = thisNode['WaitUntil']
         String naPriority = thisNode['Priority'].toString()
+        String whenDone = thisNode['DONE'].toString()
 
         // take care of missing attributes. null or empty string evaluates as boolean false
         if (!naWhen) {
@@ -302,6 +303,7 @@ class GTDMapReader {
                                notes   : naNotes,
                                waitFor : naWaitFor,
                                waitUntil : naWaitUntil,
+                               DONE    : whenDone,
                                done    : done]
                 }
             }

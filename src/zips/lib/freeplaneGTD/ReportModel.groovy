@@ -4,6 +4,12 @@ import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.ConvertibleDate
 import org.freeplane.plugin.script.proxy.Proxy
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar
+import java.time.temporal.ChronoUnit
+
 /**
  * Model for the report pane.
  *
@@ -19,7 +25,13 @@ class ReportModel {
     String thisWeekText = TextUtils.getText("freeplaneGTD.view.when.this_week")
 
     enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, ABOUT
+        PROJECT, WHO, CONTEXT, WHEN, ABOUT, DONETIMELINE
+    }
+
+    enum DONE_TIMELINE {
+        TODAY,
+        THIS_WEEK,
+        EARLIER
     }
 
     /**
@@ -75,6 +87,34 @@ class ReportModel {
         return ad <=> bd
     }
 
+    def doneTimeline(String time) {
+        println "checking $time"
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
+        Date date;
+
+        // get date when it was done
+        try {
+            date = dateFormat.parse(time)
+        } catch(e) {
+            return DONE_TIMELINE.EARLIER
+        }
+
+        // today to compare with
+        Date today = new Date()
+
+        // consider today as exactly this day
+        // consider this month as today + month before
+        def days = ChronoUnit.DAYS.between(date.toInstant(), today.toInstant())
+        println "diff days $today->$date = $days"
+        if (days < 0) {
+            throw new IllegalArgumentException("date from future $time")
+        }
+        if (days < 1) return DONE_TIMELINE.TODAY
+        if (days < 7) return DONE_TIMELINE.THIS_WEEK
+        return DONE_TIMELINE.EARLIER
+    }
+
+
     /**
      * Sort tasks according to priority and next action time
      */
@@ -126,7 +166,8 @@ class ReportModel {
                               waitFor  : it['waitFor'],
                               waitUntil: it['waitUntil'],
                               details  : it['details'],
-                              notes    : it['notes']
+                              notes    : it['notes'],
+                              done     : it['DONE']
                     ]
                 }
                 groups << [title: key, items: items]
@@ -177,7 +218,8 @@ class ReportModel {
                                    project  : it['project'],
                                    waitUntil: it['waitUntil'],
                                    details  : it['details'],
-                                   notes    : it['notes']
+                                   notes    : it['notes'],
+                                   done     : it['DONE']
                     ]
                     if (it['who'] && it['who'].trim() != key) {
                         newItem['who'] = it['who']
@@ -226,7 +268,8 @@ class ReportModel {
                               waitFor  : it['waitFor'],
                               waitUntil: it['waitUntil'],
                               details  : it['details'],
-                              notes    : it['notes']
+                              notes    : it['notes'],
+                              done     : it['DONE']
                     ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
@@ -266,6 +309,19 @@ class ReportModel {
                     items << newItem
                 }
                 groups << [title: key, items: items]
+        }
+        retval['groups'] = groups
+        return retval
+    }
+
+    def doneTimeline() {
+        Map retval = [type: 'DONE']
+        List groups = []
+        Map<DONE_TIMELINE, List> byDoneTimeline = actionList.findAll{ it['done'] }.groupBy({ node -> doneTimeline(node['DONE']) })
+        byDoneTimeline.each {
+            // FIXME: add sorting of values?
+            key, value ->
+                groups << [title: key, items: value ]
         }
         retval['groups'] = groups
         return retval

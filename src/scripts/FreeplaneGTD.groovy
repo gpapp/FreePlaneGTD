@@ -162,6 +162,13 @@ class ReportWindow {
                                 mnemonic: "?",
                                 actionPerformed: { ReportWindow.refreshContent() }
                         )
+                        doneTimeline = radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: ReportModel.VIEW.DONETIMELINE.name(),
+                                text: "done timeline",
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
+                                actionPerformed: { ReportWindow.refreshContent() }
+                        )
                     }
                     reportPanel = panel(constraints: BorderLayout.CENTER) {
                         gridLayout(columns: 1, rows: 1)
@@ -247,6 +254,7 @@ class ReportWindow {
 	
     static def refreshContent = {
 		cbFilterDone.selected=config.getBooleanProperty('freeplaneGTD_filter_done')
+        // FIXME: won't work for done timeline..
         report.parseMap(cbFilterDone.selected)
 
         def content
@@ -259,7 +267,6 @@ class ReportWindow {
             case ReportModel.VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
                 break
             case ReportModel.VIEW.ABOUT:
-
                 Tag html = new Tag('html',
                         new Tag('body', [style: 'padding-left:25px'])
                                 .addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
@@ -269,6 +276,8 @@ class ReportWindow {
                                 .addContent('h4', 'Licensed under GNU GPL Version 3')
                                 .addContent('a', txtURI, [href: txtURI]))
                 content = HTML_HEADER + html.toString()
+                break
+            case ReportModel.VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
                 break
             case ReportModel.VIEW.PROJECT:
             default:
