@@ -36,6 +36,7 @@ class ReportWindow {
 			PROJECT, WHO, CONTEXT, WHEN, ABOUT
 		}
 
+    static final String SYSTEM_PROTOCOL_HANDLERS = "java.protocol.handler.pkgs"
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
             '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
@@ -88,18 +89,10 @@ class ReportWindow {
 		return reportWindow
 	}
 	
-    ReportWindow() {
-        ResourceController resourceController = ResourceController.getResourceController()
-        try {
-            Field handlersField = URL.handlers.put("fpgtd", new URLStreamHandler() {
-                @Override
-                protected URLConnection openConnection(URL u) throws IOException {
-                    return resourceController.getResource("/images/icons/" + u.getPath()).openConnection()
-                }
-            })
-        } catch (Exception e) {
-            throw new RuntimeException(e)
-        }
+    static {
+		Class.forName("freeplaneGTD.protocol.fpgtd.Handler")
+		System.setProperty(SYSTEM_PROTOCOL_HANDLERS,System.getProperty(SYSTEM_PROTOCOL_HANDLERS)+"|freeplaneGTD.protocol")
+		new URL("fpgtd:checked.png").openStream
     }
 
     private JFrame getMainFrame( FreeplaneScriptBaseClass.ConfigProperties configModel) {
