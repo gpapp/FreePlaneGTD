@@ -76,6 +76,18 @@ class ReportWindow {
     protected boolean showNotes
     protected VIEW selectedView
 
+	static def getInstance () {
+		Controller currentController = Controller.currentController
+		def reportWindow
+		try{
+			reportWindow = currentController.getGtdReportWindow()
+		} catch (Exception e) {
+			reportWindow = new ReportWindow()
+			currentController.metaClass.getGtdReportWindow = { reportWindow }
+		}
+		return reportWindow
+	}
+	
     ReportWindow() {
         ResourceController resourceController = ResourceController.getResourceController()
         try {
