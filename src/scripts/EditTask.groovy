@@ -18,10 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-import freeplaneGTD.ReportWindow
 import freeplaneGTD.editor.ActionEditor
-import org.freeplane.features.mode.Controller
-import org.freeplane.features.mode.ModeController
 
 ActionEditor editor = new ActionEditor()
 editor.editNode(node)

@@ -3,7 +3,7 @@
 <node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1496660973871" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
-    <properties fit_to_viewport="false;" show_icon_for_attributes="true" show_note_icons="true"/>
+    <properties show_icon_for_attributes="true" fit_to_viewport="false;" show_note_icons="true"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
@@ -56,7 +56,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<attribute_layout NAME_WIDTH="74.99999776482589 pt" VALUE_WIDTH="179.99999463558214 pt"/>
+<attribute_layout NAME_WIDTH="55.49999834597116 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
 <attribute NAME="version" VALUE="v2.0.0-alpha"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
@@ -209,7 +209,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" FOLDED="true" POSITION="left" ID="ID_800601165" CREATED="1323057303742" MODIFIED="1496660973898">
+<node TEXT="preferences.xml" FOLDED="true" POSITION="left" ID="ID_456089147" CREATED="1323057303742" MODIFIED="1496660973898">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -227,7 +227,7 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;PROJECT&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHO&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;CONTEXT&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHEN&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_remember_last_position&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_561768128" CREATED="1413235874574" MODIFIED="1480965679776"/>
+<node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;PROJECT&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHO&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;CONTEXT&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHEN&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_remember_last_position&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_x&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_y&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_w&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_h&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_1035150433" CREATED="1413235874574" MODIFIED="1497987250288"/>
 </node>
 <node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1496660973902">
 <edge COLOR="#999999" WIDTH="3"/>
@@ -244,13 +244,13 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout NAME_WIDTH="202.4999939650299 pt" VALUE_WIDTH="97.49999709427365 pt"/>
+<attribute_layout NAME_WIDTH="151.4999954849483 pt" VALUE_WIDTH="72.74999783188112 pt"/>
 <attribute NAME="freeplaneGTD_filter_done" VALUE="false"/>
 <attribute NAME="freeplaneGTD_default_view" VALUE="PROJECT" OBJECT="org.freeplane.features.format.FormattedObject|PROJECT|number:decimal:#0.####"/>
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="true"/>
 </node>
-<node TEXT="translations" FOLDED="true" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1496660973911"><richcontent TYPE="NOTE">
+<node TEXT="translations" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1496660973911"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -274,8 +274,8 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1480975130265">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<node TEXT="en" ID="ID_590286510" CREATED="1323057303773" MODIFIED="1497988375153">
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Next action list"/>
@@ -326,10 +326,14 @@
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Archives"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="Review"/>
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="Remember last position"/>
+<attribute NAME="freeplaneGTD_last_position_x" VALUE="Action list X position"/>
+<attribute NAME="freeplaneGTD_last_position_y" VALUE="Action list Y position"/>
+<attribute NAME="freeplaneGTD_last_position_w" VALUE="Action list width"/>
+<attribute NAME="freeplaneGTD_last_position_h" VALUE="Action list height"/>
 <edge COLOR="#999999"/>
 </node>
-<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1480975171871">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<node TEXT="hu" ID="ID_1234559081" CREATED="1323057303773" MODIFIED="1497988628793">
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teend&#x151;k"/>
 <attribute NAME="addons.${name}.parseShorthand" VALUE="Feladatok l&#xe9;trehoz&#xe1;sa r&#xf6;vid&#xed;t&#xe9;sb&#x151;l"/>
@@ -379,10 +383,14 @@
 <attribute NAME="freeplaneGTD.config.archiveDirName" VALUE="Arch&#xed;vum"/>
 <attribute NAME="freeplaneGTD.config.reviewDirName" VALUE="&#xc1;tn&#xe9;zend&#x151;"/>
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="Utols&#xf3; ablakpoz&#xed;ci&#xf3; megjegyz&#xe9;se"/>
+<attribute NAME="freeplaneGTD_last_position_x" VALUE="Feladatok list&#xe1;ja X poz&#xed;ci&#xf3;"/>
+<attribute NAME="freeplaneGTD_last_position_y" VALUE="Feladatok list&#xe1;ja Y poz&#xed;ci&#xf3;"/>
+<attribute NAME="freeplaneGTD_last_position_w" VALUE="Feladatok list&#xe1;ja sz&#xe9;less&#xe9;g"/>
+<attribute NAME="freeplaneGTD_last_position_h" VALUE="Feladatok list&#xe1;ja magass&#xe1;g"/>
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="de" ID="ID_630670890" CREATED="1323057303773" MODIFIED="1490294088116">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
@@ -435,7 +443,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="fr" ID="ID_148000654" CREATED="1323057303773" MODIFIED="1456080252314">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Liste des prochaines actions"/>
@@ -486,7 +494,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="es" ID="ID_1393937145" CREATED="1323057303773" MODIFIED="1480975410029">
-<attribute_layout NAME_WIDTH="149.24999555200353 pt" VALUE_WIDTH="176.24999474734085 pt"/>
+<attribute_layout NAME_WIDTH="111.74999666959057 pt" VALUE_WIDTH="131.99999606609356 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
@@ -539,7 +547,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="nl" ID="ID_1763629932" CREATED="1323057303773" MODIFIED="1456080263018">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lijst met eerstvolgende acties"/>
@@ -590,7 +598,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="ru" ID="ID_1596016669" CREATED="1323057303773" MODIFIED="1459603928376">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="164.99999508261695 pt"/>
+<attribute_layout NAME_WIDTH="116.24999653548012 pt" VALUE_WIDTH="122.99999633431446 pt"/>
 <attribute NAME="main_menu_scripting/freeplaneGTD" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}" VALUE="FreeplaneGTD"/>
 <attribute NAME="addons.${name}.listActions" VALUE="&#x421;&#x43b;&#x435;&#x434;&#x443;&#x44e;&#x449;&#x438;&#x439; &#x441;&#x43f;&#x438;&#x441;&#x43e;&#x43a; &#x434;&#x435;&#x439;&#x441;&#x442;&#x432;&#x438;&#x439;"/>
@@ -658,7 +666,7 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout NAME_WIDTH="33.74999899417165 pt" VALUE_WIDTH="374.99998882412945 pt"/>
+<attribute_layout NAME_WIDTH="24.749999262392542 pt" VALUE_WIDTH="280.4999916404488 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneGTD.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/FreeplaneShorthand.groovy"/>
@@ -691,7 +699,7 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ArchiveTask.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1496660973934">
+<node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1496660973934">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -815,7 +823,7 @@
 </html>
 </richcontent>
 <node TEXT="ShowTasks.groovy" ID="ID_875504923" CREATED="1323057833226" MODIFIED="1495225348698">
-<attribute_layout NAME_WIDTH="154.49999539554133 pt" VALUE_WIDTH="119.24999644607315 pt"/>
+<attribute_layout NAME_WIDTH="115.49999655783186 pt" VALUE_WIDTH="89.24999734014281 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.listActions"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -828,7 +836,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="ParseShorthand.groovy" ID="ID_900035903" CREATED="1323057833226" MODIFIED="1495225330848">
-<attribute_layout NAME_WIDTH="154.49999539554133 pt" VALUE_WIDTH="119.24999644607315 pt"/>
+<attribute_layout NAME_WIDTH="115.49999655783186 pt" VALUE_WIDTH="89.24999734014281 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.parseShorthand"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -841,7 +849,7 @@
 <edge COLOR="#999999"/>
 </node>
 <node TEXT="EditTask.groovy" ID="ID_572939250" CREATED="1415043619831" MODIFIED="1495225309012">
-<attribute_layout NAME_WIDTH="161.24999519437566 pt" VALUE_WIDTH="116.99999651312838 pt"/>
+<attribute_layout NAME_WIDTH="120.74999640136969 pt" VALUE_WIDTH="86.99999740719802 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.editAction"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -853,7 +861,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 <node TEXT="ReviewTask.groovy" ID="ID_1165981840" CREATED="1453634472702" MODIFIED="1495225405523">
-<attribute_layout NAME_WIDTH="163.49999512732043 pt" VALUE_WIDTH="112.49999664723883 pt"/>
+<attribute_layout NAME_WIDTH="122.2499963566662 pt" VALUE_WIDTH="83.99999749660499 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.reviewTask"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -865,7 +873,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 <node TEXT="ArchiveTask.groovy" ID="ID_1222024407" CREATED="1453634472702" MODIFIED="1495225397428">
-<attribute_layout NAME_WIDTH="163.49999512732043 pt" VALUE_WIDTH="112.49999664723883 pt"/>
+<attribute_layout NAME_WIDTH="122.2499963566662 pt" VALUE_WIDTH="83.99999749660499 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.archiveTask"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>

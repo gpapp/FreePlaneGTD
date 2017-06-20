@@ -19,8 +19,6 @@
 //
 //=========================================================
 import freeplaneGTD.ReportWindow
-import org.freeplane.features.mode.Controller
-import org.freeplane.features.mode.ModeController
 
 def reportWindow = ReportWindow.instance;
 reportWindow.show(config)

@@ -1,7 +1,6 @@
 package FreePlaneGTD
 
 import freeeplaneHarness.MyController
-import freeplaneGTD.ReportModel
 import freeplaneGTD.ReportWindow
 import groovy.swing.SwingBuilder
 import org.freeplane.core.resources.ResourceBundles
@@ -16,9 +15,6 @@ import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
 
-/**
- * Created by gpapp on 2017.05.28..
- */
 class Harness implements Runnable {
     private static final String PROPERTY_FILE = "harness/keys.properties"
 
@@ -40,13 +36,8 @@ class Harness implements Runnable {
                                 new AbstractAction() {
                                     @Override
                                     void actionPerformed(ActionEvent e) {
-                                        Controller currentController = Controller.currentController
-                                        ReportWindow reportWindow = currentController.getExtension(ReportWindow.class)
-                                        if (!reportWindow) {
-                                            reportWindow = new ReportWindow()
-                                            currentController.addExtension(ReportWindow.class, reportWindow)
-                                        }
-                                        reportWindow.show(currentController, config)
+                                        ReportWindow reportWindow = ReportWindow.instance
+                                        reportWindow.show(config)
                                         reportWindow.refresh(map.root)
                                     }
                                 }
@@ -76,10 +67,8 @@ class Harness implements Runnable {
         addNode(map, "ID__3", "*test task 3 #3 {2017-06-19} @Context1 @Context2")
 
 
-        config.properties.put(ReportWindow.FREEPLANE_GTD_DEFAULT_VIEW, ReportModel.VIEW.WHEN.toString())
+        config.properties.put(ReportWindow.FREEPLANE_GTD_DEFAULT_VIEW, ReportWindow.VIEW.WHEN.toString())
         config.properties.put(ReportWindow.FREEPLANE_GTD_REMEMBER_LAST_POSITION, Boolean.TRUE)
-
-
     }
 
     private static void addNode(Proxy.Map map, String id, String text) {

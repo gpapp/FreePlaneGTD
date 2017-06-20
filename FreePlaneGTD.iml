@@ -21,5 +21,24 @@
     <orderEntry type="library" name="freeplane" level="application" />
     <orderEntry type="library" name="groovy-2.4.8" level="application" />
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" scope="TEST" name="mnemonicsetter" level="project" />
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///usr/share/java/idw.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///usr/share/java/SimplyHTML.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -1,4 +1,4 @@
-// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.archiveTask]"})
+// @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.reviewTask]"})
 /*
 =========================================================
  Freeplane GTD+
