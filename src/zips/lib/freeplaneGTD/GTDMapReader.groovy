@@ -43,6 +43,7 @@ class GTDMapReader {
     public String iconProject
     public String iconToday
     public String iconDone
+    public String iconCancel
 	public Date today
     public Map contextIcons
 
@@ -79,6 +80,7 @@ class GTDMapReader {
         iconProject = "list"
         iconToday = "bookmark"
         iconDone = "button_ok"
+        iconCancel = "button_cancel"
         contextIcons = [:]
 
         internalFindIcons(thisNode)
