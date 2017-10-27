@@ -26,8 +26,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.util.logging.Level
 import java.util.logging.Logger
+import java.util.logging.Level
 
 class ReportWindow {
     static enum VIEW {
@@ -90,10 +90,26 @@ class ReportWindow {
 
     static {
         // Let's hope it works in non Oracle JVMs as well
+		        /*
+
         try {
             URL.factory.setURLStreamHandler("fpgtd", new Handler())
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot add my own stream handler", e)
+        }
+		*/
+		
+		try {
+			System.setProperty( SYSTEM_PROTOCOL_HANDLERS, "freeplaneGTD.protocol" + (System.getProperty( SYSTEM_PROTOCOL_HANDLERS ) ? ("|"+System.getProperty( SYSTEM_PROTOCOL_HANDLERS )):""))
+            Logger.getAnonymousLogger().log(Level.INFO, "Protocol set up: "+System.getProperty( SYSTEM_PROTOCOL_HANDLERS ))
+			String clsName = "freeplaneGTD.protocol.fpgtd.Handler"
+			ClassLoader cl = ClassLoader.getSystemClassLoader()
+            if (cl != null) {
+				cl.loadClass(clsName)
+			}
+			new URL("fpgtd:no.png").getContent()
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot add my own protocol handler", e)
         }
     }
 
@@ -106,7 +122,7 @@ class ReportWindow {
                 defaultView = VIEW.valueOf(config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
             } catch (Exception e) {
                 defaultView = VIEW.PROJECT.toString()
-                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
+                logger.warning("Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
             }
 
 
