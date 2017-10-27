@@ -108,7 +108,7 @@ class GTDMapReader {
     //Get icon key names from Settings/Icons nodes
     private void internalFindIcons(Proxy.Node thisNode) {
         String firstIcon = thisNode.icons.first
-        String nodeText = thisNode.text.trim()
+        String nodeText = thisNode.transformedText.trim()
 
         if (nodeText =~ '^Icon:') {
             if (firstIcon ==~ /^full\-\d$/) {
@@ -137,14 +137,14 @@ class GTDMapReader {
     // Convert next action shorthand notation with recursive walk:
     // shorthand: *<next action> @<Context> [<who>] {<when>} #<priority>
     // becomes:
-    // node.text     = <next action>
+    // node.transformedText     = <next action>
     // node['Where'] = <where>
     // node['Who']   = <who>
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
     void internalConvertShorthand(Proxy.Node thisNode) {
-        String nodeText = thisNode.text.trim()
+        String nodeText = thisNode.transformedText.trim()
 
         if (nodeText.length() > 0 && nodeText.charAt(0) == (char) '?') {
             nodeText = nodeText.substring(1).trim()
@@ -218,12 +218,12 @@ class GTDMapReader {
             Proxy.Node walker = parentNode
             while (walker) {
                 if (walker.icons.contains(iconProject)) {
-                    retval = stripHTMLTags(walker.text) + (retval ? '/' + retval : '')
+                    retval = walker.transformedText + (retval ? '/' + retval : '')
                 }
                 walker = walker.parent
             }
         }
-        return retval ? retval : stripHTMLTags(parentNode.text)
+        return retval ? retval : parentNode.transformedText
     }
 
     //--------------------------------------------------------------
@@ -262,7 +262,7 @@ class GTDMapReader {
         def result = []
         // include result if it has next action icon and its not the icon setting node for next actions
         if (icons.contains(iconNextAction)) {
-            String naAction = stripHTMLTags(thisNode.text)
+            String naAction = thisNode.transformedText
             if (!(naAction =~ /Icon:/)) {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
