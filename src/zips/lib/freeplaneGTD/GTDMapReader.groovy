@@ -109,7 +109,7 @@ class GTDMapReader {
 
     // FYI: may use for server callback
     public List getActionList(Proxy.Node rootNode, boolean filterDone) {
-        return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
+        return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday)
     }
 
     //Get icon key names from Settings/Icons nodes
@@ -246,10 +246,16 @@ class GTDMapReader {
         return res
     }
 
+    private
+    def isDone(Proxy.Node node) {
+        def icons = node.icons.icons;
+        return icons.contains(iconDone) || icons.contains(iconCancel)
+    }
+
     //--------------------------------------------------------------
     // recursive walk through nodes to find Next Actions
     private
-    def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday, String iconDone) {
+    def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday) {
         def icons = thisNode.icons.icons;
         def naNodeID = thisNode.id;
 
@@ -291,7 +297,7 @@ class GTDMapReader {
                 if (icons.contains(iconToday)) {
                     naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
                 }
-                boolean done = icons.contains(iconDone)
+                boolean done = isDone(thisNode)
                 if (!(filterDone && done)) {
                     result << [node    : thisNode,
                                action  : naAction,
@@ -312,7 +318,7 @@ class GTDMapReader {
         }
 
         thisNode.children.each {
-            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday, iconDone))
+            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday))
         }
         return result;
     }

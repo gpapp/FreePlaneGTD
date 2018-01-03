@@ -33,12 +33,12 @@ abstract class DoneMover {
         // Must reread it every time in case the configuration nodes were changed
         mapReader.findIcons(node.map.root)
         mapReader.internalConvertShorthand(node)
-        System.out.print("checking " + node.text)
+        System.out.print("checking " + node.text + " - " + node.icons)
         if (node.text.equals("Archives")) {
             return
         }
 
-        if (!node.icons.contains(mapReader.iconNextAction) || !(node.icons.contains(mapReader.iconCancel) || node.icons.contains(mapReader.iconDone ))) {
+        if (!node.icons.contains(mapReader.iconNextAction) || !node.icons.contains(mapReader.iconCancel) || !node.icons.contains(mapReader.iconDone )) {
             node.children.each {
                 if (it==targetDir){
                     return
