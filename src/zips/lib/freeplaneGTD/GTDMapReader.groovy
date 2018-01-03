@@ -42,10 +42,12 @@ class GTDMapReader {
     public String iconNextAction
     public String iconProject
     public String iconToday
+    public String iconWeek
     public String iconDone
     public String iconCancel
 	public Date today
     public Map contextIcons
+    private String laterText = "Later" // FIXME
 
     static GTDMapReader getInstance() {
 		instance.today=new Date().clearTime()
@@ -79,29 +81,34 @@ class GTDMapReader {
         iconNextAction = "yes"
         iconProject = "list"
         iconToday = "bookmark"
+        iconWeek = "idea"
         iconDone = "button_ok"
         iconCancel = "button_cancel"
         contextIcons = [:]
 
         internalFindIcons(thisNode)
-        if (['help', iconProject, iconToday, iconDone].contains(iconNextAction)
+        if (['help', iconProject, iconToday, iconDone, iconWeek].contains(iconNextAction)
                 || contextIcons.values().contains(iconNextAction)) {
             throw new Exception('Trying to reuse icon:' + iconNextAction + ' as \'Next action\'')
         }
-        if (['help', iconNextAction, iconToday, iconDone].contains(iconProject)
+        if (['help', iconNextAction, iconToday, iconDone, iconWeek].contains(iconProject)
                 || contextIcons.values().contains(iconProject)) {
             throw new Exception('Trying to reuse icon:' + iconProject + ' as \'Project\'')
         }
-        if (['help', iconNextAction, iconProject, iconDone].contains(iconToday)
+        if (['help', iconNextAction, iconProject, iconDone, iconWeek].contains(iconToday)
                 || contextIcons.values().contains(iconToday)) {
             throw new Exception('Trying to reuse icon:' + iconToday + ' as \'Today\'')
         }
-        if (['help', iconNextAction, iconProject, iconToday].contains(iconDone)
+        if (['help', iconNextAction, iconProject, iconToday, iconWeek].contains(iconDone)
                 || contextIcons.values().contains(iconDone)) {
             throw new Exception('Trying to reuse icon:' + iconDone + ' as \'Done\'')
         }
+        if (['help', iconNextAction, iconProject, iconToday].contains(iconWeek)
+                || contextIcons.values().contains(iconDone)) {
+            throw new Exception('Trying to reuse icon:' + iconWeek + ' as \'Week\'')
+        }
         contextIcons.each { context, icon ->
-            if (['help', iconNextAction, iconProject, iconToday, iconDone].contains(icon)) {
+            if (['help', iconNextAction, iconProject, iconToday, iconDone, iconWeek].contains(icon)) {
                 throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'')
             }
         }
@@ -129,6 +136,8 @@ class GTDMapReader {
                 iconToday = firstIcon
             } else if (nodeText == 'Icon: Done') {
                 iconDone = firstIcon
+            } else if (nodeText == 'Icon: Week') {
+                iconWeek = firstIcon
             } else if (nodeText =~ '^Icon: @') {
                 String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1');
                 contextIcons[context] = firstIcon
@@ -270,7 +279,7 @@ class GTDMapReader {
 
         // take care of missing attributes. null or empty string evaluates as boolean false
         if (!naWhen) {
-            naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
+            naWhen = laterText
         } else {
             naWhen = DateUtil.normalizeDate(naWhen)			
             thisNode['When'] = naWhen
@@ -294,8 +303,11 @@ class GTDMapReader {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
                 String naProject = findNextActionProject(thisNode, iconProject);
+                // if a node has both today and week icons then will use today
                 if (icons.contains(iconToday)) {
                     naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
+                } else if (icons.contains(iconWeek)) {
+                    naWhen = TextUtils.getText('freeplaneGTD.view.when.this_week');
                 }
                 boolean done = isDone(thisNode)
                 if (!(filterDone && done)) {
