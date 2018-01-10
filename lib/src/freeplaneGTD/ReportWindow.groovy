@@ -297,17 +297,8 @@ class ReportWindow {
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
         Platform.runLater({
-			ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-			try {
-				final ClassLoader cld = Controller.class.getClassLoader();
-				//needed for css
-				Thread.currentThread().setContextClassLoader(cld);
-				webView.engine.loadContent(content)
-				webView.engine.reload()
-			} finally {
-				Thread.currentThread().setContextClassLoader(tccl);
-			}		
-		
+			webView.engine.loadContent(content)
+			webView.engine.reload()
         })
     }
 
@@ -346,8 +337,7 @@ class ReportWindow {
             Tag title = body.addChild('h2')
             if (contextIcons.keySet().contains(it['title'])) {
 				
-                title.addChild('img', [class: "contextTitleIcon", src: getIconCopyURL(contextIcons.get(it['title'])
-                ) + ".png", "title": it['title']])
+                title.addChild('img', [class: "contextTitleIcon", src: getIconCopyURL(contextIcons.get(it['title']) + ".png"), "title": it['title']])
             }
             title.addContent(it['title'] as String)
             Tag curItem = body.addChild('ul', ['class': 'actionlist'])
