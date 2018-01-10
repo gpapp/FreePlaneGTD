@@ -1,6 +1,5 @@
 package freeplaneGTD
 
-import freeplaneGTD.protocol.fpgtd.Handler
 import groovy.swing.SwingBuilder
 import javafx.application.Platform
 import javafx.beans.value.ChangeListener
@@ -11,10 +10,13 @@ import javafx.scene.Scene
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import netscape.javascript.JSObject
+
+import org.freeplane.core.resources.ResourceController
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.features.mode.Controller
+import org.freeplane.features.mode.ModeController
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
@@ -26,15 +28,17 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.util.logging.Logger
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.logging.Level
+import java.util.logging.Logger
 
 class ReportWindow {
-    static enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, ABOUT
-    }
+	static enum VIEW {
+			PROJECT, WHO, CONTEXT, WHEN, ABOUT
+		}
 
-    static final String SYSTEM_PROTOCOL_HANDLERS = "java.protocol.handler.pkgs"
+	private static Map<String,URL> iconCache = new HashMap<>()
     static final String title = 'GTD Next Actions'
     static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
             '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
@@ -63,7 +67,6 @@ class ReportWindow {
             '.overdue {background-color: rgb(250,150,140)}' +
             '.buttons {display:inline-block;float:right;font-size:90%;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
             '/*]]>*/'
-
     private FreeplaneScriptBaseClass.ConfigProperties config
     private ReportModel report
     private JFrame mainFrame
@@ -75,45 +78,19 @@ class ReportWindow {
     protected boolean showNotes
     protected VIEW selectedView
 
-    static def getInstance() {
-        Controller currentController = Controller.currentController
-        // Monkey patch the Controller, to overcome classloader hell in sandbox
-        def reportWindow
-        try {
-            reportWindow = currentController.getGtdReportWindow()
-        } catch (Exception e) {
-            reportWindow = new ReportWindow()
-            currentController.metaClass.getGtdReportWindow = { reportWindow }
-        }
-        return reportWindow
-    }
+	static def getInstance () {
+		Controller currentController = Controller.currentController
+		def reportWindow
+		try{
+			reportWindow = currentController.getGtdReportWindow()
+		} catch (Exception e) {
+			reportWindow = new ReportWindow()
+			currentController.metaClass.getGtdReportWindow = { reportWindow }
+		}
+		return reportWindow
+	}
 
-    static {
-        // Let's hope it works in non Oracle JVMs as well
-		        /*
-
-        try {
-            URL.factory.setURLStreamHandler("fpgtd", new Handler())
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot add my own stream handler", e)
-        }
-		*/
-		
-		try {
-			System.setProperty( SYSTEM_PROTOCOL_HANDLERS, "freeplaneGTD.protocol" + (System.getProperty( SYSTEM_PROTOCOL_HANDLERS ) ? ("|"+System.getProperty( SYSTEM_PROTOCOL_HANDLERS )):""))
-            Logger.getAnonymousLogger().log(Level.INFO, "Protocol set up: "+System.getProperty( SYSTEM_PROTOCOL_HANDLERS ))
-			String clsName = "freeplaneGTD.protocol.fpgtd.Handler"
-			ClassLoader cl = ClassLoader.getSystemClassLoader()
-            if (cl != null) {
-				cl.loadClass(clsName)
-			}
-			new URL("fpgtd:no.png").getContent()
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot add my own protocol handler", e)
-        }
-    }
-
-    private JFrame getMainFrame(FreeplaneScriptBaseClass.ConfigProperties configModel) {
+    private JFrame getMainFrame( FreeplaneScriptBaseClass.ConfigProperties configModel) {
         config = configModel
         boolean rememberLastPosition
         if (!mainFrame) {
@@ -122,13 +99,24 @@ class ReportWindow {
                 defaultView = VIEW.valueOf(config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
             } catch (Exception e) {
                 defaultView = VIEW.PROJECT.toString()
-                logger.warning("Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
+                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
             }
 
+            Dimension screenSize = Toolkit.defaultToolkit.screenSize
+            int tPosX = (int) (screenSize.width / 16 * 3)
+            int tPosY = (int) (screenSize.height / 16 * 3)
+            int tSizeX = (int) (screenSize.width / 4 * 3)
+            int tSizeY = (int) (screenSize.height / 4 * 3)
+
+            rememberLastPosition = config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)
+            int posX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_x', tPosX) : tPosX
+            int posY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_y', tPosY) : tPosY
+            int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_x', tSizeX) : tSizeX
+            int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_y', tSizeY) : tSizeY
 
             SwingBuilder.edtBuilder {
                 String userPath = ScriptUtils.c().userDirectory.toString()
-                def iconFrame = new ImageIcon(userPath + "/resources/images/freeplaneGTD-icon.png").image
+                def iconFrame = imageIcon(userPath + "/resources/images/freeplaneGTD-icon.png").image
 
                 mainFrame = frame(title: title,
                         iconImage: iconFrame,
@@ -190,19 +178,19 @@ class ReportWindow {
 
                         final ReportWindow currentWindow = this
                         Platform.runLater({
-                            webView = new WebView()
-                            projectPane.setScene(new Scene(webView))
-                            WebEngine engine = webView.getEngine()
-                            engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-                                @Override
-                                void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                                    if (newValue == Worker.State.SUCCEEDED) {
-                                        JSObject win = engine.executeScript("window") as JSObject
-                                        win.setMember("app", new JSHandler(report, currentWindow) as Object)
-                                    }
-                                }
-                            })
-                            engine.loadContent("TODO: no content")
+							webView = new WebView()
+							projectPane.setScene(new Scene(webView))
+							WebEngine engine = webView.getEngine()
+							engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+								@Override
+								void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+									if (newValue == Worker.State.SUCCEEDED) {
+										JSObject win = engine.executeScript("window") as JSObject
+										win.setMember("app", new JSHandler(report, currentWindow) as Object)
+									}
+								}
+							})
+							engine.loadContent("TODO: no content")
                         })
 
                     }.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), projectPane)
@@ -238,7 +226,7 @@ class ReportWindow {
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
-                                    config.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected)
+                                    config.properties['freeplaneGTD_filter_done']=Boolean.toString(it.source.selected)
                                     refreshContent()
                                 })
                         checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
@@ -262,25 +250,14 @@ class ReportWindow {
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
                     if (config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)) {
-                        config.properties['freeplaneGTD_last_position_x'] = Integer.toString(mainFrame.x)
-                        config.properties['freeplaneGTD_last_position_y'] = Integer.toString(mainFrame.y)
-                        config.properties['freeplaneGTD_last_position_w'] = Integer.toString(mainFrame.width)
-                        config.properties['freeplaneGTD_last_position_h'] = Integer.toString(mainFrame.height)
+                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
+                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
+                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
+                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
                     mainFrame.visible = false
                 }
             })
-            Dimension screenSize = Toolkit.defaultToolkit.screenSize
-            int tPosX = (int) (screenSize.width / 16 * 3)
-            int tPosY = (int) (screenSize.height / 16 * 3)
-            int tSizeX = (int) (screenSize.width / 4 * 3)
-            int tSizeY = (int) (screenSize.height / 4 * 3)
-
-            rememberLastPosition = config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)
-            int posX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_x', tPosX) : tPosX
-            int posY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_y', tPosY) : tPosY
-            int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_w', tSizeX) : tSizeX
-            int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_h', tSizeY) : tSizeY
 
             mainFrame.setLocation(posX, posY)
             mainFrame.setSize(sizeX, sizeY)
@@ -320,11 +297,39 @@ class ReportWindow {
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
         Platform.runLater({
-            webView.engine.loadContent(content)
-            webView.engine.reload()
+			ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+			try {
+				final ClassLoader cld = Controller.class.getClassLoader();
+				//needed for css
+				Thread.currentThread().setContextClassLoader(cld);
+				webView.engine.loadContent(content)
+				webView.engine.reload()
+			} finally {
+				Thread.currentThread().setContextClassLoader(tccl);
+			}		
+		
         })
     }
 
+	private static URL getIconCopyURL (String iconName) {
+		URL retval = iconCache.get(iconName)
+		if (retval==null) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Loading icon to temp cache:" + iconName)
+			try {
+				InputStream inputStream = new URL("bundle://1:1/images/icons/"+iconName).openStream()
+				File tempDest = File.createTempFile(iconName, "")
+				tempDest.deleteOnExit()
+				Files.copy(inputStream, tempDest.toPath(), StandardCopyOption.REPLACE_EXISTING)
+				inputStream.close()
+				retval = tempDest.toURI().toURL()
+				iconCache.put(iconName,retval)
+			} catch (Exception e) {
+				Logger.getAnonymousLogger().log(Level.WARNING, "Cannot load icon for " + iconName, e)
+			}
+		}
+		return retval
+	}
+	
     private static String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
         Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
         Tag head = html.addChild('head')
@@ -340,21 +345,22 @@ class ReportWindow {
                     addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: '#', onclick: 'app.selectOnMap(' + index + ')'])
             Tag title = body.addChild('h2')
             if (contextIcons.keySet().contains(it['title'])) {
-                title.addChild('img', [class: "contextTitleIcon", src: "fpgtd:" + contextIcons.get(it['title']
-                ) + ".png", "title"         : it['title']])
+				
+                title.addChild('img', [class: "contextTitleIcon", src: getIconCopyURL(contextIcons.get(it['title'])
+                ) + ".png", "title": it['title']])
             }
             title.addContent(it['title'] as String)
             Tag curItem = body.addChild('ul', ['class': 'actionlist'])
             it['items'].each {
                 Tag wrap = curItem.addChild('li')
                 if (it['priority']) {
-                    wrap.addChild('img', [class: "priorityIcon", src: "fpgtd:full-" + it['priority'] + ".png"])
+                    wrap.addChild('img', [class: "priorityIcon", src: getIconCopyURL("full-" + it['priority'] + ".png")])
                 }
-                wrap.addChild('A', [href: '#', onclick: 'app.toggleDone("' + it['nodeID'] + '")']).addChild('img', [class: "doneIcon", src: "fpgtd:" + (it['done'] ? "" : "un") + "checked" + ".png"])
+                wrap.addChild('A', [href: '#', onclick: 'app.toggleDone("' + it['nodeID'] + '")']).addChild('img', [class: "doneIcon", src: getIconCopyURL((it['done'] ? "" : "un") + "checked" + ".png")])
                 if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
                 (it['context'] as String)?.tokenize(',')?.each { key ->
                     if (contextIcons.keySet().contains(key)) {
-                        wrap.addChild('img', [class: "contextIcon", src: "fpgtd:" + contextIcons.get(key) + ".png", "title": key])
+                        wrap.addChild('img', [class: "contextIcon", src: getIconCopyURL(contextIcons.get(key) + ".png"), "title": key])
                     }
                 }
                 wrap.addChild('A', [href: '#', onclick: 'app.followLink("' + it['nodeID'] + '")']).addPreformatted(it['action'] as String)
@@ -387,8 +393,8 @@ class ReportWindow {
         return HTML_HEADER + html.toString()
     }
 
-    void show(FreeplaneScriptBaseClass.ConfigProperties config) {
-        JFrame frameinstance = getMainFrame(config)
+    void show( FreeplaneScriptBaseClass.ConfigProperties config) {
+        JFrame frameinstance = getMainFrame( config)
         frameinstance.visible = true
     }
 
