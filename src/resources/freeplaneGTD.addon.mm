@@ -1,6 +1,6 @@
-<map version="freeplane 1.5.9">
+<map version="freeplane 1.6.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1497989165567" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
+<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1515788725284" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" fit_to_viewport="false;" show_note_icons="true"/>
@@ -58,7 +58,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="129.74999613314878 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v2.0.0-alpha"/>
+<attribute NAME="version" VALUE="v2.0.0"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.5.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -102,7 +102,7 @@
 </html>
 </richcontent>
 <edge COLOR="#999999"/>
-<node TEXT="description" FOLDED="true" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1496660973883">
+<node TEXT="description" FOLDED="true" POSITION="left" ID="ID_1125389651" CREATED="1323057303632" MODIFIED="1515788725316">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -168,7 +168,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1496660973887">
+<node TEXT="changes" POSITION="left" ID="ID_1824187995" CREATED="1323057303648" MODIFIED="1515788725318">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -184,7 +184,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1496660973892">
+<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1073906233" CREATED="1323057303663" MODIFIED="1515788725321">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -209,7 +209,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="preferences.xml" FOLDED="true" POSITION="left" ID="ID_456089147" CREATED="1323057303742" MODIFIED="1496660973898">
+<node TEXT="preferences.xml" FOLDED="true" POSITION="left" ID="ID_456089147" CREATED="1323057303742" MODIFIED="1515788725326">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -229,7 +229,7 @@
 </richcontent>
 <node TEXT="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xa;&lt;preferences_structure&gt;&#xa;         &lt;tabbed_pane&gt;&#xa;                  &lt;tab name=&quot;plugins&quot;&gt;&#xa;                           &lt;separator name=&quot;freeplaneGTD&quot;&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_filter_done&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;combo name=&quot;freeplaneGTD_default_view&quot;&gt;&#xa;                    &lt;choice value=&quot;PROJECT&quot; text=&quot;freeplaneGTD_view_project&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHO&quot; text=&quot;freeplaneGTD_view_who&quot; /&gt;&#xa;                    &lt;choice value=&quot;CONTEXT&quot; text=&quot;freeplaneGTD_view_context&quot; /&gt;&#xa;                    &lt;choice value=&quot;WHEN&quot; text=&quot;freeplaneGTD_view_when&quot; /&gt;&#xa;                &lt;/combo&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_auto_fold_map&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;boolean name=&quot;freeplaneGTD_remember_last_position&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_x&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_y&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_w&quot; min=&quot;0&quot; /&gt;&#xa;                &lt;number name=&quot;freeplaneGTD_last_position_h&quot; min=&quot;0&quot; /&gt;&#xa;                           &lt;/separator&gt;&#xa;                  &lt;/tab&gt;&#xa;         &lt;/tabbed_pane&gt;&#xa;&lt;/preferences_structure&gt;" ID="ID_1035150433" CREATED="1413235874574" MODIFIED="1497987250288"/>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1496660973902">
+<node TEXT="default.properties" POSITION="left" ID="ID_680880217" CREATED="1323057303742" MODIFIED="1515788725334">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -250,7 +250,7 @@
 <attribute NAME="freeplaneGTD_auto_fold_map" VALUE="true"/>
 <attribute NAME="freeplaneGTD_remember_last_position" VALUE="true"/>
 </node>
-<node TEXT="translations" FOLDED="true" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1496660973911"><richcontent TYPE="NOTE">
+<node TEXT="translations" FOLDED="true" POSITION="left" ID="ID_580707814" CREATED="1496660973904" MODIFIED="1515788725338"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -651,7 +651,7 @@
 <edge COLOR="#999999"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1495226750490">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1515788732398">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -698,8 +698,19 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ShowTasks.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ArchiveTask.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_nl.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_ru.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_de.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_hu.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_es.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_en.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_fr.properties"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/JSHandler.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/ReportWindow.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/mover/DoneMover.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/editor/MultinodeActionEditor.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1496660973934">
+<node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1515788725361">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -885,7 +896,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1496660974010"><richcontent TYPE="NOTE">
+<node TEXT="lib" POSITION="right" ID="ID_1003498816" CREATED="1413287263211" MODIFIED="1515788725412"><richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -923,7 +934,7 @@
 </html>
 </richcontent>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1496660974017">
+<node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1515788725417">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -966,7 +977,7 @@
 <node TEXT="lib" ID="ID_1543761795" CREATED="1413298467588" MODIFIED="1497481062534" LINK="../out/lib/"/>
 <node TEXT="templates" ID="ID_1096097283" CREATED="1446325478471" MODIFIED="1497481445935" LINK="resources/zips/templates"/>
 </node>
-<node TEXT="images" FOLDED="true" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1497481602583" LINK="resources/images"><richcontent TYPE="NOTE">
+<node TEXT="images" FOLDED="true" POSITION="right" ID="ID_907142452" CREATED="1323172874273" MODIFIED="1515788725434" LINK="resources/images"><richcontent TYPE="NOTE">
 
 <html>
   <head>

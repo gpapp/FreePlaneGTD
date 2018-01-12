@@ -10,13 +10,10 @@ import javafx.scene.Scene
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import netscape.javascript.JSObject
-
-import org.freeplane.core.resources.ResourceController
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.features.mode.Controller
-import org.freeplane.features.mode.ModeController
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
