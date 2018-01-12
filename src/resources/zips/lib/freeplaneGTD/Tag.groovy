@@ -65,7 +65,6 @@ class Tag {
         return this
     }
 
-
     Tag addContent(Tag tag) {
         this.content.push(tag)
         return this
@@ -88,16 +87,21 @@ class Tag {
     }
 
     String toString() {
-        String retval = '<' + tagName
+        StringBuilder retval = new StringBuilder()
+        retval.append('<').append(tagName)
         params.each {
-            retval += ' ' + it.key + '=\'' + it.value + '\''
+            retval.append(' ')
+            retval.append(it.key)
+            retval.append('=\'')
+            retval.append(it.value)
+            retval.append('\'')
         }
-        retval += '>'
+        retval.append('>')
         content.each {
-            retval += it
+            retval.append(it)
         }
-        retval += '</' + tagName + '>'
-        return retval
+        retval.append('</').append(tagName).append('>')
+        return retval.toString()
     }
 
 }

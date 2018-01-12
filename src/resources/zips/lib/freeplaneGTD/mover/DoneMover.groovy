@@ -1,5 +1,6 @@
-package freeplaneGTD
+package freeplaneGTD.mover
 
+import freeplaneGTD.GTDMapReader
 import org.freeplane.plugin.script.proxy.Proxy
 
 /**
