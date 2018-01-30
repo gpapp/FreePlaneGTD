@@ -8,7 +8,6 @@ import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import javax.swing.*
-import javax.swing.SwingUtilities
 import java.awt.*
 import java.util.List
 import java.util.logging.Level
@@ -24,25 +23,26 @@ class JSHandler {
     }
 
     void toggleDone(String linkNodeID) {
-		try {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override public void run() {
-					def nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
+        try {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    def nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
 
-					if (nodesFound[0] != null) {
-						def node = nodesFound[0]
-						if (node.icons.contains(report.mapReader.iconDone)) {
-							node.icons.remove(report.mapReader.iconDone)
-						} else {
-							node.icons.add(report.mapReader.iconDone)
-						}
-						target.refreshContent()
-					} else {
-						Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot find node to mark as done")
-						UITools.informationMessage("Cannot find node to mark as done")
-					}
-				}
-			})
+                    if (nodesFound[0] != null) {
+                        def node = nodesFound[0]
+                        if (node.icons.contains(report.mapReader.iconDone)) {
+                            node.icons.remove(report.mapReader.iconDone)
+                        } else {
+                            node.icons.add(report.mapReader.iconDone)
+                        }
+                        target.refreshContent()
+                    } else {
+                        Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot find node to mark as done")
+                        UITools.informationMessage("Cannot find node to mark as done")
+                    }
+                }
+            })
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.SEVERE, "Error in toggling as done", e)
         }
@@ -50,24 +50,25 @@ class JSHandler {
 
     void followLink(String linkNodeID) {
         try {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override public void run() {
-					switchToMainWindow()
-					def nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    switchToMainWindow()
+                    def nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
 
-					if (nodesFound[0] != null) {
-						if (target.autoFoldMap) {
-							foldToTop(nodesFound[0])
-						}
-						unfoldBranch(nodesFound[0])
-						ScriptUtils.c().centerOnNode(nodesFound[0])
-						ScriptUtils.c().select(nodesFound[0])
-					} else {
-						Logger.anonymousLogger.log(Level.SEVERE, "Next Action not found in mind map. Refresh Next Action list")
-						UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
-					}
-				}
-			})
+                    if (nodesFound[0] != null) {
+                        if (target.autoFoldMap) {
+                            foldToTop(nodesFound[0])
+                        }
+                        unfoldBranch(nodesFound[0])
+                        ScriptUtils.c().centerOnNode(nodesFound[0])
+                        ScriptUtils.c().select(nodesFound[0])
+                    } else {
+                        Logger.anonymousLogger.log(Level.SEVERE, "Next Action not found in mind map. Refresh Next Action list")
+                        UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
+                    }
+                }
+            })
         } catch (Exception e) {
             Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
         }
@@ -102,31 +103,32 @@ class JSHandler {
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
             }
             List ids = list.collect { it['nodeID'] }
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override public void run() {
-					switchToMainWindow()
-					def nodesFound = ScriptUtils.c().find { ids.contains(it.id) }
-					if (nodesFound.size() > 0) {
-						if (target.autoFoldMap) {
-							foldToTop(nodesFound[0])
-						}
-						nodesFound.each {
-							unfoldBranch(it)
-						}
-						ScriptUtils.c().centerOnNode(nodesFound[0])
-						ScriptUtils.c().selectMultipleNodes(nodesFound)
-					} else {
-						UITools.informationMessage("Error finding selection")
-					}
-				}
-			})
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    switchToMainWindow()
+                    def nodesFound = ScriptUtils.c().find { ids.contains(it.id) }
+                    if (nodesFound.size() > 0) {
+                        if (target.autoFoldMap) {
+                            foldToTop(nodesFound[0])
+                        }
+                        nodesFound.each {
+                            unfoldBranch(it)
+                        }
+                        ScriptUtils.c().centerOnNode(nodesFound[0])
+                        ScriptUtils.c().selectMultipleNodes(nodesFound)
+                    } else {
+                        UITools.informationMessage("Error finding selection")
+                    }
+                }
+            })
         } catch (Exception e) {
             Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
         }
     }
 
     private static void switchToMainWindow() {
-		JFrame parentFrame = Controller.currentController.viewController.menuComponent as JFrame
+        JFrame parentFrame = Controller.currentController.viewController.menuComponent as JFrame
         for (Window window : Window.windows) {
             if (parentFrame == window) {
                 window.toFront()
@@ -135,7 +137,7 @@ class JSHandler {
     }
 
 // recursive unfolding of branch
-    private void unfoldBranch(Proxy.Node thisNode) {
+    private static void unfoldBranch(Proxy.Node thisNode) {
         Proxy.Node rootNode = thisNode.getMap().getRoot()
         if (thisNode != rootNode) {
             if (thisNode.folded) thisNode.setFolded(false)
@@ -144,11 +146,11 @@ class JSHandler {
     }
 
 // fold to first level
-    private void foldToTop(Proxy.Node thisNode) {
+    private static void foldToTop(Proxy.Node thisNode) {
         Proxy.Node rootNode = thisNode.getMap().getRoot()
         def Nodes = ScriptUtils.c().findAll()
         Nodes.each {
-            if(!it.folded) it.setFolded(true)
+            if (!it.folded) it.setFolded(true)
         }
         rootNode.setFolded(false)
     }

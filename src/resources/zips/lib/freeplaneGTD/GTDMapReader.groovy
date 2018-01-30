@@ -163,7 +163,7 @@ class GTDMapReader {
             if (fields['when']) nodeAttr['When'] = fields['when']
             if (fields['priority']) nodeAttr['Priority'] = fields['priority']
 
-            List contexts = nodeAttr['Where'] ? nodeAttr['Where'].split(',') : []
+            List contexts = nodeAttr['Where'] ? nodeAttr['Where'].toString().split(',') : []
             contextIcons.each {
                 context, icon ->
                     if (thisNode.icons.icons.contains(icon)) {
@@ -301,7 +301,7 @@ class GTDMapReader {
         }
         String retval
         if (HtmlUtils.isHtmlNode(string)) {
-            retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1").replaceAll("",
+            retval = string.replaceFirst("(?s)^.*<body>\\s*(.*)\\s*</body>.*\$", "\$1")
         } else {
             retval = HtmlUtils.toHTMLEscapedText(string)
         }
@@ -316,7 +316,7 @@ class GTDMapReader {
         String toParse = nodeText
         def delegates = []
         while (toParse.matches('^.*\\[([^\\]]*)\\].*$')) {
-            delegates.addAll(toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').split(',')*.trim())
+            delegates.addAll(toParse.replaceFirst('[^\\[]*\\[([^\\]]*)\\].*', '$1').toString().split(',')*.trim())
             toParse = toParse.replaceFirst('\\s*\\[[^\\]]*\\]\\s*', ' ').trim()
         }
         if (delegates) {
@@ -332,7 +332,7 @@ class GTDMapReader {
         }
         def contexts = []
         while (toParse =~ '^[^@]*@([^@\\s\\*]+).*') {
-            contexts.addAll(toParse.replaceFirst('^[^@]*@([^@\\s\\*]+).*', '$1').split(',')*.trim())
+            contexts.addAll(toParse.replaceFirst('^[^@]*@([^@\\s\\*]+).*', '$1').toString().split(',')*.trim())
             toParse = toParse.replaceFirst('\\s*@[^@\\s\\*]+\\s*', ' ').trim()
         }
         if (contexts) {
