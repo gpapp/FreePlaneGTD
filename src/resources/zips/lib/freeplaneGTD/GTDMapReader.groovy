@@ -20,9 +20,13 @@
 //=========================================================
 package freeplaneGTD
 
+import java.util.logging.Level
+import java.util.logging.Logger
+
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
+import org.freeplane.plugin.script.proxy.ScriptUtils
 
 //=========================================================
 // references
@@ -43,6 +47,8 @@ class GTDMapReader {
     String iconDone
 	Date today
     Map contextIcons
+    Map contextAliases 
+    Map delegateAliases
 
     static GTDMapReader getInstance() {
 		instance.today=new Date().clearTime()
@@ -63,21 +69,80 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     void convertShorthand(Proxy.Node rootNode) {
-        findIcons(rootNode)
+        findAliases()
+        findIcons()
         internalConvertShorthand(rootNode)
     }
 
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
-    void findIcons(Proxy.Node thisNode) {
+    void findAliases() {
+		def aliasesFound = ScriptUtils.c().find { it.transformedText.startsWith('Alias: ') }
+		contextAliases = [:]
+		delegateAliases = [:]
+
+		def contextMatcher = ('' =~/(?:@(\S+)\s*)/)
+        def delegatematcher = ('' =~/(?:\[([^\]]+)\]\s*)/)
+		aliasesFound.each {
+			if (it.transformedText =~ /^Alias:(\s*@\S+){2,}/) {
+                contextMatcher.reset(it.transformedText)
+				def res = contextMatcher.collect{it[1]}
+                def key = res[0]
+    			(1..res.size()-1).each {                  
+					def value = res[it]
+					contextAliases[value]=key
+					Logger.getAnonymousLogger().log(Level.INFO, 'Context alias: ' + key + '->' + value)
+				}
+			} else if (it.transformedText =~ /^Alias:\s*(\[([^\]]+)\]\s*){2,}/) {
+                delegatematcher.reset(it.transformedText)
+				def res = delegatematcher.collect{it[1]}
+				def key = res[0]
+    			(1..res.size()-1).each {                  
+					def value = res[it]
+					delegateAliases[value]=key
+					Logger.getAnonymousLogger().log(Level.INFO, 'Delegate alias: ' + key + '->' + value)
+				}
+			} else {
+                throw new Exception('Aliases must take the format \n'+
+				'\'Alias: @WHAT_TO_ALIAS @ALIAS1 @ALIAS2\'\n'+
+				'\'Alias: [WHO_TO_ALIAS] [ALIAS1] [ALIAS2]\'\n'+
+                'Got: \'' + it.transformedText + '\'\n')
+			}
+		}
+	}
+    //--------------------------------------------------------------
+    //Get icon key names from Settings/Icons nodes
+    void findIcons() {
         // Get icon keys for next actions and projects
         iconNextAction = "yes"
         iconProject = "list"
         iconToday = "bookmark"
         iconDone = "button_ok"
         contextIcons = [:]
+		
+		def iconsFound = ScriptUtils.c().find { it.transformedText.startsWith('Icon: ') }         
+		
+		iconsFound.each {
+			String firstIcon = it.icons.first
+			String nodeText = it.transformedText.trim()
 
-        internalFindIcons(thisNode)
+            if (firstIcon ==~ /^full\-\d$/) {
+                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
+            }
+            if (nodeText == 'Icon: Next action') {
+                iconNextAction = firstIcon
+            } else if (nodeText == 'Icon: Project') {
+                iconProject = firstIcon
+            } else if (nodeText == 'Icon: Today') {
+                iconToday = firstIcon
+            } else if (nodeText == 'Icon: Done') {
+                iconDone = firstIcon
+            } else if (nodeText =~ '^Icon: @') {
+                String context = nodeText.replaceAll(/^Icon: @(^\s*)/, '$1')
+                contextIcons[context] = firstIcon
+            }
+		}
+
         if (['help', iconProject, iconToday, iconDone].contains(iconNextAction)
                 || contextIcons.values().contains(iconNextAction)) {
             throw new Exception('Trying to reuse icon:' + iconNextAction + ' as \'Next action\'')
@@ -103,34 +168,6 @@ class GTDMapReader {
 
     List getActionList(Proxy.Node rootNode, boolean filterDone) {
         return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday, iconDone)
-    }
-
-    //Get icon key names from Settings/Icons nodes
-    private void internalFindIcons(Proxy.Node thisNode) {
-        String firstIcon = thisNode.icons.first
-        String nodeText = thisNode.transformedText.trim()
-
-        if (nodeText =~ '^Icon:') {
-            if (firstIcon ==~ /^full\-\d$/) {
-                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
-            }
-            if (nodeText == 'Icon: Next action') {
-                iconNextAction = firstIcon
-            } else if (nodeText == 'Icon: Project') {
-                iconProject = firstIcon
-            } else if (nodeText == 'Icon: Today') {
-                iconToday = firstIcon
-            } else if (nodeText == 'Icon: Done') {
-                iconDone = firstIcon
-            } else if (nodeText =~ '^Icon: @') {
-                String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1')
-                contextIcons[context] = firstIcon
-            }
-        }
-
-        thisNode.children.each {
-            internalFindIcons(it)
-        }
     }
 
     //--------------------------------------------------------------
