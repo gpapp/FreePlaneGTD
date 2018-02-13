@@ -11,7 +11,6 @@ import org.freeplane.plugin.script.proxy.Proxy
  */
 
 class ReportModel {
-    Proxy.Node rootNode
     List actionList
     GTDMapReader mapReader
 
@@ -83,8 +82,7 @@ class ReportModel {
         return ap <=> bp
     }
 
-    ReportModel(Proxy.Node rootNode) {
-        this.rootNode = rootNode
+    ReportModel() {
         this.mapReader = GTDMapReader.instance
     }
 
@@ -155,7 +153,6 @@ class ReportModel {
                     }
                 }
         }
-
 
         naByDelegate = naByDelegate.sort { it.toString().toLowerCase() }
         naByDelegate.each {

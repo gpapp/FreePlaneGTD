@@ -108,8 +108,8 @@ class ReportWindow {
             rememberLastPosition = config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)
             int posX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_x', tPosX) : tPosX
             int posY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_y', tPosY) : tPosY
-            int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_x', tSizeX) : tSizeX
-            int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_size_y', tSizeY) : tSizeY
+            int sizeX = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_w', tSizeX) : tSizeX
+            int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_h', tSizeY) : tSizeY
 
             SwingBuilder.edtBuilder {
                 String userPath = ScriptUtils.c().userDirectory.toString()
@@ -385,8 +385,8 @@ class ReportWindow {
         frameinstance.visible = true
     }
 
-    void refresh(Proxy.Node root) {
-        report = new ReportModel(root)
+    void refresh() {
+        report = new ReportModel()
         if (mainFrame?.visible) {
             refreshContent()
         }
