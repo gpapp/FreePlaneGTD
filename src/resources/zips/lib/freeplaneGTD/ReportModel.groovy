@@ -92,10 +92,10 @@ class ReportModel {
     // parse the GTD mind map
     void parseMap(boolean filterDone) {
         // Expand any nodes with next action shorthand
-        mapReader.convertShorthand(rootNode);
+        mapReader.convertShorthand();
 
         // Get next action lists
-        actionList = mapReader.getActionList(rootNode, filterDone)
+        actionList = mapReader.getActionList(filterDone)
 
         // Fill actionList with next actionable time
         actionList.each { it['time'] = taskDate(it) }
