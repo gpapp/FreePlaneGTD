@@ -172,6 +172,24 @@ class GTDMapReader {
 		
 		taskNodes.each {
 			Proxy.Node thisNode = it
+			// Handle delegate aliases
+			def delegateAttr = thisNode['Who']
+			List delegates = delegateAttr ? delegateAttr.toString().split(',') : []
+			def newDelegates = []
+			delegates.each {
+				def curDelegate = it
+				// convert aliases
+				def aliasMatch = delegateAliases?.keySet().find { it.equalsIgnoreCase(curDelegate) }
+				if (aliasMatch){
+					curDelegate = delegateAliases[aliasMatch]
+				}
+				newDelegates << curDelegate
+			}
+			if (newDelegates?.size()) {
+				thisNode['Who']= newDelegates.unique().join(',')    			
+			}		
+
+			// Handle context icons
 			def contextAttr = thisNode['Where']
 			List contexts = contextAttr ? contextAttr.toString().split(',') : []
 			// Add missing attributes from existing icons
