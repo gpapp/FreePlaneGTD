@@ -103,7 +103,7 @@ class ActionEditor {
             // Re-parse map
             mapReader.internalConvertShorthand()
 
-            ReportWindow.instance.refresh(editedNodes.map.root)
+            ReportWindow.instance.refresh()
         }
     }
     ActionEditorModel model = new ActionEditorModel();
