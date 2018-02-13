@@ -30,8 +30,8 @@ class ActionEditor {
         boolean setNode(Proxy.Node node) {
             this.editedNodes = node
             GTDMapReader mapReader = GTDMapReader.instance
-            mapReader.findIcons(node.map.root)
-            mapReader.internalConvertShorthand(node)
+            mapReader.findIcons()
+            mapReader.internalConvertShorthand()
             if (!node.icons.contains(mapReader.iconNextAction)) {
                 UITools.errorMessage('Selected node is not a task')
                 return false
@@ -87,7 +87,7 @@ class ActionEditor {
                 }
             }
             // Find icons in the entire map
-            mapReader.findIcons(editedNodes.map.root)
+            mapReader.findIcons()
             // Remove priority icons that are to be re-added by the shorthand conversion
             editedNodes.icons.each {
                 if (it ==~ /^full\-\d$/) {
@@ -100,8 +100,8 @@ class ActionEditor {
                     editedNodes.icons.remove(it)
                 }
             }
-            // Only re-parse the current node
-            mapReader.internalConvertShorthand(editedNodes)
+            // Re-parse map
+            mapReader.internalConvertShorthand()
 
             ReportWindow.instance.refresh(editedNodes.map.root)
         }
