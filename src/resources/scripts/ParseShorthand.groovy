@@ -20,4 +20,4 @@
 //
 //=========================================================
 import freeplaneGTD.ReportWindow
-ReportWindow.instance.refresh(node.map.root)
+ReportWindow.instance.refresh()
