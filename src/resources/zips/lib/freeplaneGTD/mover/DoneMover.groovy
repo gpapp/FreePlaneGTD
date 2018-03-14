@@ -32,7 +32,7 @@ abstract class DoneMover {
 
     void execute(final Proxy.Node targetDir, final Proxy.Node node) {
         // Must reread it every time in case the configuration nodes were changed
-        mapReader.findIcons(node.map.root)
+        mapReader.findIcons()
         mapReader.internalConvertShorthand(node)
 
         if (!node.icons.contains(mapReader.iconNextAction) || !node.icons.contains(mapReader.iconDone )) {
