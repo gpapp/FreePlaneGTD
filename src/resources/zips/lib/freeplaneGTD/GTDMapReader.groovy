@@ -26,7 +26,11 @@ import java.util.logging.Logger
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
 import org.freeplane.plugin.script.proxy.ScriptUtils
+=======
+import freeplaneGTD.GTDChangeListener
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
 
 //=========================================================
 // references
@@ -41,6 +45,7 @@ import org.freeplane.plugin.script.proxy.ScriptUtils
 class GTDMapReader {
     private static GTDMapReader instance = new GTDMapReader()
 
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     String iconNextAction
     String iconProject
     String iconToday
@@ -49,6 +54,17 @@ class GTDMapReader {
     Map contextIcons
     Map contextAliases 
     Map delegateAliases
+=======
+    public String iconNextAction
+    public String iconProject
+    public String iconToday
+    public String iconWeek
+    public String iconDone
+    public String iconCancel
+	public Date today
+    public Map contextIcons
+    private String laterText = "Later" // FIXME
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
 
     static GTDMapReader getInstance() {
 		instance.today=new Date().clearTime()
@@ -68,11 +84,19 @@ class GTDMapReader {
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     void convertShorthand() {
         findAliases()
         findIcons()
         internalConvertShorthand()
 		fixAliasesAndIcons()
+=======
+    public void convertShorthand(Proxy.Node rootNode) {
+        findIcons(rootNode)
+        internalConvertShorthand(rootNode)
+        //stupid..
+        GTDChangeListener.register(rootNode)
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
     }
 
     //--------------------------------------------------------------
@@ -118,7 +142,9 @@ class GTDMapReader {
         iconNextAction = "yes"
         iconProject = "list"
         iconToday = "bookmark"
+        iconWeek = "idea"
         iconDone = "button_ok"
+        iconCancel = "button_cancel"
         contextIcons = [:]
 		
 		def iconsFound = ScriptUtils.c().find { it.transformedText.startsWith('Icon: ') }         
@@ -144,25 +170,39 @@ class GTDMapReader {
             }
 		}
 
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
         if (['help', iconProject, iconToday, iconDone].contains(iconNextAction)
+=======
+        internalFindIcons(thisNode)
+        if (['help', iconProject, iconToday, iconDone, iconWeek].contains(iconNextAction)
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
                 || contextIcons.values().contains(iconNextAction)) {
             throw new Exception('Trying to reuse icon:' + iconNextAction + ' as \'Next action\'')
         }
-        if (['help', iconNextAction, iconToday, iconDone].contains(iconProject)
+        if (['help', iconNextAction, iconToday, iconDone, iconWeek].contains(iconProject)
                 || contextIcons.values().contains(iconProject)) {
             throw new Exception('Trying to reuse icon:' + iconProject + ' as \'Project\'')
         }
-        if (['help', iconNextAction, iconProject, iconDone].contains(iconToday)
+        if (['help', iconNextAction, iconProject, iconDone, iconWeek].contains(iconToday)
                 || contextIcons.values().contains(iconToday)) {
             throw new Exception('Trying to reuse icon:' + iconToday + ' as \'Today\'')
         }
-        if (['help', iconNextAction, iconProject, iconToday].contains(iconDone)
+        if (['help', iconNextAction, iconProject, iconToday, iconWeek].contains(iconDone)
                 || contextIcons.values().contains(iconDone)) {
             throw new Exception('Trying to reuse icon:' + iconDone + ' as \'Done\'')
         }
+        if (['help', iconNextAction, iconProject, iconToday].contains(iconWeek)
+                || contextIcons.values().contains(iconDone)) {
+            throw new Exception('Trying to reuse icon:' + iconWeek + ' as \'Week\'')
+        }
         contextIcons.each { context, icon ->
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
             if (['help', iconNextAction, iconProject, iconToday, iconDone].contains(icon)) {
                 throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'') //'
+=======
+            if (['help', iconNextAction, iconProject, iconToday, iconDone, iconWeek].contains(icon)) {
+                throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'')
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
             }
         }
     }
@@ -189,6 +229,7 @@ class GTDMapReader {
 				thisNode['Who']= newDelegates.unique().join(',')    			
 			}		
 
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
 			// Handle context icons
 			def contextAttr = thisNode['Where']
 			List contexts = contextAttr ? contextAttr.toString().split(',') : []
@@ -199,6 +240,12 @@ class GTDMapReader {
 						contexts << context
 					}
 			}
+=======
+    // FYI: may use for server callback
+    public List getActionList(Proxy.Node rootNode, boolean filterDone) {
+        return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday)
+    }
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
 
 			def newContexts = []
 			contexts.each {
@@ -243,6 +290,7 @@ class GTDMapReader {
 		}		
 	}
 
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     List getActionList(boolean filterDone) {
 		def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
 		
@@ -302,6 +350,25 @@ class GTDMapReader {
                                waitUntil : naWaitUntil,
                                done    : done]
                 }
+=======
+        if (nodeText =~ '^Icon:') {
+            if (firstIcon ==~ /^full\-\d$/) {
+                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
+            }
+            if (nodeText == 'Icon: Next action') {
+                iconNextAction = firstIcon
+            } else if (nodeText == 'Icon: Project') {
+                iconProject = firstIcon
+            } else if (nodeText == 'Icon: Today') {
+                iconToday = firstIcon
+            } else if (nodeText == 'Icon: Done') {
+                iconDone = firstIcon
+            } else if (nodeText == 'Icon: Week') {
+                iconWeek = firstIcon
+            } else if (nodeText =~ '^Icon: @') {
+                String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1');
+                contextIcons[context] = firstIcon
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
             }
         }
 
@@ -378,7 +445,104 @@ class GTDMapReader {
                 walker = walker.parent
             }
         }
+<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
         return retval ? retval : parentNode.transformedText
+=======
+        return retval ? retval : stripHTMLTags(parentNode.text);
+    }
+
+    //--------------------------------------------------------------
+    // substitutes multiline text to its first line + "..."
+    private
+    def trunc(String str) {
+        def splitted = str.split("\n")
+        def res = splitted[0]
+
+        if (splitted.size() > 1) {
+            res += "..."
+        }
+        return res
+    }
+
+    private
+    def isDone(Proxy.Node node) {
+        def icons = node.icons.icons;
+        return icons.contains(iconDone) || icons.contains(iconCancel)
+    }
+
+    //--------------------------------------------------------------
+    // recursive walk through nodes to find Next Actions
+    private
+    def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday) {
+        def icons = thisNode.icons.icons;
+        def naNodeID = thisNode.id;
+
+        // use index method to get attributes
+        String naContext = thisNode['Where'].toString()
+        String naWho = thisNode['Who'].toString()
+        Object naWhen = thisNode['When']
+        Object naWaitFor = thisNode['WaitFor']
+        Object naWaitUntil = thisNode['WaitUntil']
+        String naPriority = thisNode['Priority'].toString()
+        String whenDone = thisNode['DONE'].toString()
+
+        // take care of missing attributes. null or empty string evaluates as boolean false
+        if (!naWhen) {
+            naWhen = laterText
+        } else {
+            naWhen = DateUtil.normalizeDate(naWhen)			
+            thisNode['When'] = naWhen
+        }		
+		if ((naWhen!=null) && (naWhen instanceof Date)){
+			if(today.equals(naWhen.clearTime())) {
+				naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+			}
+		}
+		
+        if (naWaitUntil) {
+            naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
+            thisNode['WaitUntil'] = naWaitUntil
+        }
+
+        def result = [];
+        // include result if it has next action icon and its not the icon setting node for next actions
+        if (icons.contains(iconNextAction)) {
+            String naAction = stripHTMLTags(trunc(thisNode.text))
+            if (!(naAction =~ /Icon:/)) {
+                String naDetails = stripHTMLTags(thisNode.detailsText)
+                String naNotes = stripHTMLTags(thisNode.noteText)
+                String naProject = findNextActionProject(thisNode, iconProject);
+                // if a node has both today and week icons then will use today
+                if (icons.contains(iconToday)) {
+                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
+                } else if (icons.contains(iconWeek)) {
+                    naWhen = TextUtils.getText('freeplaneGTD.view.when.this_week');
+                }
+                boolean done = isDone(thisNode)
+                if (!(filterDone && done)) {
+                    result << [node    : thisNode,
+                               action  : naAction,
+                               project : naProject,
+                               context : naContext,
+                               who     : naWho,
+                               when    : naWhen,
+                               priority: naPriority,
+                               nodeID  : naNodeID,
+                               details : naDetails,
+                               notes   : naNotes,
+                               waitFor : naWaitFor,
+                               waitUntil : naWaitUntil,
+                               DONE    : whenDone,
+                               done    : done]
+                }
+            }
+        }
+
+        thisNode.children.each {
+            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday))
+        }
+        return result;
+>>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
     }
 
     private static final String stripHTMLTags(String string) {
