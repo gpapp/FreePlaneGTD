@@ -2,7 +2,10 @@ package freeplaneGTD
 
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.ConvertibleDate
-import org.freeplane.plugin.script.proxy.Proxy
+
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.temporal.ChronoUnit
 
 /**
  * Model for the freeplaneGTD.report pane.
@@ -34,8 +37,8 @@ class ReportModel {
         if (waitUntil instanceof Date) waitUntilDate = waitUntil
         else if (waitUntil instanceof ConvertibleDate) waitUntilDate = waitUntil.calendar.time
 
-        if (!whenDate && !waitUntilDate) {		
-            return waitUntil?: (when?: thisWeekText)
+        if (!whenDate && !waitUntilDate) {
+            return waitUntil ?: (when ?: thisWeekText)
         }
         Date retval
         if (whenDate && !waitUntilDate) retval = whenDate
@@ -62,7 +65,7 @@ class ReportModel {
         if (bw instanceof Date) bd = bw
         else if (bw == todayText) bd = today
         else if (bw == thisWeekText) bd = today + 7
-        if (ad==null && bd==null) {
+        if (ad == null && bd == null) {
             return aw <=> bw
         }
         if (ad && !bd) return -1
@@ -100,7 +103,7 @@ class ReportModel {
     }
 
     def projectList() {
-        Map<String, Object> retval = [type: 'project']
+        Map retval = [type: 'project' as Object]
         List<Map> groups = []
         Map<Object, List> naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
@@ -110,6 +113,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              whenDone : it['whenDone'],
                               time     : it['time'],
                               priority : it['priority'],
                               action   : it['action'],
@@ -130,7 +134,7 @@ class ReportModel {
     }
 
     def delegateList() {
-        Map retval = [type: 'who']
+        Map retval = [type: 'who' as Object]
         List groups = []
         Map naByWhoFull = actionList.groupBy({ it['who'] })
         Map naByWaitForFull = actionList.groupBy({ it['waitFor'] })
@@ -161,6 +165,7 @@ class ReportModel {
                 def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
+                                   whenDone : it['whenDone'],
                                    time     : it['time'],
                                    priority : it['priority'],
                                    action   : it['action'],
@@ -187,7 +192,7 @@ class ReportModel {
     }
 
     def contextList() {
-        Map retval = [type: 'context']
+        Map retval = [type: 'context' as Object]
         List groups = []
         Map naByGroupFull = actionList.groupBy { it['context'] }
         Map naByGroup = [:]
@@ -209,6 +214,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              whenDone : it['whenDone'],
                               time     : it['time'],
                               priority : it['priority'],
                               action   : it['action'],
@@ -229,7 +235,7 @@ class ReportModel {
     }
 
     def timelineList() {
-        Map retval = [type: 'when']
+        Map retval = [type: 'when' as Object]
         List groups = []
         def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
         def naByGroup = sortedList.groupBy { it['time'] }
@@ -239,6 +245,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done    : it['done'],
+                                   whenDone: it['whenDone'],
                                    time    : it['time'],
                                    priority: it['priority'],
                                    action  : it['action'],
@@ -259,6 +266,42 @@ class ReportModel {
                     items << newItem
                 }
                 groups << [title: key, items: items]
+        }
+        retval['groups'] = groups
+        return retval
+    }
+
+    ReportWindow.DONE_TIMELINE doneTimeline(Object time) {
+        if (!time) return ReportWindow.DONE_TIMELINE.EARLIER
+        println "checking $time"
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
+        Date date = DateUtil.normalizeDate(time) as Date
+
+        // today to compare with
+        Date today = new Date()
+
+        // consider today as exactly this day
+        // consider this month as today + month before
+        def days = ChronoUnit.DAYS.between(date.toInstant(), today.toInstant())
+        println "diff days $today->$date = $days"
+        if (days < 0) {
+            throw new IllegalArgumentException("date from future $time")
+        }
+        if (days < 1) return ReportWindow.DONE_TIMELINE.TODAY
+        if (days < 7) return ReportWindow.DONE_TIMELINE.THIS_WEEK
+        return ReportWindow.DONE_TIMELINE.EARLIER
+    }
+
+    def doneTimeline() {
+        Map retval = [type: 'whenDone' as Object]
+        List groups = []
+        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = actionList.findAll {
+            it['done']
+        }.groupBy({ node -> doneTimeline(node['whenDone']) })
+        byDoneTimeline.each {
+                // FIXME: add sorting of values?
+            key, value ->
+                groups << [title: key, items: value]
         }
         retval['groups'] = groups
         return retval

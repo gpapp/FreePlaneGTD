@@ -20,17 +20,13 @@
 //=========================================================
 package freeplaneGTD
 
-import java.util.logging.Level
-import java.util.logging.Logger
-
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
 import org.freeplane.plugin.script.proxy.ScriptUtils
-=======
-import freeplaneGTD.GTDChangeListener
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
+
+import java.util.logging.Level
+import java.util.logging.Logger
 
 //=========================================================
 // references
@@ -45,29 +41,20 @@ import freeplaneGTD.GTDChangeListener
 class GTDMapReader {
     private static GTDMapReader instance = new GTDMapReader()
 
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     String iconNextAction
     String iconProject
     String iconToday
+    String iconWeek
     String iconDone
-	Date today
-    Map contextIcons
-    Map contextAliases 
-    Map delegateAliases
-=======
-    public String iconNextAction
-    public String iconProject
-    public String iconToday
-    public String iconWeek
-    public String iconDone
-    public String iconCancel
-	public Date today
-    public Map contextIcons
-    private String laterText = "Later" // FIXME
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
+    String iconCancel
+    Date today
+    Map<String, String> contextIcons
+    Map<String, String> contextAliases
+    Map<String, String> delegateAliases
+    String laterText = "Later" // FIXME
 
     static GTDMapReader getInstance() {
-		instance.today=new Date().clearTime()
+        instance.today = new Date().clearTime()
         return instance
     }
 
@@ -84,57 +71,49 @@ class GTDMapReader {
     // node['When']  = <when>
     // node['Priority']  = <priority>
     //
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     void convertShorthand() {
         findAliases()
         findIcons()
         internalConvertShorthand()
-		fixAliasesAndIcons()
-=======
-    public void convertShorthand(Proxy.Node rootNode) {
-        findIcons(rootNode)
-        internalConvertShorthand(rootNode)
-        //stupid..
-        GTDChangeListener.register(rootNode)
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
+        fixAliasesAndIcons()
     }
 
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findAliases() {
-		def aliasesFound = ScriptUtils.c().find { it.transformedText.startsWith('Alias: ') }
-		contextAliases = [:]
-		delegateAliases = [:]
+        def aliasesFound = ScriptUtils.c().find { it.transformedText.startsWith('Alias: ') }
+        contextAliases = [:]
+        delegateAliases = [:]
 
-		def contextMatcher = ('' =~/(?:@(\S+)\s*)/)
-        def delegatematcher = ('' =~/(?:\[([^\]]+)\]\s*)/)
-		aliasesFound.each {
-			if (it.transformedText =~ /^Alias:(\s*@\S+){2,}/) {
+        def contextMatcher = ('' =~ /(?:@(\S+)\s*)/)
+        def delegatematcher = ('' =~ /(?:\[([^]]+)]\s*)/)
+        aliasesFound.each {
+            if (it.transformedText =~ /^Alias:(\s*@\S+){2,}/) {
                 contextMatcher.reset(it.transformedText)
-				def res = contextMatcher.collect{it[1]}
-                def key = res[0]
-    			(1..res.size()-1).each {                  
-					def value = res[it]
-					contextAliases[value]=key
-					Logger.getAnonymousLogger().log(Level.INFO, 'Context alias: ' + key + '->' + value)
-				}
-			} else if (it.transformedText =~ /^Alias:\s*(\[([^\]]+)\]\s*){2,}/) {
+                def res = contextMatcher.collect { it[1] }
+                String key = res[0]
+                (1..res.size() - 1).each {
+                    String value = res[it]
+                    contextAliases[value] = key
+                    Logger.getAnonymousLogger().log(Level.INFO, 'Context alias: ' + key + '->' + value)
+                }
+            } else if (it.transformedText =~ /^Alias:\s*(\[([^]]+)]\s*){2,}/) {
                 delegatematcher.reset(it.transformedText)
-				def res = delegatematcher.collect{it[1]}
-				def key = res[0]
-    			(1..res.size()-1).each {                  
-					def value = res[it]
-					delegateAliases[value]=key
-					Logger.getAnonymousLogger().log(Level.INFO, 'Delegate alias: ' + key + '->' + value)
-				}
-			} else {
-                throw new Exception('Aliases must take the format \n'+
-				'\'Alias: @WHAT_TO_ALIAS @ALIAS1 @ALIAS2\'\n'+
-				'\'Alias: [WHO_TO_ALIAS] [ALIAS1] [ALIAS2]\'\n'+
-                'Got: \'' + it.transformedText + '\'\n')
-			}
-		}
-	}
+                def res = delegatematcher.collect { it[1] }
+                String key = res[0]
+                (1..res.size() - 1).each {
+                    String value = res[it]
+                    delegateAliases[value] = key
+                    Logger.getAnonymousLogger().log(Level.INFO, 'Delegate alias: ' + key + '->' + value)
+                }
+            } else {
+                throw new Exception('Aliases must take the format \n' +
+                        '\'Alias: @WHAT_TO_ALIAS @ALIAS1 @ALIAS2\'\n' +
+                        '\'Alias: [WHO_TO_ALIAS] [ALIAS1] [ALIAS2]\'\n' +
+                        'Got: \'' + it.transformedText + '\'\n')
+            }
+        }
+    }
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findIcons() {
@@ -146,14 +125,14 @@ class GTDMapReader {
         iconDone = "button_ok"
         iconCancel = "button_cancel"
         contextIcons = [:]
-		
-		def iconsFound = ScriptUtils.c().find { it.transformedText.startsWith('Icon: ') }         
-		
-		iconsFound.each {
-			String firstIcon = it.icons.first
-			String nodeText = it.transformedText.trim()
 
-            if (firstIcon ==~ /^full\-\d$/) {
+        def iconsFound = ScriptUtils.c().find { it.transformedText.startsWith('Icon: ') }
+
+        iconsFound.each {
+            String firstIcon = it.icons.first
+            String nodeText = it.transformedText.trim()
+
+            if (firstIcon ==~ /^full-\d$/) {
                 throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
             }
             if (nodeText == 'Icon: Next action') {
@@ -162,169 +141,158 @@ class GTDMapReader {
                 iconProject = firstIcon
             } else if (nodeText == 'Icon: Today') {
                 iconToday = firstIcon
+            } else if (nodeText == 'Icon: Week') {
+                iconWeek = firstIcon
             } else if (nodeText == 'Icon: Done') {
                 iconDone = firstIcon
+            } else if (nodeText == 'Icon: Cancel') {
+                iconCancel = firstIcon
             } else if (nodeText =~ '^Icon: @') {
                 String context = nodeText.replaceAll(/^Icon: @(\S*)/, '$1')
                 contextIcons[context] = firstIcon
             }
-		}
+        }
 
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
-        if (['help', iconProject, iconToday, iconDone].contains(iconNextAction)
-=======
-        internalFindIcons(thisNode)
-        if (['help', iconProject, iconToday, iconDone, iconWeek].contains(iconNextAction)
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
+        if (['help', iconProject, iconToday, iconDone, iconCancel, iconWeek].contains(iconNextAction)
                 || contextIcons.values().contains(iconNextAction)) {
             throw new Exception('Trying to reuse icon:' + iconNextAction + ' as \'Next action\'')
         }
-        if (['help', iconNextAction, iconToday, iconDone, iconWeek].contains(iconProject)
+        if (['help', iconNextAction, iconToday, iconDone, iconCancel, iconWeek].contains(iconProject)
                 || contextIcons.values().contains(iconProject)) {
             throw new Exception('Trying to reuse icon:' + iconProject + ' as \'Project\'')
         }
-        if (['help', iconNextAction, iconProject, iconDone, iconWeek].contains(iconToday)
+        if (['help', iconNextAction, iconProject, iconDone, iconCancel, iconWeek].contains(iconToday)
                 || contextIcons.values().contains(iconToday)) {
             throw new Exception('Trying to reuse icon:' + iconToday + ' as \'Today\'')
         }
-        if (['help', iconNextAction, iconProject, iconToday, iconWeek].contains(iconDone)
+        if (['help', iconNextAction, iconProject, iconToday, iconCancel, iconWeek].contains(iconDone)
                 || contextIcons.values().contains(iconDone)) {
             throw new Exception('Trying to reuse icon:' + iconDone + ' as \'Done\'')
         }
-        if (['help', iconNextAction, iconProject, iconToday].contains(iconWeek)
+        if (['help', iconNextAction, iconProject, iconToday, iconCancel].contains(iconWeek)
                 || contextIcons.values().contains(iconDone)) {
             throw new Exception('Trying to reuse icon:' + iconWeek + ' as \'Week\'')
         }
+        if (['help', iconNextAction, iconProject, iconToday, iconWeek].contains(iconCancel)
+                || contextIcons.values().contains(iconCancel)) {
+            throw new Exception('Trying to reuse icon:' + iconWeek + ' as \'Cancel\'')
+        }
         contextIcons.each { context, icon ->
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
-            if (['help', iconNextAction, iconProject, iconToday, iconDone].contains(icon)) {
-                throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'') //'
-=======
-            if (['help', iconNextAction, iconProject, iconToday, iconDone, iconWeek].contains(icon)) {
+            if (['help', iconNextAction, iconProject, iconToday, iconDone, iconCancel, iconWeek].contains(icon)) {
                 throw new Exception('Trying to reuse icon:' + icon + ' as \'@' + context + '\'')
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
             }
         }
     }
-	
-	void fixAliasesAndIcons () {
-		def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
-		
-		taskNodes.each {
-			Proxy.Node thisNode = it
-			// Handle delegate aliases
-			def delegateAttr = thisNode['Who']
-			List delegates = delegateAttr ? delegateAttr.toString().split(',') : []
-			def newDelegates = []
-			delegates.each {
-				def curDelegate = it
-				// convert aliases
-				def aliasMatch = delegateAliases?.keySet().find { it.equalsIgnoreCase(curDelegate) }
-				if (aliasMatch){
-					curDelegate = delegateAliases[aliasMatch]
-				}
-				newDelegates << curDelegate
-			}
-			if (newDelegates?.size()) {
-				thisNode['Who']= newDelegates.unique().join(',')    			
-			}		
 
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
-			// Handle context icons
-			def contextAttr = thisNode['Where']
-			List contexts = contextAttr ? contextAttr.toString().split(',') : []
-			// Add missing attributes from existing icons
-			contextIcons.each {
-				context, icon ->
-					if (thisNode.icons.icons.contains(icon)) {
-						contexts << context
-					}
-			}
-=======
-    // FYI: may use for server callback
-    public List getActionList(Proxy.Node rootNode, boolean filterDone) {
-        return findNextActions(rootNode, filterDone, iconProject, iconNextAction, iconToday)
+    void fixAliasesAndIcons() {
+        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+
+        taskNodes.each {
+            Proxy.Node thisNode = it
+            // Handle delegate aliases
+            def delegateAttr = thisNode['Who']
+            List delegates = delegateAttr ? delegateAttr.toString().split(',') : []
+            def newDelegates = []
+            delegates.each { String curDelegate ->
+                // convert aliases
+                def aliasMatch = delegateAliases?.keySet()?.find { it.equalsIgnoreCase(curDelegate) }
+                if (aliasMatch) {
+                    curDelegate = delegateAliases[aliasMatch]
+                }
+                newDelegates << curDelegate
+            }
+            if (newDelegates?.size()) {
+                thisNode['Who'] = newDelegates.unique().join(',')
+            }
+
+            // Handle context icons
+            def contextAttr = thisNode['Where']
+            List contexts = contextAttr ? contextAttr.toString().split(',') : []
+            // Add missing attributes from existing icons
+            contextIcons.each {
+                context, icon ->
+                    if (thisNode.icons.icons.contains(icon)) {
+                        contexts << context
+                    }
+            }
+
+            def newContexts = []
+            contexts.each { String curContext ->
+                // convert aliases
+                def aliasMatch = contextAliases?.keySet()?.find { it.equalsIgnoreCase(curContext) }
+                if (aliasMatch) {
+                    curContext = contextAliases[aliasMatch]
+                }
+                // Add icons for simple matches
+                if (contextIcons.keySet().contains(curContext)) {
+                    newContexts << curContext
+                    addIconIfNotExists(thisNode, contextIcons[curContext])
+                } else {
+                    def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
+                    Logger.getAnonymousLogger().log(Level.INFO, 'Replace close match: ' + curContext + '->' + closeMatch + '<-' + contextIcons)
+                    if (closeMatch) {
+                        newContexts << closeMatch
+                        addIconIfNotExists(thisNode, contextIcons[closeMatch])
+                    } else {
+                        newContexts << curContext
+                    }
+                }
+            }
+            contexts = newContexts
+            if (contexts?.size()) {
+                thisNode['Where'] = contexts.unique().join(',')
+            }
+
+            // Remove priority icon if exists
+            thisNode.icons.each {
+                if (it ==~ /^full-\d$/) {
+                    thisNode.icons.remove(it)
+                }
+            }
+            // Add priority icon if attribute exists
+            def priorityAttr = thisNode['Priority']
+            if (priorityAttr) {
+                String priorityIcon = 'full-' + priorityAttr
+                thisNode.icons.add(priorityIcon)
+            }
+        }
     }
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
 
-			def newContexts = []
-			contexts.each {
-				def curContext = it
-				// convert aliases
-				def aliasMatch = contextAliases?.keySet().find { it.equalsIgnoreCase(curContext) }
-				if (aliasMatch){
-					curContext = contextAliases[aliasMatch]
-				}
-				// Add icons for simple matches
-				if (contextIcons.keySet().contains(curContext)) {
-					newContexts << curContext
-					addIconIfNotExists (thisNode, contextIcons[curContext])
-				} else {
-					def closeMatch = contextIcons.keySet().find { it.equalsIgnoreCase(curContext) }
-					Logger.getAnonymousLogger().log(Level.INFO, 'Replace close match: ' + curContext + '->' + closeMatch + '<-' + contextIcons)
-					if (closeMatch) {
-						newContexts << closeMatch
-						addIconIfNotExists (thisNode, contextIcons[closeMatch])
-					} else {
-						newContexts << curContext
-					}
-				}					
-			}
-			contexts = newContexts
-			if (contexts?.size()) {
-				thisNode['Where']= contexts.unique().join(',')    			
-			}					
-			
-			// Remove priority icon if exists
-			thisNode.icons.each {
-				if (it ==~ /^full\-\d$/) {
-					thisNode.icons.remove(it)
-				}
-			}
-			// Add priority icon if attribute exists
-			def priorityAttr = thisNode['Priority']
-			if (priorityAttr) {
-				String priorityIcon = 'full-' + priorityAttr
-				thisNode.icons.add(priorityIcon)
-			}
-		}		
-	}
-
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
     List getActionList(boolean filterDone) {
-		def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
-		
-		def result = []
-		// include result if it has next action icon and its not the icon setting node for next actions
-		taskNodes.each {
-			Proxy.Node thisNode = it
-			def icons = thisNode.icons.icons
-			def naNodeID = thisNode.id
-			// use index method to get attributes
-			String naContext = thisNode['Where'].toString()
-			String naWho = thisNode['Who'].toString()
-			Object naWhen = thisNode['When']
-			Object naWaitFor = thisNode['WaitFor']
-			Object naWaitUntil = thisNode['WaitUntil']
-			String naPriority = thisNode['Priority'].toString()
+        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
 
-			// take care of missing attributes. null or empty string evaluates as boolean false
-			if (!naWhen) {
-				naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
-			} else {
-				naWhen = DateUtil.normalizeDate(naWhen)			
-				thisNode['When'] = naWhen
-			}		
-			if ((naWhen!=null) && (naWhen instanceof Date)){
-				if(today.equals(naWhen.clearTime())) {
-					naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
-				}
-			}
-			
-			if (naWaitUntil) {
-				naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
-				thisNode['WaitUntil'] = naWaitUntil
-			}
+        def result = []
+        // include result if it has next action icon and its not the icon setting node for next actions
+        taskNodes.each {
+            Proxy.Node thisNode = it
+            def icons = thisNode.icons.icons
+            def naNodeID = thisNode.id
+            // use index method to get attributes
+            String naContext = thisNode['Where'].toString()
+            String naWho = thisNode['Who'].toString()
+            Object naWhen = thisNode['When']
+            Object naWaitFor = thisNode['WaitFor']
+            Object naWaitUntil = thisNode['WaitUntil']
+            String naPriority = thisNode['Priority'].toString()
+            Object naWhenDone = thisNode['WhenDone']
+
+            // take care of missing attributes. null or empty string evaluates as boolean false
+            if (!naWhen) {
+                naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
+            } else {
+                naWhen = DateUtil.normalizeDate(naWhen)
+                thisNode['When'] = naWhen
+            }
+            if ((naWhen != null) && (naWhen instanceof Date)) {
+                if (today == naWhen.clearTime()) {
+                    naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+                }
+            }
+
+            if (naWaitUntil) {
+                naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
+                thisNode['WaitUntil'] = naWaitUntil
+            }
 
             String naAction = thisNode.transformedText
             if (!(naAction =~ /Icon:/)) {
@@ -334,41 +302,23 @@ class GTDMapReader {
                 if (icons.contains(iconToday)) {
                     naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
                 }
-                boolean done = icons.contains(iconDone)
+                boolean done = isDone(it)
                 if (!(filterDone && done)) {
-                    result << [node    : thisNode,
-                               action  : naAction,
-                               project : naProject,
-                               context : naContext,
-                               who     : naWho,
-                               when    : naWhen,
-                               priority: naPriority,
-                               nodeID  : naNodeID,
-                               details : naDetails,
-                               notes   : naNotes,
-                               waitFor : naWaitFor,
-                               waitUntil : naWaitUntil,
-                               done    : done]
+                    result << [node     : thisNode,
+                               action   : naAction,
+                               project  : naProject,
+                               context  : naContext,
+                               who      : naWho,
+                               when     : naWhen,
+                               priority : naPriority,
+                               nodeID   : naNodeID,
+                               details  : naDetails,
+                               notes    : naNotes,
+                               waitFor  : naWaitFor,
+                               waitUntil: naWaitUntil,
+                               whenDone : naWhenDone,
+                               done     : done]
                 }
-=======
-        if (nodeText =~ '^Icon:') {
-            if (firstIcon ==~ /^full\-\d$/) {
-                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
-            }
-            if (nodeText == 'Icon: Next action') {
-                iconNextAction = firstIcon
-            } else if (nodeText == 'Icon: Project') {
-                iconProject = firstIcon
-            } else if (nodeText == 'Icon: Today') {
-                iconToday = firstIcon
-            } else if (nodeText == 'Icon: Done') {
-                iconDone = firstIcon
-            } else if (nodeText == 'Icon: Week') {
-                iconWeek = firstIcon
-            } else if (nodeText =~ '^Icon: @') {
-                String context = nodeText.replaceAll('^Icon: @([^\\s]*)', '$1');
-                contextIcons[context] = firstIcon
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
             }
         }
 
@@ -386,51 +336,51 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     void internalConvertShorthand() {
-		def questionNodes = ScriptUtils.c().find { it.transformedText.startsWith('?') }
-		
-		questionNodes.each{
-			String nodeText = it.transformedText.trim()
+        def questionNodes = ScriptUtils.c().find { it.transformedText.startsWith('?') }
+
+        questionNodes.each {
+            String nodeText = it.transformedText.trim()
             nodeText = nodeText.substring(1).trim()
             it.text = nodeText
             it.icons.add('help')
-		}
-		
-		def unparsedNodes = ScriptUtils.c().find { it.transformedText.startsWith('*') }
-		
-		unparsedNodes.each{
-			Proxy.Node thisNode = it
-			String nodeText = thisNode.transformedText.trim()
+        }
 
-			Map fields = parseShorthand(nodeText)
-			thisNode.text = fields['action']
+        def unparsedNodes = ScriptUtils.c().find { it.transformedText.startsWith('*') }
 
-			def nodeAttr = [:] as Map<String, Object>
-			thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
+        unparsedNodes.each {
+            Proxy.Node thisNode = it
+            String nodeText = thisNode.transformedText.trim()
 
-			if (fields['context']) nodeAttr['Where'] = fields['context']
-			if (fields['delegate']) nodeAttr['Who'] = fields['delegate']
-			if (fields['when']) nodeAttr['When'] = fields['when']
-			if (fields['priority']) nodeAttr['Priority'] = fields['priority']
+            Map fields = parseShorthand(nodeText)
+            thisNode.text = fields['action']
 
-			thisNode.icons.each {
-				if (it ==~ /^full\-\d$/) {
-					nodeAttr['Priority'] = it[5]
-				}
-			}
+            def nodeAttr = [:] as Map<String, Object>
+            thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
 
-			addIconIfNotExists (thisNode, iconNextAction)
+            if (fields['context']) nodeAttr['Where'] = fields['context']
+            if (fields['delegate']) nodeAttr['Who'] = fields['delegate']
+            if (fields['when']) nodeAttr['When'] = fields['when']
+            if (fields['priority']) nodeAttr['Priority'] = fields['priority']
 
-			// set new attributes for the node
-			thisNode.attributes = nodeAttr
-		}
-		
+            thisNode.icons.each {
+                if (it ==~ /^full-\d$/) {
+                    nodeAttr['Priority'] = it[5]
+                }
+            }
+
+            addIconIfNotExists(thisNode, iconNextAction)
+
+            // set new attributes for the node
+            thisNode.attributes = nodeAttr
+        }
+
     }
-	
-	private static void addIconIfNotExists (Proxy.Node node, String icon) {
-		if (!node.icons.icons.contains(icon)) {
-			node.icons.add(icon)
-		}
-	}
+
+    private static void addIconIfNotExists(Proxy.Node node, String icon) {
+        if (!node.icons.icons.contains(icon)) {
+            node.icons.add(icon)
+        }
+    }
     //--------------------------------------------------------------
     // find parent for the next action, either direct (task) or indirect (project)
     private static String findNextActionProject(Proxy.Node thisNode, String iconProject) {
@@ -445,104 +395,12 @@ class GTDMapReader {
                 walker = walker.parent
             }
         }
-<<<<<<< HEAD:src/resources/zips/lib/freeplaneGTD/GTDMapReader.groovy
         return retval ? retval : parentNode.transformedText
-=======
-        return retval ? retval : stripHTMLTags(parentNode.text);
     }
 
-    //--------------------------------------------------------------
-    // substitutes multiline text to its first line + "..."
-    private
-    def trunc(String str) {
-        def splitted = str.split("\n")
-        def res = splitted[0]
-
-        if (splitted.size() > 1) {
-            res += "..."
-        }
-        return res
-    }
-
-    private
-    def isDone(Proxy.Node node) {
-        def icons = node.icons.icons;
+    private boolean isDone(Proxy.Node node) {
+        def icons = node.icons.icons
         return icons.contains(iconDone) || icons.contains(iconCancel)
-    }
-
-    //--------------------------------------------------------------
-    // recursive walk through nodes to find Next Actions
-    private
-    def findNextActions(Proxy.Node thisNode, boolean filterDone, String iconProject, String iconNextAction, String iconToday) {
-        def icons = thisNode.icons.icons;
-        def naNodeID = thisNode.id;
-
-        // use index method to get attributes
-        String naContext = thisNode['Where'].toString()
-        String naWho = thisNode['Who'].toString()
-        Object naWhen = thisNode['When']
-        Object naWaitFor = thisNode['WaitFor']
-        Object naWaitUntil = thisNode['WaitUntil']
-        String naPriority = thisNode['Priority'].toString()
-        String whenDone = thisNode['DONE'].toString()
-
-        // take care of missing attributes. null or empty string evaluates as boolean false
-        if (!naWhen) {
-            naWhen = laterText
-        } else {
-            naWhen = DateUtil.normalizeDate(naWhen)			
-            thisNode['When'] = naWhen
-        }		
-		if ((naWhen!=null) && (naWhen instanceof Date)){
-			if(today.equals(naWhen.clearTime())) {
-				naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
-			}
-		}
-		
-        if (naWaitUntil) {
-            naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
-            thisNode['WaitUntil'] = naWaitUntil
-        }
-
-        def result = [];
-        // include result if it has next action icon and its not the icon setting node for next actions
-        if (icons.contains(iconNextAction)) {
-            String naAction = stripHTMLTags(trunc(thisNode.text))
-            if (!(naAction =~ /Icon:/)) {
-                String naDetails = stripHTMLTags(thisNode.detailsText)
-                String naNotes = stripHTMLTags(thisNode.noteText)
-                String naProject = findNextActionProject(thisNode, iconProject);
-                // if a node has both today and week icons then will use today
-                if (icons.contains(iconToday)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today');
-                } else if (icons.contains(iconWeek)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.this_week');
-                }
-                boolean done = isDone(thisNode)
-                if (!(filterDone && done)) {
-                    result << [node    : thisNode,
-                               action  : naAction,
-                               project : naProject,
-                               context : naContext,
-                               who     : naWho,
-                               when    : naWhen,
-                               priority: naPriority,
-                               nodeID  : naNodeID,
-                               details : naDetails,
-                               notes   : naNotes,
-                               waitFor : naWaitFor,
-                               waitUntil : naWaitUntil,
-                               DONE    : whenDone,
-                               done    : done]
-                }
-            }
-        }
-
-        thisNode.children.each {
-            result.addAll(findNextActions(it, filterDone, iconProject, iconNextAction, iconToday))
-        }
-        return result;
->>>>>>> later_tasks:src/zips/lib/freeplaneGTD/GTDMapReader.groovy
     }
 
     private static final String stripHTMLTags(String string) {
@@ -565,25 +423,25 @@ class GTDMapReader {
 
         String toParse = nodeText
         def delegates = []
-        while (toParse.matches(/^.*\[([^\]]*)\].*$/)) {
-            delegates.addAll(toParse.replaceFirst(/[^\[]*\[([^\]]*)\].*/, '$1').toString().split(',')*.trim())
-            toParse = toParse.replaceFirst(/\s*\[[^\]]*\]\s*/, ' ').trim()
+        while (toParse.matches(/^.*\[([^]]*)].*$/)) {
+            delegates.addAll(toParse.replaceFirst(/[^\[]*\[([^]]*)].*/, '$1').toString().split(',')*.trim())
+            toParse = toParse.replaceFirst(/\s*\[[^]]*]\s*/, ' ').trim()
         }
         if (delegates) {
             fields['delegate'] = delegates.unique().join(',')
         }
         if (toParse.indexOf('{') >= 0) {
-            fields['when'] = DateUtil.normalizeDate(toParse.replaceAll(/^.*\{(.*)\}.*$/, '$1').trim())
-            toParse = toParse.replaceAll(/\s*\{.*\}\s*/, ' ').trim()
+            fields['when'] = DateUtil.normalizeDate(toParse.replaceAll(/^.*\{(.*)}.*$/, '$1').trim())
+            toParse = toParse.replaceAll(/\s*\{.*}\s*/, ' ').trim()
         }
         if (toParse =~ /#\d/) {
             fields['priority'] = toParse.replaceAll(/^.*#(\d).*$/, '$1').trim()
             toParse = toParse.replaceAll(/#\d/, ' ').trim()
         }
         def contexts = []
-        while (toParse =~ /^[^@]*@([^@\s\*]+).*/) {
-            contexts.addAll(toParse.replaceFirst(/^[^@]*@([^@\s\*]+).*/, '$1').toString().split(',')*.trim())
-            toParse = toParse.replaceFirst(/\s*@[^@\s\*]+\s*/, ' ').trim()
+        while (toParse =~ /^[^@]*@([^@\s*]+).*/) {
+            contexts.addAll(toParse.replaceFirst(/^[^@]*@([^@\s*]+).*/, '$1').toString().split(',')*.trim())
+            toParse = toParse.replaceFirst($/\s*@[^@\s*]+\s*/$, ' ').trim()
         }
         if (contexts) {
             fields['context'] = contexts.unique().join(',')
