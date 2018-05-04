@@ -1,7 +1,7 @@
-<map version="freeplane 1.5.9">
+<map version="freeplane 1.6.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
 <node LOCALIZED_TEXT="new_mindmap" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1283093380553"><hook NAME="MapStyle">
-    <properties fit_to_viewport="false;" show_icon_for_attributes="true" show_note_icons="true"/>
+    <properties show_icon_for_attributes="true" show_note_icons="true" fit_to_viewport="false;"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
@@ -55,7 +55,7 @@
 </map_styles>
 </hook>
 <hook NAME="AutomaticEdgeColor" COUNTER="9" RULE="ON_BRANCH_CREATION"/>
-<node TEXT="Action tests" FOLDED="true" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
+<node TEXT="Action tests" POSITION="right" ID="ID_1890009009" CREATED="1413667814847" MODIFIED="1413840466701">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
 
@@ -148,7 +148,7 @@
 <node TEXT="* abc @bde [me] {v1.0}" ID="ID_591419351" CREATED="1413839958312" MODIFIED="1413839972030"/>
 <node TEXT="* KILLER &lt;&gt;" ID="ID_1764118338" CREATED="1425073942429" MODIFIED="1425073952727"/>
 </node>
-<node TEXT="Shorthand tests" FOLDED="true" POSITION="right" ID="ID_1488226184" CREATED="1413840469105" MODIFIED="1413840511178">
+<node TEXT="Shorthand tests" POSITION="right" ID="ID_1488226184" CREATED="1413840469105" MODIFIED="1413840511178">
 <edge COLOR="#ff00ff"/>
 <richcontent TYPE="NOTE">
 
@@ -176,13 +176,12 @@
 </node>
 <node TEXT="* aa #3" ID="ID_743874059" CREATED="1421399779261" MODIFIED="1421399790869"/>
 <node TEXT="* #43 dodo" ID="ID_973470716" CREATED="1421399792202" MODIFIED="1421399807938"/>
-<node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1421403498651">
+<node TEXT="* #5 nah" ID="ID_211000701" CREATED="1421399809202" MODIFIED="1525472082597">
 <attribute_layout VALUE_WIDTH="326.2499902769926 pt"/>
-<attribute NAME="i" VALUE="=(node.text.matches(&apos;#\\d&apos;)"/>
 <attribute NAME="j" VALUE="=node.text"/>
 </node>
 </node>
-<node TEXT="Context icon tests" FOLDED="true" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
+<node TEXT="Context icon tests" POSITION="right" ID="ID_596843020" CREATED="1414538178214" MODIFIED="1414538187291">
 <edge COLOR="#7c0000"/>
 <node TEXT="* doit @Home" ID="ID_1683724110" CREATED="1414538189836" MODIFIED="1414538207409"/>
 <node TEXT="doit" ID="ID_1820217533" CREATED="1414538208273" MODIFIED="1414538278587">
@@ -201,7 +200,7 @@
 </node>
 </node>
 </node>
-<node TEXT="Priority icon tests" FOLDED="true" POSITION="right" ID="ID_1127701216" CREATED="1421401059533" MODIFIED="1421401066512">
+<node TEXT="Priority icon tests" POSITION="right" ID="ID_1127701216" CREATED="1421401059533" MODIFIED="1421401066512">
 <edge COLOR="#007c00"/>
 <node TEXT="ny&#xfa;l" ID="ID_7975647" CREATED="1421400996628" MODIFIED="1421401036596">
 <icon BUILTIN="full-1"/>
