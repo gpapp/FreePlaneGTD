@@ -23,7 +23,7 @@ abstract class DoneMover {
         if (projectDir.icons.contains(mapReader.iconProject)) {
             Proxy.Node targetProjectDir = targetParentDir.children.find { it.text == projectDir.text }
             if (!targetProjectDir) {
-                targetProjectDir = targetParentDir.appendChild(projectDir);
+                targetProjectDir = targetParentDir.appendChild(projectDir)
             }
             return targetProjectDir
         }
@@ -34,9 +34,13 @@ abstract class DoneMover {
         // Must reread it every time in case the configuration nodes were changed
         mapReader.findIcons()
         mapReader.internalConvertShorthand()
+        if (node.text.equals("Archives")) {
+            return
+        }
 
         if (!node.icons.contains(mapReader.iconNextAction) || !node.icons.contains(mapReader.iconDone )) {
             node.children.each {
+                Proxy.Node it ->
                 if (it==targetDir){
                     return
                 }
