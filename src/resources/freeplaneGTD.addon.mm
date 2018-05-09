@@ -325,7 +325,6 @@
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/mover/ReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/mover/ArchiveTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/editor/ActionEditor.groovy"/>
-<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/lib/jfxrt.jar"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/freeplaneGTD.ReportWindow.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/NodeLink.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ParseShorthand.groovy"/>
@@ -346,8 +345,6 @@
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/editor/MultinodeActionEditor.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/GTDChangeListener.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/scripts/init/AddGTDChangeListener.groovy"/>
-<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/lib/jfxswt.jar"/>
-<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/lib/javafx.properties"/>
 </node>
 <node TEXT="scripts" FOLDED="true" POSITION="right" ID="ID_111817827" CREATED="1323057303804" MODIFIED="1525898550752">
 <edge COLOR="#999999" WIDTH="3"/>
@@ -574,9 +571,6 @@
 </html>
 
 </richcontent>
-<node TEXT="jfxrt.jar" ID="ID_869025678" CREATED="1525898306750" MODIFIED="1525898306751"/>
-<node TEXT="jfxswt.jar" ID="ID_747630203" CREATED="1525898550790" MODIFIED="1525898550792"/>
-<node TEXT="javafx.properties" ID="ID_1963074277" CREATED="1525898550793" MODIFIED="1525898550794"/>
 </node>
 <node TEXT="zips" POSITION="right" ID="ID_1927628745" CREATED="1323057303835" MODIFIED="1525898550800">
 <edge COLOR="#999999" WIDTH="3"/>

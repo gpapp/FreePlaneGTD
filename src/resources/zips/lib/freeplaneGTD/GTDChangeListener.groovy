@@ -1,20 +1,35 @@
 package freeplaneGTD
 
+import org.freeplane.features.attribute.AttributeController
+import org.freeplane.features.icon.MindIcon
 import org.freeplane.features.map.AMapChangeListenerAdapter
 import org.freeplane.features.map.NodeChangeEvent
 import org.freeplane.features.map.NodeModel
+import org.freeplane.features.mode.Controller
+import org.freeplane.plugin.script.proxy.Proxy
+import org.freeplane.plugin.script.proxy.ProxyFactory
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class GTDChangeListener extends AMapChangeListenerAdapter {
+    GTDMapReader reader;
+
+    GTDChangeListener (){
+        reader = GTDMapReader.instance
+    }
+    ReportWindow getReportWindow() {
+        return Controller.currentController.metaClass.getGtdReportWindow ?
+                Controller.currentController.getGtdReportWindow() : null
+    }
 
     void nodeChanged(NodeChangeEvent event) {
         // freeplane doesn't previous state of a node
         // so will make some assumptions
         try {
 
-            NodeModel node = event.getNode()
+            NodeModel nodeModel = event.getNode()
+            Node node = ProxyFactory.createNode(nodeModel, null)
             if (node) {
                 if (!isTask(node)) {
                     System.out.print('ignore - it isnt a task, remove if it has done mark')
@@ -38,39 +53,31 @@ class GTDChangeListener extends AMapChangeListenerAdapter {
         }
     }
 
-    //TBD: change to proxy
-    private boolean _is(NodeModel node, String iconName) {
-        //System.out.print("checking " + node.toString() + " for " + iconName)
-        def icons = node.getIcons()
-        // consider that we are working with MindIcon not Proxy.Icon
-        return icons.find { it.getName().equals(iconName) }
+    private boolean hasIcon(Proxy.Node node, String iconName) {
+        Proxy.Icons icons = node.getIcons()
+        return icons.find { String it -> it.equals(iconName) }
     }
 
-    private boolean isTask(NodeModel node) {
-        return _is(node, 'yes')
+    private boolean isTask(Proxy.Node node) {
+        return hasIcon(node, 'yes')
     }
 
-    private boolean isDone(NodeModel node) {
-        return _is(node, 'button_ok')
+    private boolean isDone(Proxy.Node node) {
+        return hasIcon(node, 'button_ok')
     }
 
-    private boolean isPrevioslyDone(NodeModel node) {
-        def res = node.getAt("DONE")
+    private boolean isPrevioslyDone(Proxy.Node node) {
+        def res = node['DONE']
         println "$node is previously " + (res ? "" : "not") + " done"
         return res
     }
 
-    private markDone(NodeModel node) {
-        node.attributes = [DONE: getNowString()]
+    private markDone(Proxy.Node node) {
+        node['DONE'] = getNowString()
     }
 
-    private removeDone(pnode) {
-        pnode.attributes = [:]
+    private removeDone(Proxy.Node node) {
+        node.attributes = [:]
     }
 
-    private getNowString() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
 }
