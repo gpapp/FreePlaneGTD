@@ -25,14 +25,15 @@ import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
-import java.util.logging.Level
-import java.util.logging.Logger
+import java.util.regex.Matcher
 
 //---------------------------------------------------------
 // GTDMapReader: reads and parses GTD map for next actions
 //---------------------------------------------------------
 class GTDMapReader {
     private static GTDMapReader instance = new GTDMapReader()
+    private static Matcher contextMatcher = ('' =~ /(?:@(\S+)\s*)/)
+    private static Matcher delegateMatcher = ('' =~ /(?:\[([^]]+)]\s*)/)
 
     String iconNextAction
     String iconProject
@@ -71,42 +72,73 @@ class GTDMapReader {
         fixAliasesAndIcons()
     }
 
+    static boolean isShorthandTask(Proxy.Node it) {
+        it.transformedText.startsWith('*')
+    }
+
+    static boolean isShorthandQuestion(Proxy.Node it) {
+        it.transformedText.startsWith('?')
+    }
+
+    static boolean isConfigAlias(Proxy.Node it) {
+        it.transformedText.startsWith('Alias: ')
+    }
+
+    static boolean isConfigIcon(Proxy.Node it) {
+        it.transformedText.startsWith('Icon: ')
+    }
+
+    boolean isTask(Proxy.Node node) {
+        if (!iconNextAction) {
+            findIcons()
+            findAliases()
+        }
+        node.icons.contains(iconNextAction)
+    }
+
+    boolean isDone(Proxy.Node node) {
+        if (!iconNextAction) {
+            findIcons()
+            findAliases()
+        }
+        def icons = node.icons.icons
+        return icons.contains(iconDone) || icons.contains(iconCancel)
+    }
+
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findAliases() {
-        def aliasesFound = ScriptUtils.c().find { it.transformedText.startsWith('Alias: ') }
+        def aliasesFound = ScriptUtils.c().find { Proxy.Node it -> isConfigAlias(it) }
         contextAliases = [:]
         delegateAliases = [:]
 
-        def contextMatcher = ('' =~ /(?:@(\S+)\s*)/)
-        def delegatematcher = ('' =~ /(?:\[([^]]+)]\s*)/)
         aliasesFound.each {
-            if (it.transformedText =~ /^Alias:(\s*@\S+){2,}/) {
-                contextMatcher.reset(it.transformedText)
-                def res = contextMatcher.collect { it[1] }
-                String key = res[0]
-                (1..res.size() - 1).each {
-                    String value = res[it]
-                    contextAliases[value] = key
-                    Logger.getAnonymousLogger().log(Level.INFO, 'Context alias: ' + key + '->' + value)
+            Proxy.Node it ->
+                if (it.transformedText =~ /^Alias:(\s*@\S+){2,}/) {
+                    contextMatcher.reset(it.transformedText)
+                    def res = contextMatcher.collect { it[1] }
+                    String key = res[0]
+                    (1..res.size() - 1).each {
+                        String value = res[it]
+                        contextAliases[value] = key
+                    }
+                } else if (it.transformedText =~ /^Alias:\s*(\[([^]]+)]\s*){2,}/) {
+                    delegateMatcher.reset(it.transformedText)
+                    def res = delegateMatcher.collect { it[1] }
+                    String key = res[0]
+                    (1..res.size() - 1).each {
+                        String value = res[it]
+                        delegateAliases[value] = key
+                    }
+                } else {
+                    throw new Exception('Aliases must take the format \n' +
+                            '\'Alias: @WHAT_TO_ALIAS @ALIAS1 @ALIAS2\'\n' +
+                            '\'Alias: [WHO_TO_ALIAS] [ALIAS1] [ALIAS2]\'\n' +
+                            'Got: \'' + it.transformedText + '\'\n')
                 }
-            } else if (it.transformedText =~ /^Alias:\s*(\[([^]]+)]\s*){2,}/) {
-                delegatematcher.reset(it.transformedText)
-                def res = delegatematcher.collect { it[1] }
-                String key = res[0]
-                (1..res.size() - 1).each {
-                    String value = res[it]
-                    delegateAliases[value] = key
-                    Logger.getAnonymousLogger().log(Level.INFO, 'Delegate alias: ' + key + '->' + value)
-                }
-            } else {
-                throw new Exception('Aliases must take the format \n' +
-                        '\'Alias: @WHAT_TO_ALIAS @ALIAS1 @ALIAS2\'\n' +
-                        '\'Alias: [WHO_TO_ALIAS] [ALIAS1] [ALIAS2]\'\n' +
-                        'Got: \'' + it.transformedText + '\'\n')
-            }
         }
     }
+
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findIcons() {
@@ -119,31 +151,32 @@ class GTDMapReader {
         iconCancel = "button_cancel"
         contextIcons = [:]
 
-        def iconsFound = ScriptUtils.c().find { it.transformedText.startsWith('Icon: ') }
+        def iconsFound = ScriptUtils.c().find { Proxy.Node it -> isConfigIcon(it) }
 
         iconsFound.each {
-            String firstIcon = it.icons.first
-            String nodeText = it.transformedText.trim()
+            Proxy.Node it ->
+                String firstIcon = it.icons.first
+                String nodeText = it.transformedText.trim()
 
-            if (firstIcon ==~ /^full-\d$/) {
-                throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
-            }
-            if (nodeText == 'Icon: Next action') {
-                iconNextAction = firstIcon
-            } else if (nodeText == 'Icon: Project') {
-                iconProject = firstIcon
-            } else if (nodeText == 'Icon: Today') {
-                iconToday = firstIcon
-            } else if (nodeText == 'Icon: Week') {
-                iconWeek = firstIcon
-            } else if (nodeText == 'Icon: Done') {
-                iconDone = firstIcon
-            } else if (nodeText == 'Icon: Cancel') {
-                iconCancel = firstIcon
-            } else if (nodeText =~ '^Icon: @') {
-                String context = nodeText.replaceAll(/^Icon: @(\S*)/, '$1')
-                contextIcons[context] = firstIcon
-            }
+                if (firstIcon ==~ /^full-\d$/) {
+                    throw new Exception('Trying to reuse priority icon:' + firstIcon + ' on node ' + nodeText)
+                }
+                if (nodeText == 'Icon: Next action') {
+                    iconNextAction = firstIcon
+                } else if (nodeText == 'Icon: Project') {
+                    iconProject = firstIcon
+                } else if (nodeText == 'Icon: Today') {
+                    iconToday = firstIcon
+                } else if (nodeText == 'Icon: Week') {
+                    iconWeek = firstIcon
+                } else if (nodeText == 'Icon: Done') {
+                    iconDone = firstIcon
+                } else if (nodeText == 'Icon: Cancel') {
+                    iconCancel = firstIcon
+                } else if (nodeText =~ '^Icon: @') {
+                    String context = nodeText.replaceAll(/^Icon: @(\S*)/, '$1')
+                    contextIcons[context] = firstIcon
+                }
         }
 
         if (['help', iconProject, iconToday, iconDone, iconCancel, iconWeek].contains(iconNextAction)
@@ -177,77 +210,87 @@ class GTDMapReader {
         }
     }
 
+
     void fixAliasesAndIcons() {
         def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
 
         taskNodes.each {
-            Proxy.Node thisNode = it
-            // Handle delegate aliases
-            def delegateAttr = thisNode['Who']
-            List delegates = delegateAttr ? delegateAttr.toString().split(',') : []
-            def newDelegates = []
-            delegates.each { String curDelegate ->
-                // convert aliases
-                def aliasMatch = delegateAliases?.keySet()?.find { it.equalsIgnoreCase(curDelegate) }
-                if (aliasMatch) {
-                    curDelegate = delegateAliases[aliasMatch]
-                }
-                newDelegates << curDelegate
-            }
-            if (newDelegates?.size()) {
-                thisNode['Who'] = newDelegates.unique().join(',')
-            }
+            fixAliasesAndIconsForNode(it)
+        }
+    }
 
-            // Handle context icons
-            def contextAttr = thisNode['Where']
-            List contexts = contextAttr ? contextAttr.toString().split(',') : []
-            // Add missing attributes from existing icons
-            contextIcons.each {
-                context, icon ->
-                    if (thisNode.icons.icons.contains(icon)) {
-                        contexts << context
-                    }
+    void fixAliasesAndIconsForNode(Proxy.Node it) {
+        Proxy.Node thisNode = it
+        // Handle delegate aliases
+        def delegateAttr = thisNode['Who']
+        def delegates = [] as List<String>
+        if (delegateAttr) {
+            delegates = delegateAttr.toString().split(',')
+        }
+        List newDelegates = [] as List<String>
+        delegates.each { String curDelegate ->
+            // convert aliases
+            def aliasMatch = delegateAliases?.keySet()?.find { it.equalsIgnoreCase(curDelegate) }
+            if (aliasMatch) {
+                curDelegate = delegateAliases[aliasMatch]
             }
+            newDelegates << curDelegate
+        }
+        if (newDelegates?.size()) {
+            thisNode['Who'] = newDelegates.unique().join(',')
+        }
 
-            def newContexts = []
-            contexts.each { String curContext ->
-                // convert aliases
-                def aliasMatch = contextAliases?.keySet()?.find { it.equalsIgnoreCase(curContext) }
-                if (aliasMatch) {
-                    curContext = contextAliases[aliasMatch]
+        // Handle context icons
+        def contextAttr = thisNode['Where']
+        List contexts = [] as List<String>
+        if (contextAttr) {
+            contexts.addAll(contextAttr.toString().split(','))
+        }
+        // Add missing attributes from existing icons
+        contextIcons.each {
+            context, icon ->
+                if (thisNode.icons.icons.contains(icon)) {
+                    contexts << context
                 }
-                // Add icons for simple matches
-                if (contextIcons.keySet().contains(curContext)) {
-                    newContexts << curContext
-                    addIconIfNotExists(thisNode, contextIcons[curContext])
+        }
+
+        List newContexts = [] as List<String>
+        contexts.each { String curContext ->
+            // convert aliases
+            def aliasMatch = contextAliases?.keySet()?.find { it.equalsIgnoreCase(curContext) }
+            if (aliasMatch) {
+                curContext = contextAliases[aliasMatch]
+            }
+            // Add icons for simple matches
+            if (contextIcons.keySet().contains(curContext)) {
+                newContexts << curContext
+                addIconIfNotExists(thisNode, contextIcons[curContext])
+            } else {
+                def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
+                if (closeMatch) {
+                    newContexts << closeMatch
+                    addIconIfNotExists(thisNode, contextIcons[closeMatch])
                 } else {
-                    def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
-                    Logger.getAnonymousLogger().log(Level.INFO, 'Replace close match: ' + curContext + '->' + closeMatch + '<-' + contextIcons)
-                    if (closeMatch) {
-                        newContexts << closeMatch
-                        addIconIfNotExists(thisNode, contextIcons[closeMatch])
-                    } else {
-                        newContexts << curContext
-                    }
+                    newContexts << curContext
                 }
             }
-            contexts = newContexts
-            if (contexts?.size()) {
-                thisNode['Where'] = contexts.unique().join(',')
-            }
+        }
+        contexts = newContexts
+        if (contexts?.size()) {
+            thisNode['Where'] = contexts.unique().join(',')
+        }
 
-            // Remove priority icon if exists
-            thisNode.icons.each {
-                if (it ==~ /^full-\d$/) {
-                    thisNode.icons.remove(it)
-                }
+        // Remove priority icon if exists
+        thisNode.icons.each {
+            if (it ==~ /^full-\d$/) {
+                thisNode.icons.remove(it)
             }
-            // Add priority icon if attribute exists
-            def priorityAttr = thisNode['Priority']
-            if (priorityAttr) {
-                String priorityIcon = 'full-' + priorityAttr
-                thisNode.icons.add(priorityIcon)
-            }
+        }
+        // Add priority icon if attribute exists
+        def priorityAttr = thisNode['Priority']
+        if (priorityAttr) {
+            String priorityIcon = 'full-' + priorityAttr
+            thisNode.icons.add(priorityIcon)
         }
     }
 
@@ -329,44 +372,51 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     void internalConvertShorthand() {
-        def questionNodes = ScriptUtils.c().find { it.transformedText.startsWith('?') }
+        def questionNodes = ScriptUtils.c().find { Proxy.Node it -> isShorthandQuestion(it) }
 
         questionNodes.each {
-            String nodeText = it.transformedText.trim()
-            nodeText = nodeText.substring(1).trim()
-            it.text = nodeText
-            it.icons.add('help')
+            parseSingleQuestionNode(it)
         }
 
-        def unparsedNodes = ScriptUtils.c().find { it.transformedText.startsWith('*') }
+        def unparsedNodes = ScriptUtils.c().find { Proxy.Node it -> isShorthandTask(it) }
 
         unparsedNodes.each {
-            Proxy.Node thisNode = it
-            String nodeText = thisNode.transformedText.trim()
-
-            Map fields = parseShorthand(nodeText)
-            thisNode.text = fields['action']
-
-            def nodeAttr = [:] as Map<String, Object>
-            thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
-
-            if (fields['context']) nodeAttr['Where'] = fields['context']
-            if (fields['delegate']) nodeAttr['Who'] = fields['delegate']
-            if (fields['when']) nodeAttr['When'] = fields['when']
-            if (fields['priority']) nodeAttr['Priority'] = fields['priority']
-
-            thisNode.icons.each {
-                if (it ==~ /^full-\d$/) {
-                    nodeAttr['Priority'] = it[5]
-                }
-            }
-
-            addIconIfNotExists(thisNode, iconNextAction)
-
-            // set new attributes for the node
-            thisNode.attributes = nodeAttr
+            parseSingleTaskNode(it)
         }
 
+    }
+
+    void parseSingleQuestionNode(Proxy.Node it) {
+        String nodeText = it.transformedText.trim()
+        nodeText = nodeText.substring(1).trim()
+        it.text = nodeText
+        it.icons.add('help')
+    }
+
+    void parseSingleTaskNode(Proxy.Node thisNode) {
+        String nodeText = thisNode.transformedText.trim()
+
+        Map fields = parseShorthand(nodeText)
+        thisNode.text = fields['action']
+
+        def nodeAttr = [:] as Map<String, Object>
+        thisNode.attributes.names.eachWithIndex { name, i -> nodeAttr[name] = thisNode.attributes.get(i) }
+
+        if (fields['context']) nodeAttr['Where'] = fields['context']
+        if (fields['delegate']) nodeAttr['Who'] = fields['delegate']
+        if (fields['when']) nodeAttr['When'] = fields['when']
+        if (fields['priority']) nodeAttr['Priority'] = fields['priority']
+
+        thisNode.icons.each {
+            if (it ==~ /^full-\d$/) {
+                nodeAttr['Priority'] = it[5]
+            }
+        }
+
+        addIconIfNotExists(thisNode, iconNextAction)
+
+        // set new attributes for the node
+        thisNode.attributes = nodeAttr
     }
 
     private static void addIconIfNotExists(Proxy.Node node, String icon) {
@@ -389,11 +439,6 @@ class GTDMapReader {
             }
         }
         return retval ? retval : parentNode.transformedText
-    }
-
-    private boolean isDone(Proxy.Node node) {
-        def icons = node.icons.icons
-        return icons.contains(iconDone) || icons.contains(iconCancel)
     }
 
     private static final String stripHTMLTags(String string) {
@@ -442,4 +487,5 @@ class GTDMapReader {
         fields['action'] = toParse.replaceAll(/^\s*\*\s*/, '').trim()
         return fields
     }
+
 }
