@@ -292,13 +292,25 @@ class GTDMapReader {
             thisNode.icons.add(priorityIcon)
         }
     }
+    
+    Proxy.Node findArchiveNode(){
+        Proxy.Node rootNode = ScriptUtils.node().map.root
+        String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
+
+        Proxy.Node archiveNode = rootNode.children.find {
+            it.transformedText == archiveDirName
+        }
+        return archiveNode    
+    }
 
     List getDoneList() {
-        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+    	// TODO remove items from this list that are already archived
+        Proxy.Node archiveNode =  findArchiveNode()
+		def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) && (archiveNode?!it.isDescendantOf(archiveNode):true)}
 
         def result = []
         // include result if it has next action icon and its not the icon setting node for next actions
-        taskNodes.each {
+        taskNodes.each {          
             Proxy.Node thisNode = it
             def icons = thisNode.icons.icons
             def naNodeID = thisNode.id
@@ -361,7 +373,9 @@ class GTDMapReader {
     }
 
     List getActionList(boolean filterDone) {
-        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+        // TODO remove items from this list that are already archived
+        Proxy.Node archiveNode =  findArchiveNode()
+		def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) && (archiveNode?!it.isDescendantOf(archiveNode):true)}
 
         def result = []
         // include result if it has next action icon and its not the icon setting node for next actions
