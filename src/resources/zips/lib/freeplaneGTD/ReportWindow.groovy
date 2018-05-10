@@ -36,7 +36,8 @@ class ReportWindow {
 
     enum DONE_TIMELINE {
         TODAY,
-        THIS_WEEK,
+        LAST_WEEK,
+        LAST_MONTH,
         EARLIER
 
     }

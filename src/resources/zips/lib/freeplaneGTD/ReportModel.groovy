@@ -275,7 +275,6 @@ class ReportModel {
 
     ReportWindow.DONE_TIMELINE doneTimeline(Object time) {
         if (!time) return ReportWindow.DONE_TIMELINE.EARLIER
-        println "checking $time"
         Date date = DateUtil.normalizeDate(time) as Date
 
         // today to compare with
@@ -289,16 +288,16 @@ class ReportModel {
             throw new IllegalArgumentException("date from future $time")
         }
         if (days < 1) return ReportWindow.DONE_TIMELINE.TODAY
-        if (days < 7) return ReportWindow.DONE_TIMELINE.THIS_WEEK
+        if (days < 7) return ReportWindow.DONE_TIMELINE.LAST_WEEK
+        if (days < 30) return ReportWindow.DONE_TIMELINE.LAST_MONTH
         return ReportWindow.DONE_TIMELINE.EARLIER
     }
 
     def doneTimeline() {
         Map retval = [type: 'whenDone' as Object]
         List groups = []
-        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) })
+        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
         byDoneTimeline.each {
-                // FIXME: add sorting of values?
             key, value ->
                 groups << [title: key, items: value]
         }

@@ -45,7 +45,6 @@ class GTDMapReader {
     Map<String, String> contextIcons
     Map<String, String> contextAliases
     Map<String, String> delegateAliases
-    String laterText = "Later" // FIXME
 
     static GTDMapReader getInstance() {
         instance.today = new Date().clearTime()
