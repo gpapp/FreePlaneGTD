@@ -118,10 +118,14 @@ class DateUtil {
     }
 
     static Object normalizeDate(ConvertibleDate date) {
-        return date.date
+        date.date
     }
 
     static Object normalizeDate(Convertible date) {
-        return normalizeDate(date.text)
+        normalizeDate(date.text)
+    }
+    
+    static FormattedDate getFormattedDate() {
+    	new FormattedDate(new Date().getTime(), stdFormat)
     }
 }

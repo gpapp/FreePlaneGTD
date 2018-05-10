@@ -294,6 +294,73 @@ class GTDMapReader {
         }
     }
 
+    List getDoneList() {
+        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+
+        def result = []
+        // include result if it has next action icon and its not the icon setting node for next actions
+        taskNodes.each {
+            Proxy.Node thisNode = it
+            def icons = thisNode.icons.icons
+            def naNodeID = thisNode.id
+            // use index method to get attributes
+            String naContext = thisNode['Where'].toString()
+            String naWho = thisNode['Who'].toString()
+            Object naWhen = thisNode['When']
+            Object naWaitFor = thisNode['WaitFor']
+            Object naWaitUntil = thisNode['WaitUntil']
+            String naPriority = thisNode['Priority'].toString()
+            Object naWhenDone = thisNode['WhenDone']
+
+            // take care of missing attributes. null or empty string evaluates as boolean false
+            if (!naWhen) {
+                naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
+            } else {
+                naWhen = DateUtil.normalizeDate(naWhen)
+                thisNode['When'] = naWhen
+            }
+            if ((naWhen != null) && (naWhen instanceof Date)) {
+                if (today == naWhen.clearTime()) {
+                    naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+                }
+            }
+
+            if (naWaitUntil) {
+                naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
+                thisNode['WaitUntil'] = naWaitUntil
+            }
+
+            String naAction = thisNode.transformedText
+            if (!(naAction =~ /Icon:/)) {
+                String naDetails = stripHTMLTags(thisNode.detailsText)
+                String naNotes = stripHTMLTags(thisNode.noteText)
+                String naProject = findNextActionProject(thisNode, iconProject)
+                if (icons.contains(iconToday)) {
+                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
+                }
+                boolean done = isDone(it)
+                if (done) {
+                    result << [node     : thisNode,
+                               action   : naAction,
+                               project  : naProject,
+                               context  : naContext,
+                               who      : naWho,
+                               when     : naWhen,
+                               priority : naPriority,
+                               nodeID   : naNodeID,
+                               details  : naDetails,
+                               notes    : naNotes,
+                               waitFor  : naWaitFor,
+                               waitUntil: naWaitUntil,
+                               whenDone : naWhenDone,
+                               done     : done]
+                }
+            }
+        }
+
+        return result
+    }
+
     List getActionList(boolean filterDone) {
         def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
 

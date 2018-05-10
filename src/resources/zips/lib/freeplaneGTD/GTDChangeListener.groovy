@@ -55,6 +55,13 @@ class GTDChangeListener extends AMapChangeListenerAdapter {
                 }
             } else if (event.property == 'icon') {
                 // TODO
+                Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
+                if (reader.isDone(node) && !node['WhenDone']){
+                	node['WhenDone']= DateUtil.getFormattedDate()
+                }
+                if (!reader.isDone(node) && node['WhenDone']){
+                	node['WhenDone']= null
+                }
             }
 
         } catch (Exception e) {

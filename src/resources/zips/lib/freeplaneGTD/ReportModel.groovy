@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit
 
 class ReportModel {
     List actionList
+    List doneList
     GTDMapReader mapReader
 
     String todayText = TextUtils.getText("freeplaneGTD.view.when.today")
@@ -97,6 +98,7 @@ class ReportModel {
 
         // Get next action lists
         actionList = mapReader.getActionList(filterDone)
+        doneList = mapReader.getDoneList()
 
         // Fill actionList with next actionable time
         actionList.each { it['time'] = taskDate(it) }
@@ -274,7 +276,6 @@ class ReportModel {
     ReportWindow.DONE_TIMELINE doneTimeline(Object time) {
         if (!time) return ReportWindow.DONE_TIMELINE.EARLIER
         println "checking $time"
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
         Date date = DateUtil.normalizeDate(time) as Date
 
         // today to compare with
@@ -295,9 +296,7 @@ class ReportModel {
     def doneTimeline() {
         Map retval = [type: 'whenDone' as Object]
         List groups = []
-        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = actionList.findAll {
-            it['done']
-        }.groupBy({ node -> doneTimeline(node['whenDone']) })
+        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) })
         byDoneTimeline.each {
                 // FIXME: add sorting of values?
             key, value ->
