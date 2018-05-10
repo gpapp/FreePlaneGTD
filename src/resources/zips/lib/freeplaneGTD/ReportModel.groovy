@@ -278,7 +278,7 @@ class ReportModel {
         Date date = DateUtil.normalizeDate(time) as Date
 
         // today to compare with
-        Date today = new Date()
+        Date today = mapReader.today
 
         // consider today as exactly this day
         // consider this month as today + month before
@@ -299,7 +299,7 @@ class ReportModel {
         Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
         byDoneTimeline.each {
             key, value ->
-                groups << [title: key, items: value]
+                groups << [title: TextUtils.getText("freeplaneGTD.doneTimeline."+key), items: value]
         }
         retval['groups'] = groups
         return retval

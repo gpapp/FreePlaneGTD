@@ -1,7 +1,7 @@
 package freeplaneGTD
 
+import org.freeplane.features.attribute.NodeAttributeTableModel
 import org.freeplane.features.map.*
-import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ProxyFactory
 
@@ -9,34 +9,37 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 class GTDChangeListener extends AMapChangeListenerAdapter {
-    GTDMapReader reader;
+    boolean mutex
+    GTDMapReader reader
 
     GTDChangeListener() {
         reader = GTDMapReader.instance
     }
 
-    ReportWindow getReportWindow() {
-        return Controller.currentController.metaClass.getGtdReportWindow ?
-                Controller.currentController.getGtdReportWindow() : null
+    def getReportWindow() {
+        return ReportWindow.instance
     }
 
     @Override
     void onNodeDeleted(NodeDeletionEvent nodeDeletionEvent) {
-        getReportWindow()?.refresh()
+        getReportWindow()?.refreshContent()
         super.onNodeDeleted(nodeDeletionEvent)
     }
 
     @Override
     void onNodeMoved(NodeMoveEvent nodeMoveEvent) {
-        getReportWindow()?.refresh()
+        getReportWindow()?.refreshContent()
         super.onNodeMoved(nodeMoveEvent)
     }
 
     void nodeChanged(NodeChangeEvent event) {
         // freeplane doesn't previous state of a node
         // so will make some assumptions
+        if (mutex) return
+        mutex = true
         try {
             NodeModel nodeModel = event.getNode()
+            boolean changed = true
             if (event.property == 'node_text') {
                 Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
                 if (GTDMapReader.isConfigAlias(node)) {
@@ -52,16 +55,25 @@ class GTDChangeListener extends AMapChangeListenerAdapter {
                 } else if (reader.isTask(node)) {
                     reader.parseSingleTaskNode(node)
                     reader.fixAliasesAndIconsForNode(node)
+                } else {
+                    changed = false
                 }
             } else if (event.property == 'icon') {
-                // TODO
                 Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
-                if (reader.isDone(node) && !node['WhenDone']){
-                	node['WhenDone']= DateUtil.getFormattedDate()
+                if (reader.isDone(node) && !node['WhenDone']) {
+                    node['WhenDone'] = DateUtil.getFormattedDate()
+                } else if (!reader.isDone(node) && node['WhenDone']) {
+                    node['WhenDone'] = null
+                } else {
+                    changed = false
                 }
-                if (!reader.isDone(node) && node['WhenDone']){
-                	node['WhenDone']= null
-                }
+            } else if (event.property == NodeAttributeTableModel.class) {
+                changed = true
+            } else {
+                changed = false
+            }
+            if (changed) {
+                getReportWindow()?.refreshContent()
             }
 
         } catch (Exception e) {
@@ -70,6 +82,7 @@ class GTDChangeListener extends AMapChangeListenerAdapter {
             Logger.anonymousLogger.log(Level.SEVERE, "Error caught:" + e.message, e)
             System.err.print("caught in handler" + this.toString() + ": " + e.toString())
         }
+        mutex = false
         super.nodeChanged(event)
     }
 }
