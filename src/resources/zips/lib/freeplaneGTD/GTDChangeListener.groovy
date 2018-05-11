@@ -73,7 +73,7 @@ class GTDChangeListener extends AMapChangeListenerAdapter {
                 changed = false
             }
             if (changed) {
-                getReportWindow()?.refreshContent()
+                getReportWindow()?.refresh()
             }
 
         } catch (Exception e) {
