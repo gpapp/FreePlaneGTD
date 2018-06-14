@@ -35,7 +35,7 @@ abstract class DoneMover {
         mapReader.findIcons()
         mapReader.internalConvertShorthand()
 
-        if (!node.icons.contains(mapReader.iconNextAction) || !node.icons.contains(mapReader.iconDone )) {
+        if (!node.icons.contains(mapReader.iconNextAction) || !mapReader.isDone(node)) {
             node.children.each {
                 if (it==targetDir){
                     return
