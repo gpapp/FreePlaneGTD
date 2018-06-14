@@ -38,7 +38,7 @@ abstract class DoneMover {
             return
         }
 
-        if (!node.icons.contains(mapReader.iconNextAction) || !node.icons.contains(mapReader.iconDone )) {
+        if (!node.icons.contains(mapReader.iconNextAction) || !mapReader.isDone(node)) {
             node.children.each {
                 Proxy.Node it ->
                 if (it==targetDir){
