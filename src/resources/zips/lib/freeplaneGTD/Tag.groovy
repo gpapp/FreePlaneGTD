@@ -53,7 +53,7 @@ class Tag {
 
     Tag addContent(Object content, Map params = null) {
         // Very simple sanitation for HTML entities <> here!
-        this.content.push(content.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'))
+        this.content.add(content.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'))
         if (params) {
             this.params = params
         }
@@ -61,24 +61,24 @@ class Tag {
     }
 
     Tag addPreformatted(String tag) {
-        this.content.push(tag)
+        this.content.add(tag)
         return this
     }
 
     Tag addContent(Tag tag) {
-        this.content.push(tag)
+        this.content.add(tag)
         return this
     }
 
     Tag addContent(tagName, Object content, Map params = null) {
         Tag tag = new Tag(tagName, content, params)
-        this.content.push(tag)
+        this.content.add(tag)
         return this
     }
 
     Tag addChild(tagName, Map params = null) {
         Tag tag = new Tag(tagName, params)
-        this.content.push(tag)
+        this.content.add(tag)
         return tag
     }
 
