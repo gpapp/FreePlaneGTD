@@ -24,6 +24,7 @@ import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
+import org.freeplane.features.icon.MindIcon
 
 import java.util.regex.Matcher
 
@@ -258,14 +259,12 @@ class GTDMapReader {
         if (contextAttr) {
             contexts.addAll(contextAttr.toString().split(','))
         }
-        // Add missing attributes from existing icons
-        contextIcons.each {
-            context, icon ->
-                if (thisNode.icons.icons.contains(icon)) {
-                    contexts << context
-                }
-        }
 
+		List iconContexts = [] as List<String>
+		thisNode.icons.each { String icon -> 
+			iconContexts<<contextIcons.find { it.value == icon }?.key 
+		}
+		
         List newContexts = [] as List<String>
         contexts.each { String curContext ->
             // Add icons for matches and replace standard values if any
@@ -278,6 +277,14 @@ class GTDMapReader {
 			}           
         }
         contexts = newContexts
+		
+		// remove icons no longer on the context list
+		iconContexts.each { iconContext ->
+			if (!contexts.find {it==iconContext}) {
+				thisNode.icons.remove(contextIcons[iconContext])
+			}
+		}
+		
         if (contexts?.size()) {
             thisNode['Where'] = contexts.unique().join(',')
         }
@@ -296,6 +303,56 @@ class GTDMapReader {
         }
     }
 
+    void handleIconAdd(Proxy.Node thisNode, String icon) {
+        // Handle context icons
+        def contextAttr = thisNode['Where']
+        List contexts = [] as List<String>
+        if (contextAttr) {
+            contexts.addAll(contextAttr.toString().split(','))
+        }
+        // Add new icon if it is in the contexts
+		String contextToAdd=contextIcons.find { it.value = icon }?.key
+		if (contextToAdd) {
+            contexts << contextToAdd
+		}
+
+        if (contexts?.size()) {
+            thisNode['Where'] = contexts.unique().join(',')
+        }        
+		
+		if (icon==iconDone || icon==iconCancel) {
+			node['WhenDone'] = DateUtil.getFormattedDate()
+		}
+	}
+
+    void handleIconRemove(Proxy.Node thisNode, String icon) {
+        // Handle context icons
+        def contextAttr = thisNode['Where']
+        List contexts = [] as List<String>
+        if (contextAttr) {
+            contexts.addAll(contextAttr.toString().split(','))
+        }
+        // Find context to remove
+		String contextToRemove=contextIcons.find { it.value = icon }?.key
+		if (contextToRemove) {
+			List newContexts = [] as List<String>
+			contexts.each {
+				if (it!=contextToRemove) {
+					newContexts << it
+				}
+			}
+			if (newContexts?.size()) {
+				thisNode['Where'] = newContexts.unique().join(',')
+			} else {
+				thisNode['Where'] = null
+			}      
+		}
+
+		if (icon==iconDone || icon==iconCancel) {
+			node['WhenDone'] = null
+		}
+	}
+	
     Proxy.Node findArchiveNode() {
         Proxy.Node rootNode = ScriptUtils.node().map.root
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")

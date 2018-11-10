@@ -3,6 +3,7 @@ package freeplaneGTD
 import org.freeplane.features.attribute.NodeAttributeTableModel
 import org.freeplane.features.map.INodeChangeListener
 import org.freeplane.features.map.NodeChangeEvent
+import org.freeplane.features.map.NodeModel
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ProxyFactory
 
@@ -15,6 +16,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
 
     GTDNodeChangeListener() {
         reader = GTDMapReader.instance
+		reader.findIcons()
     }
 
     def getReportWindow() {
@@ -41,23 +43,30 @@ class GTDNodeChangeListener implements INodeChangeListener {
                     reader.findIcons()
                 } else if (GTDMapReader.isShorthandQuestion(node)) {
                     reader.parseSingleQuestionNode(node)
-                    reader.fixAliasesAndIconsForNode(node)
                 } else if (GTDMapReader.isShorthandTask(node)) {
                     reader.parseSingleTaskNode(node)
-                    reader.fixAliasesAndIconsForNode(node)
+                    reader.fixAliasesForNode(node)
+                    reader.fixIconsForNode(node)
                 } else if (reader.isTask(node)) {
                     reader.parseSingleTaskNode(node)
-                    reader.fixAliasesAndIconsForNode(node)
+                    reader.fixAliasesForNode(node)
+                    reader.fixIconsForNode(node)
                 } else {
                     changed = false
                 }
             } else if (event.property == 'icon') {
                 Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
-                if (reader.isDone(node) && !node['WhenDone']) {
-                    node['WhenDone'] = DateUtil.getFormattedDate()
-                } else if (!reader.isDone(node) && node['WhenDone']) {
-                    node['WhenDone'] = null
-                } else {
+				
+				reader.findIcons()
+				// re-read icons on context change
+				if (!event.oldValue && event.newValue) {
+					reader.handleIconAdd(node,event.newValue.name)
+				} else if (event.oldValue && !event.newValue) {
+					reader.handleIconRemove(node,event.oldValue.name)
+				} else if (event.oldValue && event.newValue) {
+					reader.handleIconRemove(node,event.oldValue.name)
+					reader.handleIconAdd(node,event.newValue.name)
+				} else {
                     changed = false
                 }
             } else if (event.property == NodeAttributeTableModel.class) {
