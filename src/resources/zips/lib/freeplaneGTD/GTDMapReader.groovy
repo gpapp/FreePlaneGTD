@@ -289,6 +289,7 @@ class GTDMapReader {
             thisNode['Where'] = contexts.unique().join(',')
         }
 
+        def priorityAttr = thisNode['Priority']
         // Remove priority icon if exists
         thisNode.icons.each {
             if (it ==~ /^full-\d$/) {
@@ -296,7 +297,6 @@ class GTDMapReader {
             }
         }
         // Add priority icon if attribute exists
-        def priorityAttr = thisNode['Priority']
         if (priorityAttr) {
             String priorityIcon = 'full-' + priorityAttr
             thisNode.icons.add(priorityIcon)
