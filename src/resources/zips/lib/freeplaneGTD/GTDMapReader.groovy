@@ -234,7 +234,7 @@ class GTDMapReader {
 	List<String> replaceWithAlias (originalAttr, aliases) {
 		List newList = [] as List<String>
         if (originalAttr) {
-            originalAttr.toString().split(',').each { String curItem ->
+            originalAttr.toString().split(',')*.trim().each { String curItem ->
 				def aliasMatch = aliases?.keySet()?.find { it.equalsIgnoreCase(curItem) }
 				if (aliasMatch) {
 					curItem = aliases[aliasMatch]
@@ -257,7 +257,7 @@ class GTDMapReader {
         def contextAttr = thisNode['Where']
         List contexts = [] as List<String>
         if (contextAttr) {
-            contexts.addAll(contextAttr.toString().split(','))
+            contexts.addAll(contextAttr.toString().split(',')*.trim())
         }
 
 		List iconContexts = [] as List<String>
@@ -268,7 +268,7 @@ class GTDMapReader {
         List newContexts = [] as List<String>
         contexts.each { String curContext ->
             // Add icons for matches and replace standard values if any
-			def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
+			def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext.trim()) }
 			if (closeMatch) {
 				newContexts << closeMatch
 				addIconIfNotExists(thisNode, contextIcons[closeMatch])
@@ -280,7 +280,7 @@ class GTDMapReader {
 		
 		// remove icons no longer on the context list
 		iconContexts.each { iconContext ->
-			if (!contexts.find {it==iconContext}) {
+			if (!contexts.find {it.trim()==iconContext}) {
 				thisNode.icons.remove(contextIcons[iconContext])
 			}
 		}
@@ -289,6 +289,7 @@ class GTDMapReader {
             thisNode['Where'] = contexts.unique().join(',')
         }
 
+        def priorityAttr = thisNode['Priority']
         // Remove priority icon if exists
         thisNode.icons.each {
             if (it ==~ /^full-\d$/) {
@@ -296,7 +297,6 @@ class GTDMapReader {
             }
         }
         // Add priority icon if attribute exists
-        def priorityAttr = thisNode['Priority']
         if (priorityAttr) {
             String priorityIcon = 'full-' + priorityAttr
             thisNode.icons.add(priorityIcon)
@@ -304,52 +304,58 @@ class GTDMapReader {
     }
 
     void handleIconAdd(Proxy.Node thisNode, String icon) {
-        // Handle context icons
-        def contextAttr = thisNode['Where']
-        List contexts = [] as List<String>
-        if (contextAttr) {
-            contexts.addAll(contextAttr.toString().split(','))
-        }
-        // Add new icon if it is in the contexts
-		String contextToAdd=contextIcons.find { it.value = icon }?.key
-		if (contextToAdd) {
-            contexts << contextToAdd
-		}
+		if (icon ==~ /^full-\d$/) {
+			thisNode['Priority']=icon.substring(5,6)
+		} else if (icon==iconDone || icon==iconCancel) {
+			thisNode['WhenDone'] = DateUtil.getFormattedDate()
+		} else {
+			// Handle context icons
+			def contextAttr = thisNode['Where']
+			List contexts = [] as List<String>
+			if (contextAttr) {
+				contexts.addAll(contextAttr.toString().split(',')*.trim())				
+			}
+			// Add new icon if it is in the contexts
+			def matchingIcon = contextIcons.find { it.value == icon }
+			if (matchingIcon) {
+				if (matchingIcon.key) {
+					contexts << matchingIcon.key
+				}
 
-        if (contexts?.size()) {
-            thisNode['Where'] = contexts.unique().join(',')
-        }        
-		
-		if (icon==iconDone || icon==iconCancel) {
-			node['WhenDone'] = DateUtil.getFormattedDate()
+				if (contexts?.size()) {
+					thisNode['Where'] = contexts.unique().join(',')
+				}        			
+			}
 		}
 	}
 
     void handleIconRemove(Proxy.Node thisNode, String icon) {
-        // Handle context icons
-        def contextAttr = thisNode['Where']
-        List contexts = [] as List<String>
-        if (contextAttr) {
-            contexts.addAll(contextAttr.toString().split(','))
-        }
-        // Find context to remove
-		String contextToRemove=contextIcons.find { it.value = icon }?.key
-		if (contextToRemove) {
-			List newContexts = [] as List<String>
-			contexts.each {
-				if (it!=contextToRemove) {
-					newContexts << it
-				}
+		if (icon ==~ /^full-\d$/) {
+			thisNode['Priority'] = null
+		} else if (icon==iconDone || icon==iconCancel) {
+			thisNode['WhenDone'] = null
+		} else {
+			// Handle context icons
+			def contextAttr = thisNode['Where']
+			List contexts = [] as List<String>
+			if (contextAttr) {
+				contexts.addAll(contextAttr.toString().split(',')*.trim())
 			}
-			if (newContexts?.size()) {
-				thisNode['Where'] = newContexts.unique().join(',')
-			} else {
-				thisNode['Where'] = null
-			}      
-		}
-
-		if (icon==iconDone || icon==iconCancel) {
-			node['WhenDone'] = null
+			// Find context to remove
+			String contextToRemove=contextIcons.find { it.value == icon }?.key
+			if (contextToRemove) {
+				List newContexts = [] as List<String>
+				contexts.each {
+					if (it!=contextToRemove) {
+						newContexts << it
+					}
+				}
+				if (newContexts?.size()) {
+					thisNode['Where'] = newContexts.unique().join(',')
+				} else {
+					thisNode['Where'] = null
+				}      
+			}
 		}
 	}
 	

@@ -58,16 +58,18 @@ class GTDNodeChangeListener implements INodeChangeListener {
                 Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
 				
 				reader.findIcons()
-				// re-read icons on context change
-				if (!event.oldValue && event.newValue) {
-					reader.handleIconAdd(node,event.newValue.name)
-				} else if (event.oldValue && !event.newValue) {
-					reader.handleIconRemove(node,event.oldValue.name)
-				} else if (event.oldValue && event.newValue) {
-					reader.handleIconRemove(node,event.oldValue.name)
-					reader.handleIconAdd(node,event.newValue.name)
-				} else {
-                    changed = false
+				if (reader.isTask(node)) {
+					// re-read icons on context change
+					if (!event.oldValue && event.newValue) {
+						reader.handleIconAdd(node,event.newValue.name)
+					} else if (event.oldValue && !event.newValue) {
+						reader.handleIconRemove(node,event.oldValue.name)
+					} else if (event.oldValue && event.newValue) {
+						reader.handleIconRemove(node,event.oldValue.name)
+						reader.handleIconAdd(node,event.newValue.name)
+					} else {
+						changed = false
+					}
                 }
             } else if (event.property == NodeAttributeTableModel.class) {
                 changed = true

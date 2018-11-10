@@ -48,18 +48,13 @@ class ActionEditor {
             return true
         }
 
-        void updateNode() {
-            String localContext = ' @' + (context.split(',')*.trim()).join(' @')
-            editedNodes.text = "* $action " +
-                    (context?.trim() ? "$localContext" : '') +
-                    (delegate?.trim() ? "[$delegate]" : '') +
-                    (when?.trim() ? "{$when}" : '') +
-                    (priority?.trim() ? "#$priority" : '')
-
-            !delegate ? editedNodes.attributes.removeAll('Who') : false
-            !context ? editedNodes.attributes.removeAll('Where') : false
-            !when ? editedNodes.attributes.removeAll('When') : false
-            !priority ? editedNodes.attributes.removeAll('Priority') : false
+        void updateNode() {           
+			editedNodes.text = "$action" 
+            delegate ? editedNodes['Who']=delegate      : editedNodes.attributes.removeAll('Who') 
+            context  ? editedNodes['Where']=context     : editedNodes.attributes.removeAll('Where')
+            when     ? editedNodes['When']=when         : editedNodes.attributes.removeAll('When') 
+            priority ? editedNodes['Priority']=priority : editedNodes.attributes.removeAll('Priority') 
+			 
             if (waitFor) {
                 editedNodes.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
             } else
@@ -90,8 +85,8 @@ class ActionEditor {
             mapReader.findIcons()
 			
             // Re-parse map
+			mapReader.fixAliasesForNode(editedNodes)
 			mapReader.fixIconsForNode(editedNodes)
-            mapReader.parseSingleTaskNode(editedNodes)
 
             ReportWindow.instance.refresh()
         }
