@@ -24,6 +24,7 @@ import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
+import org.freeplane.features.icon.MindIcon
 
 import java.util.regex.Matcher
 
@@ -68,7 +69,8 @@ class GTDMapReader {
         findAliases()
         findIcons()
         internalConvertShorthand()
-        fixAliasesAndIcons()
+        fixAliases()
+        fixIcons()
     }
 
     static boolean isShorthandTask(Proxy.Node it) {
@@ -210,34 +212,46 @@ class GTDMapReader {
     }
 
 
-    void fixAliasesAndIcons() {
-        def taskNodes = ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
-
-        taskNodes.each {
-            fixAliasesAndIconsForNode(it)
-        }
+    void fixAliases() {
+        ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+			.each { fixAliasesForNode(it) }
     }
 
-    void fixAliasesAndIconsForNode(Proxy.Node it) {
-        Proxy.Node thisNode = it
+    void fixAliasesForNode(Proxy.Node thisNode) {
         // Handle delegate aliases
-        def delegateAttr = thisNode['Who']
-        def delegates = [] as List<String>
-        if (delegateAttr) {
-            delegates = delegateAttr.toString().split(',')
-        }
-        List newDelegates = [] as List<String>
-        delegates.each { String curDelegate ->
-            // convert aliases
-            def aliasMatch = delegateAliases?.keySet()?.find { it.equalsIgnoreCase(curDelegate) }
-            if (aliasMatch) {
-                curDelegate = delegateAliases[aliasMatch]
-            }
-            newDelegates << curDelegate
-        }
+		List newDelegates = replaceWithAlias (thisNode['Who'],delegateAliases)
         if (newDelegates?.size()) {
             thisNode['Who'] = newDelegates.unique().join(',')
         }
+		
+        // Handle context aliases
+		List newContexts = replaceWithAlias (thisNode['Where'],contextAliases)
+        if (newContexts?.size()) {
+            thisNode['Where'] = newContexts.unique().join(',')
+        }
+    }
+	
+	List<String> replaceWithAlias (originalAttr, aliases) {
+		List newList = [] as List<String>
+        if (originalAttr) {
+            originalAttr.toString().split(',').each { String curItem ->
+				def aliasMatch = aliases?.keySet()?.find { it.equalsIgnoreCase(curItem) }
+				if (aliasMatch) {
+					curItem = aliases[aliasMatch]
+				}
+				newList << curItem
+			}
+        }
+		return newList
+	}
+
+    void fixIcons() {
+        ScriptUtils.c().find { it.icons.icons.contains(iconNextAction) }
+			.each { fixIconsForNode(it) }
+    }
+
+    void fixIconsForNode(Proxy.Node it) {
+        Proxy.Node thisNode = it
 
         // Handle context icons
         def contextAttr = thisNode['Where']
@@ -245,36 +259,32 @@ class GTDMapReader {
         if (contextAttr) {
             contexts.addAll(contextAttr.toString().split(','))
         }
-        // Add missing attributes from existing icons
-        contextIcons.each {
-            context, icon ->
-                if (thisNode.icons.icons.contains(icon)) {
-                    contexts << context
-                }
-        }
 
+		List iconContexts = [] as List<String>
+		thisNode.icons.each { String icon -> 
+			iconContexts<<contextIcons.find { it.value == icon }?.key 
+		}
+		
         List newContexts = [] as List<String>
         contexts.each { String curContext ->
-            // convert aliases
-            def aliasMatch = contextAliases?.keySet()?.find { it.equalsIgnoreCase(curContext) }
-            if (aliasMatch) {
-                curContext = contextAliases[aliasMatch]
-            }
-            // Add icons for simple matches
-            if (contextIcons.keySet().contains(curContext)) {
-                newContexts << curContext
-                addIconIfNotExists(thisNode, contextIcons[curContext])
-            } else {
-                def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
-                if (closeMatch) {
-                    newContexts << closeMatch
-                    addIconIfNotExists(thisNode, contextIcons[closeMatch])
-                } else {
-                    newContexts << curContext
-                }
-            }
+            // Add icons for matches and replace standard values if any
+			def closeMatch = contextIcons.keySet().find { String key -> key.equalsIgnoreCase(curContext) }
+			if (closeMatch) {
+				newContexts << closeMatch
+				addIconIfNotExists(thisNode, contextIcons[closeMatch])
+			} else {
+				newContexts << curContext
+			}           
         }
         contexts = newContexts
+		
+		// remove icons no longer on the context list
+		iconContexts.each { iconContext ->
+			if (!contexts.find {it==iconContext}) {
+				thisNode.icons.remove(contextIcons[iconContext])
+			}
+		}
+		
         if (contexts?.size()) {
             thisNode['Where'] = contexts.unique().join(',')
         }
@@ -293,6 +303,56 @@ class GTDMapReader {
         }
     }
 
+    void handleIconAdd(Proxy.Node thisNode, String icon) {
+        // Handle context icons
+        def contextAttr = thisNode['Where']
+        List contexts = [] as List<String>
+        if (contextAttr) {
+            contexts.addAll(contextAttr.toString().split(','))
+        }
+        // Add new icon if it is in the contexts
+		String contextToAdd=contextIcons.find { it.value = icon }?.key
+		if (contextToAdd) {
+            contexts << contextToAdd
+		}
+
+        if (contexts?.size()) {
+            thisNode['Where'] = contexts.unique().join(',')
+        }        
+		
+		if (icon==iconDone || icon==iconCancel) {
+			node['WhenDone'] = DateUtil.getFormattedDate()
+		}
+	}
+
+    void handleIconRemove(Proxy.Node thisNode, String icon) {
+        // Handle context icons
+        def contextAttr = thisNode['Where']
+        List contexts = [] as List<String>
+        if (contextAttr) {
+            contexts.addAll(contextAttr.toString().split(','))
+        }
+        // Find context to remove
+		String contextToRemove=contextIcons.find { it.value = icon }?.key
+		if (contextToRemove) {
+			List newContexts = [] as List<String>
+			contexts.each {
+				if (it!=contextToRemove) {
+					newContexts << it
+				}
+			}
+			if (newContexts?.size()) {
+				thisNode['Where'] = newContexts.unique().join(',')
+			} else {
+				thisNode['Where'] = null
+			}      
+		}
+
+		if (icon==iconDone || icon==iconCancel) {
+			node['WhenDone'] = null
+		}
+	}
+	
     Proxy.Node findArchiveNode() {
         Proxy.Node rootNode = ScriptUtils.node().map.root
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
