@@ -262,11 +262,14 @@ class ReportWindow {
                     })
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
+		            Logger.getAnonymousLogger().log(Level.INFO, "Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
+
                     if (config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)) {
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
+						Logger.getAnonymousLogger().log(Level.INFO, "lastPosition=" + Integer.toString(mainFrame.x) + ", "+ Integer.toString(mainFrame.y) + ", "+ Integer.toString(mainFrame.width) + ", "+ Integer.toString(mainFrame.height))
+                        config.properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
+                        config.properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
+                        config.properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
+                        config.properties.put('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
                     mainFrame.visible = false
                 }
