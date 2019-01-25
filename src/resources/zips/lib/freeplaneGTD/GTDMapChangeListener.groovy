@@ -11,11 +11,11 @@ class GTDMapChangeListener implements IMapChangeListener {
 
     @Override
     void onNodeDeleted(NodeDeletionEvent nodeDeletionEvent) {
-        getReportWindow()?.refreshContent()
+        getReportWindow()?.refresh()
     }
 
     @Override
     void onNodeMoved(NodeMoveEvent nodeMoveEvent) {
-        getReportWindow()?.refreshContent()
+        getReportWindow()?.refresh()
     }
 }
