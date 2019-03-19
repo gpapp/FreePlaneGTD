@@ -48,18 +48,13 @@ class ActionEditor {
             return true
         }
 
-        void updateNode() {
-            String localContext = ' @' + (context.split(',')*.trim()).join(' @')
-            editedNodes.text = "* $action " +
-                    (context?.trim() ? "$localContext" : '') +
-                    (delegate?.trim() ? "[$delegate]" : '') +
-                    (when?.trim() ? "{$when}" : '') +
-                    (priority?.trim() ? "#$priority" : '')
-
-            !delegate ? editedNodes.attributes.removeAll('Who') : false
-            !context ? editedNodes.attributes.removeAll('Where') : false
-            !when ? editedNodes.attributes.removeAll('When') : false
-            !priority ? editedNodes.attributes.removeAll('Priority') : false
+        void updateNode() {           
+			editedNodes.text = "$action" 
+            delegate ? editedNodes['Who']=delegate      : editedNodes.attributes.removeAll('Who') 
+            context  ? editedNodes['Where']=context     : editedNodes.attributes.removeAll('Where')
+            when     ? editedNodes['When']=when         : editedNodes.attributes.removeAll('When') 
+            priority ? editedNodes['Priority']=priority : editedNodes.attributes.removeAll('Priority') 
+			 
             if (waitFor) {
                 editedNodes.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
             } else
@@ -88,20 +83,10 @@ class ActionEditor {
             }
             // Find icons in the entire map
             mapReader.findIcons()
-            // Remove priority icons that are to be re-added by the shorthand conversion
-            editedNodes.icons.each {
-                if (it ==~ /^full\-\d$/) {
-                    editedNodes.icons.remove(it)
-                }
-            }
-            // Remove all existing context icons, that are to be re-added by the shorthand conversion
-            editedNodes.icons.each {
-                if (mapReader.contextIcons.containsValue(it)) {
-                    editedNodes.icons.remove(it)
-                }
-            }
+			
             // Re-parse map
-            mapReader.internalConvertShorthand()
+			mapReader.fixAliasesForNode(editedNodes)
+			mapReader.fixIconsForNode(editedNodes)
 
             ReportWindow.instance.refresh()
         }

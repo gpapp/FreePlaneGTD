@@ -262,11 +262,14 @@ class ReportWindow {
                     })
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
+		            Logger.getAnonymousLogger().log(Level.INFO, "Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
+
                     if (config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)) {
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
-                        ScriptUtils.c().properties.put('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
+						Logger.getAnonymousLogger().log(Level.INFO, "lastPosition=" + Integer.toString(mainFrame.x) + ", "+ Integer.toString(mainFrame.y) + ", "+ Integer.toString(mainFrame.width) + ", "+ Integer.toString(mainFrame.height))
+                        config.properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
+                        config.properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
+                        config.properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
+                        config.properties.put('freeplaneGTD_last_position_h', Integer.toString(mainFrame.height))
                     }
                     mainFrame.visible = false
                 }
@@ -283,38 +286,38 @@ class ReportWindow {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
-        String content
-        selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
-        switch (selectedView) {
-            case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.ABOUT:
+		String content
+		selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+		switch (selectedView) {
+			case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
+				break
+			case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
+				break
+			case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
+				break
+			case VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
+				break
+			case VIEW.ABOUT:
 
-                Tag html = new Tag('html').
-                        addChild('head').addContent('style', BASE_CSS, [type: 'text/css'])
-                html.addChild('body', [style: 'padding-left:25px'])
-                        .addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
-                        .addContent('h2', 'Version ' + txtVer)
-                        .addContent('h4', 'by Gergely Papp')
-                        .addContent('h5', 'based on the original code by Auxilus Systems LLC')
-                        .addContent('h4', 'Licensed under GNU GPL Version 3')
-                        .addContent('a', txtURI, [href: txtURI])
-                content = HTML_HEADER + html.toString()
-                break
-            case VIEW.PROJECT:
-            default:
-                content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
-        }
-        Platform.runLater({
-            webView.engine.loadContent(content)
-            webView.engine.reload()
-        })
+				Tag html = new Tag('html').
+						addChild('head').addContent('style', BASE_CSS, [type: 'text/css'])
+				html.addChild('body', [style: 'padding-left:25px'])
+						.addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
+						.addContent('h2', 'Version ' + txtVer)
+						.addContent('h4', 'by Gergely Papp')
+						.addContent('h5', 'based on the original code by Auxilus Systems LLC')
+						.addContent('h4', 'Licensed under GNU GPL Version 3')
+						.addContent('a', txtURI, [href: txtURI])
+				content = HTML_HEADER + html.toString()
+				break
+			case VIEW.PROJECT:
+			default:
+				content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
+		}
+		Platform.runLater({
+			webView.engine.loadContent(content)
+			webView.engine.reload()
+		})
     }
 
     private static URL getIconCopyURL(String iconName) {
@@ -406,8 +409,10 @@ class ReportWindow {
     void refresh() {
         report = new ReportModel()
         if (mainFrame?.visible) {
-            refreshContent()
-        }
+			refreshContent()
+		} else {
+			report.parseMap(false)
+		}
     }
 
     boolean getAutoFoldMap() {
