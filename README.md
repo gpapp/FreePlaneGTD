@@ -51,9 +51,10 @@ The sidebar of the window contain the different groupings of the tasks.
 
 In order to speed up the action entry, shorthand notation can be used to add new items. These shorthand notations will be parsed upon the display or the refresh of the task overview window. The parsed items will be annotated with the task icon and the extracted attributes will be added to the task.
 
-The format of the shorthand notation is as follows. Please note, that the position of the attributes do not matter. The first character of the notation must be an “*”.
+The format of the shorthand notation is as follows. Please note, that the position of the attributes do not matter. The first character of the notation must be an "*".
 
-> `* Action name {when} @context [who] #priority
+Examples:
+`* Action name {when} @context [who] #priority`
 
 Will be converted to a node with attributes
 * Where - 'context'
@@ -61,13 +62,11 @@ Will be converted to a node with attributes
 * Who - 'who'
 * Priority - 'priority' (only accepts values 0 to 9)
 
-
-> `* Increase default size of the GTD pane @Coding {v0.9}
+`* Increase default size of the GTD pane @Coding {v0.9}`
 
 Will be converted to a node with attributes
 * Where - Coding
 * When - v0.9
-
 
 ### Icons
 
@@ -80,11 +79,23 @@ The plugin uses a number of pre-set icons to identify the action items, and thei
 
 To customize these icons you must place a node with the text above anywhere in your map and add a desired icon to that node. I suggest you place it under a "Config" or "Settings" node in the root of the map, so it doesn't get mixed up with the actual map content.
 
+## Using the editor
+
+The add-on comes with a simple task editor, that is mapped to the F4 key by default. This can be used to edit/set the task properties without having to use the property editor directy.
+
+The editor is also the place, where the WaitFor and WaitUntil properties can be edited for the tasks. These properties are relevant, when you want to override the ordering of certain tasks. Eg. if you know that a task to be performed by Alice is waiting for some other responsible Bob, than set WaitFor to Bob and set the responsible to Alice. This task will be present at both their names as responsible.
+
 ## Context icons
 
-If you want to add pre-defined icons for some contexts specified in your action nodes, it's available for versions over 1.0. To use this feature you must create icon nodes such as the ones above with the text "*Icon: @Context" where the Context text can be replaced with the context of your liking.
+If you want to add pre-defined icons for some contexts specified in your action nodes, it's available for versions over 1.0. To use this feature you must create icon nodes such as the ones above with the text `Icon: @Context` where the Context text can be replaced with the context of your liking.
 
 The icons specified will be converted to the corresponding context attribute (Where property).
+
+## Aliases for people and contexts
+
+If you prefer to use shortcuts for people or contexts, it is available starting V2.0. All you have to do is to create nodes with the text `Alias: @Context @ContextAlias` or `Alias: [sc] [shortcut]` where the texts can be any string of your liking.
+
+The defined aliases will replace the text when node is parsed with the shorcuts or edited through the editor.
 
 ## Credits
 
