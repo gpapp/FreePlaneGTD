@@ -107,9 +107,9 @@ class MultinodeActionEditor {
             ReportWindow.instance.refresh(editedNodes.map.root)
         }
     }
-    ActionEditorModel model = new ActionEditorModel();
+    ActionEditorModel model = new ActionEditorModel()
 
-    JDialog mainFrame;
+    JDialog mainFrame
     JTextField actionField
     JTextField delegateField
     JTextField contextField
@@ -202,14 +202,14 @@ class MultinodeActionEditor {
         }
         // on ESC key close frame
         mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"));
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TextUtils.getText("freeplaneGTD.button.cancel"))
         mainFrame.getRootPane().getActionMap().put(TextUtils.getText("freeplaneGTD.button.cancel"),
                 new AbstractAction() {
                     void actionPerformed(ActionEvent e) {
-                        mainFrame.setVisible(false);
-                        mainFrame.dispose();
+                        mainFrame.setVisible(false)
+                        mainFrame.dispose()
                     }
-                });
+                })
     }
 
     void editNodes(List<Proxy.Node> nodes) {

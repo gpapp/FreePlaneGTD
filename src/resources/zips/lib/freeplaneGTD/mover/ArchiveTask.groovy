@@ -5,7 +5,7 @@ import org.freeplane.plugin.script.proxy.Proxy
 
 class ArchiveTask extends DoneMover {
 
-    public static Proxy.Node findOrCreateArchiveDir(Proxy.Node node) {
+    static Proxy.Node findOrCreateArchiveDir(Proxy.Node node) {
         final Proxy.Node rootNode = node.map.root
         final String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
 

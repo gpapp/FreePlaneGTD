@@ -5,7 +5,7 @@ import org.freeplane.plugin.script.proxy.Proxy
 
 class ReviewTask extends DoneMover {
 
-    public static Proxy.Node findOrCreateReviewDir(Proxy.Node node){
+    static Proxy.Node findOrCreateReviewDir(Proxy.Node node){
         final Proxy.Node rootNode = node.map.root
         final String reviewDirName = TextUtils.getText("freeplaneGTD.config.reviewDirName")
 

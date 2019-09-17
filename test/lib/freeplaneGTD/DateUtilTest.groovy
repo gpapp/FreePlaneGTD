@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 
 class DateUtilTest {
 
-    int currentYear = Calendar.instance.get(Calendar.YEAR);
+    int currentYear = Calendar.instance.get(Calendar.YEAR)
     Map goodresults = [
             ['v1.1', 'v1.1']                  : null,
             ['11 23', currentYear+'-11-23'] : 'MM dd',
@@ -29,23 +29,23 @@ class DateUtilTest {
             ['2014.11.23.', '2014-11-23']     : 'yyyy.MM.dd.',
             //		'23 NOV 2014':	'dd MMM yyyy',
             ['23 November 2014', '2014-11-23']: 'dd MMMM yyyy',
-    ];
+    ]
 
     @Test
-    public void testDetermineDateFormat() {
+    void testDetermineDateFormat() {
         goodresults.each { value, result ->
             if (result == null) {
-                assert (result == DateUtil.determineDateFormat(value[0]));
+                assert (result == DateUtil.determineDateFormat(value[0]))
             } else {
                 SimpleDateFormat determineDateFormat = DateUtil.determineDateFormat(value[0])
                 assert (null != determineDateFormat): 'Error parsing: ' + value[0]
-                assert (result == determineDateFormat.toPattern());
+                assert (result == determineDateFormat.toPattern())
             }
         }
     }
 
     @Test
-    public void testNormalizeDate() {
+    void testNormalizeDate() {
 
         goodresults.each { value, result ->
             if (result == null) {

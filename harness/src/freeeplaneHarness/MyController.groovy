@@ -68,7 +68,7 @@ class MyController extends Controller implements Proxy.Controller {
 
 
         scriptContext = new ScriptContext()
-        mapViewManager = new MapViewController(this);
+        mapViewManager = new MapViewController(this)
         viewController = new ApplicationViewController(this, mapViewManager, frame)
 
         mapViewManager.changeToMap(myMap)

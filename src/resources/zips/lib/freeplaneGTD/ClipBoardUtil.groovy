@@ -18,40 +18,40 @@ class ClipBoardUtil {
                 new DataFlavor('text/plain; class=java.lang.String'),
         ]
 
-        private final String freeplaneData;
-        private final String plainData;
-        private final String htmlData;
+        private final String freeplaneData
+        private final String plainData
+        private final String htmlData
 
-        public MyTransferable(String freeplaneData, String plainData, String htmlData) {
-            this.freeplaneData = freeplaneData;
-            this.plainData = plainData;
-            this.htmlData = htmlData;
+        MyTransferable(String freeplaneData, String plainData, String htmlData) {
+            this.freeplaneData = freeplaneData
+            this.plainData = plainData
+            this.htmlData = htmlData
         }
 
-        public DataFlavor[] getTransferDataFlavors() {
-            return supportedFlavors;
+        DataFlavor[] getTransferDataFlavors() {
+            return supportedFlavors
         }
 
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
+        boolean isDataFlavorSupported(DataFlavor flavor) {
             for (DataFlavor supportedFlavor : supportedFlavors) {
                 if (supportedFlavor == flavor) {
-                    return true;
+                    return true
                 }
             }
-            return false;
+            return false
         }
 
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-            if (flavor.equals(supportedFlavors[0])) {
-                return freeplaneData;
+        Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            if (flavor == supportedFlavors[0]) {
+                return freeplaneData
             }
-            if (flavor.equals(supportedFlavors[1])) {
+            if (flavor == supportedFlavors[1]) {
                 return htmlData
             }
-            if (flavor.equals(supportedFlavors[2])) {
+            if (flavor == supportedFlavors[2]) {
                 return plainData
             }
-            throw new UnsupportedFlavorException(flavor);
+            throw new UnsupportedFlavorException(flavor)
         }
     }
 
@@ -59,7 +59,7 @@ class ClipBoardUtil {
         return new MyTransferable(
                 extractFreeplane(content, reader),
                 extractText(content),
-                extractHtml(content,showNotes));
+                extractHtml(content,showNotes))
     }
 
     static String contextsToList(String context) {
@@ -113,7 +113,7 @@ class ClipBoardUtil {
                         (it['context'] ? contextsToList((String) it['context']) : '')
             }
         }
-        return list.join('\n');
+        return list.join('\n')
     }
 
     static String extractHtml(Map content, boolean showNotes) {

@@ -20,6 +20,6 @@
 //=========================================================
 import freeplaneGTD.ReportWindow
 
-def reportWindow = ReportWindow.instance;
+def reportWindow = ReportWindow.instance
 reportWindow.show(config)
 reportWindow.refresh()

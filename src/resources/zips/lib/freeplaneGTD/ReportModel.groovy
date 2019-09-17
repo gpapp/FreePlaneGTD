@@ -94,7 +94,7 @@ class ReportModel {
     // parse the GTD mind map
     void parseMap(boolean filterDone) {
         // Expand any nodes with next action shorthand
-        mapReader.convertShorthand();
+        mapReader.convertShorthand()
 
         // Get next action lists
         actionList = mapReader.getActionList(filterDone)

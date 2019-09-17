@@ -1,37 +1,37 @@
 package freeplaneGTD
 
 import groovy.swing.SwingBuilder
-import javafx.application.Platform
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
-import javafx.concurrent.Worker
-import javafx.embed.swing.JFXPanel
-import javafx.scene.Scene
-import javafx.scene.web.WebEngine
-import javafx.scene.web.WebView
-import netscape.javascript.JSObject
+import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
-import org.freeplane.features.format.FormattedDate
+import org.freeplane.features.clipboard.ClipboardController
 import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
+import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
-import javax.swing.*
-import java.awt.*
+import javax.swing.AbstractAction
+import javax.swing.ButtonGroup
+import javax.swing.JCheckBox
+import javax.swing.JComponent
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.KeyStroke
+import javax.swing.SwingUtilities
+import java.awt.Dimension
+import java.awt.Toolkit
+import java.awt.Window
 import java.awt.datatransfer.Clipboard
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.util.logging.Level
 import java.util.logging.Logger
 
 class ReportWindow {
     static enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, DONETIMELINE, ABOUT
+        PROJECT, WHO, CONTEXT, WHEN, DONETIMELINE
     }
 
     enum DONE_TIMELINE {
@@ -42,40 +42,13 @@ class ReportWindow {
 
     }
 
-    private static Map<String, URL> iconCache = new HashMap<>()
     static final String title = 'GTD Next Actions'
-    static final String HTML_HEADER = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ' +
-            '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n'
-    static final String txtVer = '2.0.1'
-    static final String txtURI = 'http://www.itworks.hu/index.php/freeplane-gtd+'
     public static final String FREEPLANE_GTD_DEFAULT_VIEW = 'freeplaneGTD_default_view'
     public static final String FREEPLANE_GTD_REMEMBER_LAST_POSITION = 'freeplaneGTD_remember_last_position'
-    public static final String BASE_CSS = '/*<![CDATA[*/' +
-
-            'body {' +
-            '   color:#000000;' +
-            '   font-family: Tahoma,Arial,"Helvetica Neue",Helvetica,sans-serif;' +
-            '   font-size: 11pt;' +
-            '}' +
-            'h1 {font-size:150%; font-weight:bold;}' +
-            'h2 {font-size:125%; font-weight:bold;}' +
-            'a {text-decoration: none; color:#000077;}' +
-            'ul.actionlist { list-style: none; }' +
-            '.doneIcon { padding-right: 1em }' +
-            '.priorityIcon { left: 2em; position:absolute; }' +
-            '.contextIcon { padding-left: 2pt; padding-right:2pt }' +
-            '.contextTitleIcon { padding-left: 2pt; padding-right:2pt; width:24px;}' +
-            '.wait {font-size:90%; margin-left:32px; margin-top:4px}' +
-            '.details {margin-left:18px; padding:5px; background-color:rgb(240,250,240);font-size:90%;}' +
-            '.note    {margin-left:18px; padding:5px; background-color:rgb(250,250,240);font-size:90%;}' +
-            '.overdue {background-color: rgb(250,150,140)}' +
-            '.buttons {display:inline-block;float:right;font-size:90%;background-color: rgb(200,200,200);padding:2px;color: rgb(0,0,0);}' +
-            '/*]]>*/'
     private FreeplaneScriptBaseClass.ConfigProperties config
     private ReportModel report
     private JFrame mainFrame
-    private JFXPanel projectPane
-    private WebView webView
+    private JPanel taskPanel
     private ButtonGroup contentTypeGroup
     private JCheckBox cbFilterDone
 
@@ -183,29 +156,9 @@ class ReportWindow {
                                 actionPerformed: { refreshContent() }
                         )
                     }
-                    panel(constraints: BorderLayout.CENTER) {
+                    taskPanel = (JPanel) panel(constraints: BorderLayout.CENTER) {
                         gridLayout(columns: 1, rows: 1)
-                        projectPane = new JFXPanel()
-                        Platform.setImplicitExit(false)
-
-                        final ReportWindow currentWindow = this
-                        Platform.runLater({
-                            webView = new WebView()
-                            projectPane.setScene(new Scene(webView))
-                            WebEngine engine = webView.getEngine()
-                            engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-                                @Override
-                                void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                                    if (newValue == Worker.State.SUCCEEDED) {
-                                        JSObject win = engine.executeScript("window") as JSObject
-                                        win.setMember("app", new JSHandler(report, currentWindow) as Object)
-                                    }
-                                }
-                            })
-                            engine.loadContent("TODO: no content")
-                        })
-
-                    }.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), projectPane)
+                    }.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), taskPanel)
 
                     panel(constraints: BorderLayout.SOUTH) {
                         boxLayout(axis: BoxLayout.X_AXIS)
@@ -215,10 +168,12 @@ class ReportWindow {
                                 })
                         button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                                 actionPerformed: {
-                                    Clipboard clip = projectPane.getToolkit().getSystemClipboard()
+                                    Clipboard clip = taskPanel.getToolkit().getSystemClipboard()
                                     if (clip != null) {
+                                        Map<String, Object> curContent
                                         switch (contentTypeGroup.getSelection().actionCommand) {
-                                            case VIEW.PROJECT.name(): curContent = report.projectList(); break
+                                            case VIEW.PROJECT.name():
+                                                curContent = report.projectList(); break
                                             case VIEW.WHO.name(): curContent = report.delegateList(); break
                                             case VIEW.CONTEXT.name(): curContent = report.contextList(); break
                                             case VIEW.WHEN.name(): curContent = report.timelineList(); break
@@ -239,7 +194,7 @@ class ReportWindow {
                         cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
-                                    config.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected)
+                                    config.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected as boolean)
                                     refreshContent()
                                 })
                         checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
@@ -262,10 +217,10 @@ class ReportWindow {
                     })
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
-		            Logger.getAnonymousLogger().log(Level.INFO, "Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
+                    Logger.getAnonymousLogger().log(Level.INFO, "Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
 
                     if (config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)) {
-						Logger.getAnonymousLogger().log(Level.INFO, "lastPosition=" + Integer.toString(mainFrame.x) + ", "+ Integer.toString(mainFrame.y) + ", "+ Integer.toString(mainFrame.width) + ", "+ Integer.toString(mainFrame.height))
+                        Logger.getAnonymousLogger().log(Level.INFO, "lastPosition=" + Integer.toString(mainFrame.x) + ", " + Integer.toString(mainFrame.y) + ", " + Integer.toString(mainFrame.width) + ", " + Integer.toString(mainFrame.height))
                         config.properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
                         config.properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
                         config.properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
@@ -286,137 +241,261 @@ class ReportWindow {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
-		String content
-		selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
-		switch (selectedView) {
-			case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
-				break
-			case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
-				break
-			case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
-				break
-			case VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
-				break
-			case VIEW.ABOUT:
-
-				Tag html = new Tag('html').
-						addChild('head').addContent('style', BASE_CSS, [type: 'text/css'])
-				html.addChild('body', [style: 'padding-left:25px'])
-						.addContent(new Tag('h1', 'Freeplane|').addContent('span', 'GTD', [style: 'color:#ff3300']))
-						.addContent('h2', 'Version ' + txtVer)
-						.addContent('h4', 'by Gergely Papp')
-						.addContent('h5', 'based on the original code by Auxilus Systems LLC')
-						.addContent('h4', 'Licensed under GNU GPL Version 3')
-						.addContent('a', txtURI, [href: txtURI])
-				content = HTML_HEADER + html.toString()
-				break
-			case VIEW.PROJECT:
-			default:
-				content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
-		}
-		Platform.runLater({
-			webView.engine.loadContent(content)
-			webView.engine.reload()
-		})
-    }
-
-    private static URL getIconCopyURL(String iconName) {
-        URL retval = iconCache.get(iconName)
-        if (retval == null) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Loading icon to temp cache:" + iconName)
-            try {
-                InputStream inputStream = new URL("bundle://1:1/images/icons/" + iconName).openStream()
-                File tempDest = File.createTempFile(iconName, "")
-                tempDest.deleteOnExit()
-                Files.copy(inputStream, tempDest.toPath(), StandardCopyOption.REPLACE_EXISTING)
-                inputStream.close()
-                retval = tempDest.toURI().toURL()
-                iconCache.put(iconName, retval)
-            } catch (Exception e) {
-                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot load icon for " + iconName, e)
-            }
+        JComponent content
+        selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
+        switch (selectedView) {
+            case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
+                break
+            case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
+                break
+            case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
+                break
+            case VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
+                break
+            case VIEW.PROJECT:
+                content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
-        return retval
+        taskPanel.add(content)
     }
 
-    private static String formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-        Tag html = new Tag('html', [xmlns: 'http://www.w3.org/1999/xhtml'])
-        Tag head = html.addChild('head')
-        head.addContent('style', BASE_CSS, [type: 'text/css'])
+    private static JComponent formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
+        JComponent newContent
+        SwingBuilder.edtBuilder {
+            newContent = panel() {
+                list['groups'].eachWithIndex { item, index ->
+                    button(text: TextUtils.getText("freeplaneGTD.button.copy"),
+                            actionPerformed: {
+                                copyToClipboard(index)
+                            }
+                    )
+                    button(text: TextUtils.getText("freeplaneGTD.button.select"),
+                            actionPerformed: {
+                                selectOnMap(index)
+                            }
+                    )
+                    if (contextIcons.keySet().contains(item['title'])) {
+                        //TODO : find image
+                        // imageIcon(?getSystemIcon?(contextIcons.get(it['title']) ))
 
-        head.addChild('title')
-        Tag body = new Tag('body')
-        Date now = new Date().clearTime()
-        list['groups'].eachWithIndex { it, index ->
-            body.addChild('div', [class: 'buttons']).
-                    addContent('a', TextUtils.getText("freeplaneGTD.button.copy"), [href: '#', onclick: 'app.copyToClipboard(' + index + ')']).
-                    addContent('|').
-                    addContent('a', TextUtils.getText("freeplaneGTD.button.select"), [href: '#', onclick: 'app.selectOnMap(' + index + ')'])
-            Tag title = body.addChild('h2')
-            if (contextIcons.keySet().contains(it['title'])) {
-
-                title.addChild('img', [class: "contextTitleIcon", src: getIconCopyURL(contextIcons.get(it['title']) + ".png"), "title": it['title']])
-            }
-            title.addContent(it['title'] as String)
-            Tag curItem = body.addChild('ul', ['class': 'actionlist'])
-            it['items'].each {
-                Tag wrap = curItem.addChild('li')
-                if (it['priority']) {
-                    wrap.addChild('img', [class: "priorityIcon", src: getIconCopyURL("full-" + it['priority'] + ".png")])
-                }
-                wrap.addChild('A', [href: '#', onclick: 'app.toggleDone("' + it['nodeID'] + '")']).addChild('img', [class: "doneIcon", src: getIconCopyURL((it['done'] ? "" : "un") + "checked" + ".png")])
-                if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
-                (it['context'] as String)?.tokenize(',')?.each { key ->
-                    if (contextIcons.keySet().contains(key)) {
-                        wrap.addChild('img', [class: "contextIcon", src: getIconCopyURL(contextIcons.get(key) + ".png"), "title": key])
                     }
-                }
-                wrap.addChild('A', [href: '#', onclick: 'app.followLink("' + it['nodeID'] + '")']).addPreformatted(it['action'] as String)
+                    label(title: item['title'])
+                    //TODO: Indent task group
+                    panel() {
+                        gridLayout(columns: 4, rows: it['items'].length)
+                        it['items'].each {
+                            // priority block
+                            panel {
+                                if (it['priority']) {
+                                    //TODO : find image
+                                    // imageIcon(?getSystemIcon("full-" + it['priority'] + "))
+                                    label(title: it['priority'])
+                                }
+                            }
+                            // done checkbox
+                            checkBox(selected: it['done'],
+                                    actionPerformed: {
+                                        toggleDone((String) it['nodeId'])
+                                    })
+                            // context icons
+                            panel {
+                                (it['context'] as String)?.tokenize(',')?.each { key ->
+                                    if (contextIcons.keySet().contains(key)) {
+                                        // imageIcon(?getSystemIcon(contextIcons.get(key)))
+                                    }
+                                }
+                            }
+                            // task content
+                            panel(name: 'content') {
+                                // TODO: set color for overdue
+                                //  if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
+                                StringBuilder actionText = new StringBuilder(it['action'])
 
-                Tag contextTag = new Tag('span')
+                                !it['who'] ?: actionText.append(' [' + it['who'] + ']')
+                                !it['when'] ?: actionText.append(' {' + it['when'] + '}')
+                                !it['context'] ?: (it['context'] as String)?.tokenize(',')?.each { key ->
+                                    actionText.append('@')
+                                    actionText.append(key)
+                                }
+                                !it['project'] ?: actionText.append(' for ' + it['project'])
+                                // TODO: differentiate waitfor somehow?
+                                if (it['waitFor'] || it['waitUntil']) {
+                                    actionText.append('wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''))
+                                }
+                                button(text: actionText,
+                                        actionPerformed: {
+                                            followLink(it['nodeId'] as String)
+                                        }
+                                )
+                                //TODO Invent something to show the notes\
+                                /*
+                                if (showNotes) {
+                                    if (it['details']) {
+                                        wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
+                                    }
+                                    if (it['notes']) {
+                                        wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
+                                    }
+                                }
 
-                (it['context'] as String)?.tokenize(',')?.each { key ->
-                    contextTag.addContent('@')
-                    contextTag.addContent(key)
-                }
-                !it['who'] ?: wrap.addContent(' [' + it['who'] + ']')
-                !it['when'] ?: wrap.addContent(' {' + it['when'] + '}')
-                !it['context'] ?: wrap.addContent(contextTag)
-                !it['project'] ?: wrap.addContent(' for ' + it['project'])
-                if (it['waitFor'] || it['waitUntil']) {
-                    wrap.addContent('div', 'wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''), [class: 'wait'])
-                }
-                if (showNotes) {
-                    if (it['details']) {
-                        wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
-                    }
-                    if (it['notes']) {
-                        wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
+                                */
+                            }
+                        }
                     }
                 }
             }
         }
-        html.addContent(body)
-
-        return HTML_HEADER + html.toString()
+        return newContent
     }
 
     void show(FreeplaneScriptBaseClass.ConfigProperties config) {
         JFrame frameinstance = getMainFrame(config)
+        refreshContent()
         frameinstance.visible = true
     }
 
     void refresh() {
         report = new ReportModel()
         if (mainFrame?.visible) {
-			refreshContent()
-		} else {
-			report.parseMap(false)
-		}
+            refreshContent()
+        } else {
+            report.parseMap(false)
+        }
     }
 
     boolean getAutoFoldMap() {
         return config.getBooleanProperty('freeplaneGTD_auto_fold_map')
     }
 
+    void toggleDone(String linkNodeID) {
+        try {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    def nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
+
+                    if (nodesFound[0] != null) {
+                        def node = nodesFound[0]
+                        if (node.icons.contains(report.mapReader.iconDone)) {
+                            node.icons.remove(report.mapReader.iconDone)
+                        } else {
+                            node.icons.add(report.mapReader.iconDone)
+                        }
+                        target.refreshContent()
+                    } else {
+                        Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot find node to mark as done")
+                        UITools.informationMessage("Cannot find node to mark as done")
+                    }
+                }
+            })
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Error in toggling as done", e)
+        }
+    }
+
+    void followLink(String linkNodeID) {
+        try {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    switchToMainWindow()
+                    List<? extends Node> nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
+
+                    if (nodesFound[0] != null) {
+                        if (target.autoFoldMap) {
+                            foldToTop(nodesFound[0])
+                        }
+                        unfoldBranch(nodesFound[0])
+                        ScriptUtils.c().centerOnNode(nodesFound[0])
+                        ScriptUtils.c().select(nodesFound[0])
+                    } else {
+                        Logger.anonymousLogger.log(Level.SEVERE, "Next Action not found in mind map. Refresh Next Action list")
+                        UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
+                    }
+                }
+            })
+        } catch (Exception e) {
+            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+        }
+    }
+
+    void copyToClipboard(int pos) {
+        try {
+            Map feeder
+            ClipboardController clip = ClipboardController.controller
+            switch (target.selectedView) {
+                case VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
+                case VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
+                case VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
+                case VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
+                default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
+            }
+            clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, target.showNotes)
+            UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
+        } catch (Exception e) {
+            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+        }
+    }
+
+    void selectOnMap(int pos) {
+        try {
+            List list
+            switch (target.selectedView) {
+                case VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break
+                case VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break
+                case VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break
+                case VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break
+                default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
+            }
+            List ids = list.collect { it['nodeID'] }
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                void run() {
+                    switchToMainWindow()
+                    def nodesFound = ScriptUtils.c().find { ids.contains(it.id) }
+                    if (nodesFound.size() > 0) {
+                        if (target.autoFoldMap) {
+                            foldToTop(nodesFound[0])
+                        }
+                        nodesFound.each {
+                            unfoldBranch(it)
+                        }
+                        ScriptUtils.c().centerOnNode(nodesFound[0])
+                        ScriptUtils.c().selectMultipleNodes(nodesFound)
+                    } else {
+                        UITools.informationMessage("Error finding selection")
+                    }
+                }
+            })
+        } catch (Exception e) {
+            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+        }
+    }
+
+    private static void switchToMainWindow() {
+        JFrame parentFrame = Controller.currentController.viewController.menuComponent as JFrame
+        for (Window window : Window.windows) {
+            if (parentFrame == window) {
+                window.toFront()
+            }
+        }
+    }
+
+// recursive unfolding of branch
+    private static void unfoldBranch(Node thisNode) {
+        Node rootNode = thisNode.getMap().getRoot()
+        if (thisNode != rootNode) {
+            if (thisNode.folded) thisNode.setFolded(false)
+            unfoldBranch(thisNode.getParent())
+        }
+    }
+
+// fold to first level
+    private static void foldToTop(Node thisNode) {
+        Node rootNode = thisNode.getMap().getRoot()
+        def Nodes = ScriptUtils.c().findAll()
+        Nodes.each {
+            if (!it.folded) it.setFolded(true)
+        }
+        rootNode.setFolded(false)
+    }
 }

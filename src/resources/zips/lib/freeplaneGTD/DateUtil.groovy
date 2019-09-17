@@ -76,7 +76,7 @@ class DateUtil {
             '^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$'       : new SimpleDateFormat('yyyy/MM/dd HH:mm:ss'),
             '^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'   : new SimpleDateFormat('dd MMM yyyy HH:mm:ss'),
             '^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$'  : new SimpleDateFormat('dd MMMM yyyy HH:mm:ss'),
-    ];
+    ]
 
     /**
      * Determine SimpleDateFormat pattern matching with the given date string. Returns null if
@@ -85,13 +85,13 @@ class DateUtil {
      * @return The matching SimpleDateFormat pattern, or null if format is unknown.
      * @see SimpleDateFormat
      */
-    public static SimpleDateFormat determineDateFormat(String dateString) {
+    static SimpleDateFormat determineDateFormat(String dateString) {
         for (key in DATE_FORMAT_REGEXPS.keySet()) {
             if (dateString.toLowerCase().matches(key)) {
-                return DATE_FORMAT_REGEXPS[key];
+                return DATE_FORMAT_REGEXPS[key]
             }
         }
-        return null; // Unknown format.
+        return null // Unknown format.
     }
 
 
@@ -100,16 +100,16 @@ class DateUtil {
     }
 
     static Object normalizeDate(String dateString) {
-        String field = dateString.trim();
-        SimpleDateFormat fmt = determineDateFormat(field);
+        String field = dateString.trim()
+        SimpleDateFormat fmt = determineDateFormat(field)
         if (fmt != null) {
-            Date date = fmt.parse(dateString);
+            Date date = fmt.parse(dateString)
             if (fmt.toPattern().indexOf('y') < 0) {
-                Date now = new Date();
-                date[YEAR] = now[YEAR];
+                Date now = new Date()
+                date[YEAR] = now[YEAR]
             }
             if (date[YEAR] < 100) {
-                date[YEAR] += 2000;
+                date[YEAR] += 2000
             }
             return new FormattedDate(date.getTime(), stdFormat)
         } else {
