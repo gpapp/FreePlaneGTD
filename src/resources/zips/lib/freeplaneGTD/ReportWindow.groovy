@@ -5,27 +5,20 @@ import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
+import org.freeplane.features.icon.IconController
+import org.freeplane.features.icon.IconStore
 import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
-import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
-import javax.swing.AbstractAction
-import javax.swing.ButtonGroup
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.KeyStroke
-import javax.swing.SwingUtilities
-import java.awt.Dimension
-import java.awt.Toolkit
-import java.awt.Window
+import javax.swing.*
+import java.awt.*
 import java.awt.datatransfer.Clipboard
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.util.List
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -147,18 +140,12 @@ class ReportWindow {
                                 mnemonic: (char) '5',
                                 actionPerformed: { refreshContent() }
                         )
-                        radioButton(
-                                buttonGroup: contentTypeGroup,
-                                actionCommand: VIEW.ABOUT.name(),
-                                text: "? - " + TextUtils.getText("freeplaneGTD.tab.about.title"),
-                                toolTipText: TextUtils.getText("freeplaneGTD.tab.about.tooltip"),
-                                mnemonic: (char) '?',
-                                actionPerformed: { refreshContent() }
-                        )
                     }
-                    taskPanel = (JPanel) panel(constraints: BorderLayout.CENTER) {
-                        gridLayout(columns: 1, rows: 1)
-                    }.add(TextUtils.getText("freeplaneGTD.tab.project.tooltip"), taskPanel)
+                    scrollPane(constraints: BorderLayout.CENTER) {
+                        taskPanel = panel() {
+                            gridLayout(columns: 1, rows: 1)
+                        }
+                    }
 
                     panel(constraints: BorderLayout.SOUTH) {
                         boxLayout(axis: BoxLayout.X_AXIS)
@@ -233,6 +220,7 @@ class ReportWindow {
             mainFrame.setLocation(posX, posY)
             mainFrame.setSize(sizeX, sizeY)
         }
+
         return mainFrame
     }
 
@@ -255,75 +243,85 @@ class ReportWindow {
             case VIEW.PROJECT:
                 content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
         }
+        taskPanel.clear()
         taskPanel.add(content)
+        taskPanel.updateUI()
     }
 
-    private static JComponent formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-        JComponent newContent
+    private Box formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
+        Font titleFont = mainFrame.getFont().deriveFont(Font.BOLD, 24.0)
+        Box newContent = null
         SwingBuilder.edtBuilder {
-            newContent = panel() {
-                list['groups'].eachWithIndex { item, index ->
-                    button(text: TextUtils.getText("freeplaneGTD.button.copy"),
-                            actionPerformed: {
-                                copyToClipboard(index)
-                            }
-                    )
-                    button(text: TextUtils.getText("freeplaneGTD.button.select"),
-                            actionPerformed: {
-                                selectOnMap(index)
-                            }
-                    )
-                    if (contextIcons.keySet().contains(item['title'])) {
-                        //TODO : find image
-                        // imageIcon(?getSystemIcon?(contextIcons.get(it['title']) ))
+            newContent = vbox {
+                list['groups'].eachWithIndex { group, index ->
+                    hbox {
+                        if (contextIcons.keySet().contains(group['title'])) {
+                            //TODO : find image
+                            // imageIcon(?getSystemIcon?(contextIcons.get(it['title']) ))
 
+                        }
+                        label(text: group['title'], font: titleFont)
+                        button(
+                                text: TextUtils.getText("freeplaneGTD.button.copy"),
+                                actionPerformed: {
+                                    copyToClipboard(index)
+                                }
+                        )
+                        button(text: TextUtils.getText("freeplaneGTD.button.select"),
+                                actionPerformed: {
+                                    selectOnMap(index)
+                                }
+                        )
                     }
-                    label(title: item['title'])
                     //TODO: Indent task group
-                    panel() {
-                        gridLayout(columns: 4, rows: it['items'].length)
-                        it['items'].each {
+                    group['items'].each { Object item ->
+                        hbox {
+                            rigidArea(width: 10)
+
+
                             // priority block
                             panel {
-                                if (it['priority']) {
+                                if (item['priority']) {
                                     //TODO : find image
+                                    //imageIcon(image:  IconStore.newInstance().getMindIcon("full-" + it['priority']).icon)
                                     // imageIcon(?getSystemIcon("full-" + it['priority'] + "))
-                                    label(title: it['priority'])
+                                    label(text: item['priority'])
                                 }
                             }
                             // done checkbox
-                            checkBox(selected: it['done'],
+                            checkBox(selected: item['done'],
                                     actionPerformed: {
-                                        toggleDone((String) it['nodeId'])
+                                        toggleDone((String) item['nodeId'])
                                     })
                             // context icons
                             panel {
-                                (it['context'] as String)?.tokenize(',')?.each { key ->
+                                (item['context'] as String)?.tokenize(',')?.each { key ->
                                     if (contextIcons.keySet().contains(key)) {
+
                                         // imageIcon(?getSystemIcon(contextIcons.get(key)))
                                     }
                                 }
                             }
                             // task content
-                            panel(name: 'content') {
+                            panel {
                                 // TODO: set color for overdue
                                 //  if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
-                                StringBuilder actionText = new StringBuilder(it['action'])
+                                StringBuilder actionText = new StringBuilder(item['action'] as String)
 
-                                !it['who'] ?: actionText.append(' [' + it['who'] + ']')
-                                !it['when'] ?: actionText.append(' {' + it['when'] + '}')
-                                !it['context'] ?: (it['context'] as String)?.tokenize(',')?.each { key ->
+                                !item['who'] ?: actionText.append(' [' + item['who'] + ']')
+                                !item['when'] ?: actionText.append(' {' + item['when'] + '}')
+                                !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
                                     actionText.append('@')
                                     actionText.append(key)
                                 }
-                                !it['project'] ?: actionText.append(' for ' + it['project'])
+                                !item['project'] ?: actionText.append(' for ' + item['project'])
                                 // TODO: differentiate waitfor somehow?
-                                if (it['waitFor'] || it['waitUntil']) {
-                                    actionText.append('wait' + (it['waitFor'] ? ' for ' + it['waitFor'] : '') + (it['waitUntil'] ? ' until ' + it['waitUntil'] : ''))
+                                if (item['waitFor'] || item['waitUntil']) {
+                                    actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                                 }
                                 button(text: actionText,
                                         actionPerformed: {
-                                            followLink(it['nodeId'] as String)
+                                            followLink(item['nodeId'] as String)
                                         }
                                 )
                                 //TODO Invent something to show the notes\
@@ -343,13 +341,13 @@ class ReportWindow {
                     }
                 }
             }
+            vglue()
         }
         return newContent
     }
 
     void show(FreeplaneScriptBaseClass.ConfigProperties config) {
         JFrame frameinstance = getMainFrame(config)
-        refreshContent()
         frameinstance.visible = true
     }
 
@@ -498,4 +496,5 @@ class ReportWindow {
         }
         rootNode.setFolded(false)
     }
+
 }
