@@ -1,22 +1,20 @@
 package freeeplaneHarness
 
+import groovy.util.logging.Log
+import org.freeplane.api.*
 import org.freeplane.core.resources.ResourceController
-import org.freeplane.core.ui.IMouseListener
-import org.freeplane.core.ui.IMouseWheelEventHandler
+import org.freeplane.core.ui.AFreeplaneAction
 import org.freeplane.core.ui.IUserInputListenerFactory
 import org.freeplane.core.ui.components.FreeplaneMenuBar
-import org.freeplane.core.ui.menubuilders.generic.BuildPhaseListener
-import org.freeplane.core.ui.menubuilders.generic.BuilderDestroyerPair
 import org.freeplane.core.ui.menubuilders.generic.Entry
-import org.freeplane.core.ui.menubuilders.generic.PhaseProcessor
 import org.freeplane.core.undo.IUndoHandler
 import org.freeplane.core.undo.UndoHandler
 import org.freeplane.core.util.FreeplaneVersion
 import org.freeplane.features.attribute.AttributeController
 import org.freeplane.features.attribute.AttributeRegistry
 import org.freeplane.features.attribute.mindmapmode.MAttributeController
-import org.freeplane.features.clipboard.ClipboardController
-import org.freeplane.features.clipboard.mindmapmode.MClipboardController
+import org.freeplane.features.clipboard.ClipboardControllers
+import org.freeplane.features.clipboard.mindmapmode.MClipboardControllers
 import org.freeplane.features.cloud.CloudController
 import org.freeplane.features.edge.EdgeController
 import org.freeplane.features.filter.FilterController
@@ -41,160 +39,114 @@ import org.freeplane.features.styles.MapStyle
 import org.freeplane.features.styles.MapStyleModel
 import org.freeplane.features.text.TextController
 import org.freeplane.features.text.mindmapmode.MTextController
-import org.freeplane.main.application.ApplicationViewController
+import org.freeplane.features.ui.FrameController
 import org.freeplane.plugin.script.ScriptContext
 import org.freeplane.plugin.script.proxy.MapProxy
 import org.freeplane.plugin.script.proxy.NodeProxy
 import org.freeplane.plugin.script.proxy.Proxy
 import org.freeplane.view.swing.map.MapView
 import org.freeplane.view.swing.map.MapViewController
+import org.freeplane.view.swing.ui.UserInputListenerFactory
 
 import javax.swing.*
-import java.awt.dnd.DragGestureListener
-import java.awt.dnd.DropTargetListener
+import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.KeyListener
-import java.awt.event.MouseWheelListener
+import java.util.List
 
 /**
  * Created by gpapp on 2017.05.28..
  */
+@Log
 class MyController extends Controller implements Proxy.Controller {
     ScriptContext scriptContext
     MapModel myMap
 
-    MyController(ResourceController resourceController, JFrame frame) {
+    MyController(ResourceController resourceController) {
         super(resourceController)
+    }
 
-
+    void start() {
         scriptContext = new ScriptContext()
         mapViewManager = new MapViewController(this)
-        viewController = new ApplicationViewController(this, mapViewManager, frame)
 
-        mapViewManager.changeToMap(myMap)
-
-
-        ModeController modeController = new MModeController(this)
-        MMapController mapController = new MMapController(modeController)
-        modeController.setMapController(mapController)
-
-        modeController.userInputListenerFactory = new IUserInputListenerFactory() {
+        viewController = new FrameController(this, mapViewManager, "dummy_prefix") {
             @Override
-            void addMouseWheelEventHandler(IMouseWheelEventHandler iMouseWheelEventHandler) {
+            FreeplaneMenuBar getFreeplaneMenuBar() {
+                return new FreeplaneMenuBar()
+            }
+
+            @Override
+            void insertComponentIntoSplitPane(JComponent jComponent) {
 
             }
 
             @Override
-            void addToolBar(String s, int i, JComponent jComponent) {
+            boolean isApplet() {
+                return false
+            }
+
+            @Override
+            void openDocument(URI uri) throws IOException {
 
             }
 
             @Override
-            IMouseListener getMapMouseListener() {
+            void openDocument(URL url) throws Exception {
+
+            }
+
+            @Override
+            void removeSplitPane() {
+
+            }
+
+            @Override
+            protected void setFreeplaneMenuBar(FreeplaneMenuBar freeplaneMenuBar) {
+
+            }
+
+            @Override
+            void setTitle(String s) {
+
+            }
+
+            @Override
+            void setWaitingCursor(boolean b) {
+
+            }
+
+            @Override
+            void previousMapView() {
+
+            }
+
+            @Override
+            void nextMapView() {
+
+            }
+
+            @Override
+            Component getCurrentRootComponent() {
                 return null
             }
 
             @Override
-            MouseWheelListener getMapMouseWheelListener() {
+            Component getMenuComponent() {
                 return null
-            }
-
-            @Override
-            MouseWheelListener getNodeMouseWheelListener() {
-                return null
-            }
-
-            @Override
-            JPopupMenu getMapPopup() {
-                return null
-            }
-
-            @Override
-            FreeplaneMenuBar getMenuBar() {
-                return new FreeplaneMenuBar(null)
-            }
-
-            @Override
-            Set<IMouseWheelEventHandler> getMouseWheelEventHandlers() {
-                return null
-            }
-
-            @Override
-            DragGestureListener getNodeDragListener() {
-                return null
-            }
-
-            @Override
-            DropTargetListener getNodeDropTargetListener() {
-                return null
-            }
-
-            @Override
-            KeyListener getNodeKeyListener() {
-                return null
-            }
-
-            @Override
-            IMouseListener getNodeMouseMotionListener() {
-                return null
-            }
-
-            @Override
-            JPopupMenu getNodePopupMenu() {
-                return null
-            }
-
-            @Override
-            JComponent getToolBar(String s) {
-                return null
-            }
-
-            @Override
-            Iterable<JComponent> getToolBars(int i) {
-                return null
-            }
-
-            @Override
-            void removeMouseWheelEventHandler(IMouseWheelEventHandler iMouseWheelEventHandler) {
-
-            }
-
-            @Override
-            void updateMapList() {
-
-            }
-
-            @Override
-            void updateMenus(String s, Set<String> set) {
-
-            }
-
-            @Override
-            void rebuildMenu(Entry entry) {
-
-            }
-
-            @Override
-            void addUiBuilder(PhaseProcessor.Phase phase, String s, BuilderDestroyerPair builderDestroyerPair) {
-
-            }
-
-            @Override
-            void addBuildPhaseListener(BuildPhaseListener buildPhaseListener) {
-
-            }
-
-            @Override
-            Entry getGenericMenuStructure() {
-                return null
-            }
-
-            @Override
-            void rebuildMenus(String s) {
-
             }
         }
+        mapViewManager.changeToMap(myMap)
+
+        ModeController modeController = new MyModeController(this)
         selectMode(modeController)
+
+        modeController.addExtension(ClipboardControllers.class, new MClipboardControllers())
+
+
+        MMapController mapController = new MMapController(modeController) {
+
+        }
+        modeController.setMapController(mapController)
 
         addExtension(FormatController.class, new FormatController())
         addExtension(FilterController.class, new FilterController())
@@ -216,9 +168,9 @@ class MyController extends Controller implements Proxy.Controller {
         modeController.addExtension(LogicalStyleController.class, new LogicalStyleController(modeController))
         def attributeController = new MAttributeController(modeController)
         modeController.addExtension(AttributeController.class, attributeController)
-        modeController.addExtension(ClipboardController.class, new MClipboardController())
 
-        modeController.userInputListenerFactory.updateMenus("/xml/mindmapmodemenu.xml", new HashSet<String>())
+
+//        modeController.userInputListenerFactory.updateMenus("/xml/mindmapmodemenu.xml", new HashSet<String>())
 
 
     }
@@ -228,7 +180,7 @@ class MyController extends Controller implements Proxy.Controller {
         myMap = new MapModel()
         myMap.addExtension(IUndoHandler.class, new UndoHandler(myMap))
         myMap.createNewRoot()
-        myMap.rootNode.addExtension(new AttributeRegistry(modeController.getExtension(AttributeController.class)))
+        myMap.rootNode.addExtension(new AttributeRegistry(myMap,modeController.getExtension(AttributeController.class),modeController.getExtension(TextController.class)))
         MapStyleModel styleModel = new MapStyleModel()
         myMap.rootNode.addExtension(styleModel)
         styleModel.createStyleMap(myMap, styleModel, "\n" +
@@ -286,38 +238,40 @@ class MyController extends Controller implements Proxy.Controller {
         return new MapProxy(myMap, scriptContext)
     }
 
+
     @Override
-    void centerOnNode(Proxy.Node node) {
+    void select(Collection<? extends Node> collection) {
 
     }
 
     @Override
-    void edit(Proxy.Node node) {
+    void centerOnNode(Node node) {
 
     }
 
     @Override
-    void editInPopup(Proxy.Node node) {
+    void edit(Node node) {
 
     }
 
     @Override
-    void select(Proxy.Node node) {
+    void editInPopup(Node node) {
 
     }
 
     @Override
-    void select(Collection<Proxy.Node> collection) {
+    void select(Node node) {
+
+    }
+
+
+    @Override
+    void selectBranch(Node node) {
 
     }
 
     @Override
-    void selectBranch(Proxy.Node node) {
-
-    }
-
-    @Override
-    void selectMultipleNodes(Collection<Proxy.Node> collection) {
+    void selectMultipleNodes(Collection<? extends Node> collection) {
 
     }
 
@@ -356,6 +310,20 @@ class MyController extends Controller implements Proxy.Controller {
 
     }
 
+    @Override
+    Loader load(File file) {
+        return null
+    }
+
+    @Override
+    Loader load(URL url) {
+        return null
+    }
+
+    @Override
+    Loader load(String s) {
+        return null
+    }
 
     @Override
     Proxy.Map newMap(URL url) {
@@ -405,13 +373,28 @@ class MyController extends Controller implements Proxy.Controller {
     }
 
     @Override
+    List<? extends Node> find(NodeCondition condition) {
+        return null
+    }
+
+    @Override
+    List<? extends Node> find(boolean withAncestors, boolean withDescendants, NodeCondition condition) {
+        return null
+    }
+
+    @Override
     List<Proxy.Node> find(ICondition iCondition) {
         return null
     }
 
     @Override
     List<Proxy.Node> find(Closure<Boolean> closure) {
-        return new NodeProxy(myMap.root,scriptContext).find(closure)
+        return new NodeProxy(myMap.root, scriptContext).find(closure)
+    }
+
+    @Override
+    List<? extends Node> find(boolean withAncestors, boolean withDescendants, Closure<Boolean> closure) {
+        return null
     }
 
     @Override
@@ -440,12 +423,61 @@ class MyController extends Controller implements Proxy.Controller {
     }
 
     @Override
-    void export(Proxy.Map map, File file, String s, boolean b) {
+    void export(Map map, File destinationFile, String exportTypeDescription, boolean overwriteExisting) {
 
+    }
+
+    @Override
+    Proxy.Loader mapLoader(File file) {
+        return null
+    }
+
+    @Override
+    Proxy.Loader mapLoader(URL file) {
+        return null
+    }
+
+    @Override
+    Proxy.Loader mapLoader(String file) {
+        return null
+    }
+
+    @Override
+    Script script(File file) {
+        return null
+    }
+
+    @Override
+    Script script(String s, String s1) {
+        return null
     }
 
     @Override
     void quit(ActionEvent actionEvent) {
         System.exit(0)
+    }
+
+    class MyModeController extends MModeController {
+        private UserInputListenerFactory factory
+
+        MyModeController(Controller controller) {
+            super(controller)
+        }
+
+
+        @Override
+        IUserInputListenerFactory getUserInputListenerFactory() {
+            if (!this.factory){
+
+                this.factory = new UserInputListenerFactory(this)
+                factory.genericMenuStructure=new Entry()
+            }
+            return this.factory
+        }
+
+        @Override
+        String getModeName() {
+            return "HarnessController"
+        }
     }
 }

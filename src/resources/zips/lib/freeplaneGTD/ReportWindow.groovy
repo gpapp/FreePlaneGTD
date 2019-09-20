@@ -7,11 +7,14 @@ import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
 import org.freeplane.features.icon.IconController
 import org.freeplane.features.icon.IconStore
+import org.freeplane.features.icon.factory.IconStoreFactory
+import org.freeplane.features.icon.factory.MindIconFactory
 import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import javax.swing.*
+import javax.swing.border.Border
 import java.awt.*
 import java.awt.datatransfer.Clipboard
 import java.awt.event.ActionEvent
@@ -85,7 +88,7 @@ class ReportWindow {
             int sizeY = rememberLastPosition ? config.getIntProperty('freeplaneGTD_last_position_h', tSizeY) : tSizeY
 
             SwingBuilder.edtBuilder {
-                String userPath = ScriptUtils.c().userDirectory.toString()
+                String userPath = config.getFreeplaneUserDirectory()
                 def iconFrame = imageIcon(userPath + "/resources/images/freeplaneGTD-icon.png").image
 
                 mainFrame = frame(title: title,
@@ -142,8 +145,8 @@ class ReportWindow {
                         )
                     }
                     scrollPane(constraints: BorderLayout.CENTER) {
-                        taskPanel = panel() {
-                            gridLayout(columns: 1, rows: 1)
+                        taskPanel = panel(background: Color.RED) {
+                            borderLayout()
                         }
                     }
 
@@ -229,7 +232,7 @@ class ReportWindow {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
         report.parseMap(cbFilterDone.selected)
 
-        JComponent content
+        Component content
         selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
         switch (selectedView) {
             case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
@@ -248,26 +251,33 @@ class ReportWindow {
         taskPanel.updateUI()
     }
 
-    private Box formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-        Font titleFont = mainFrame.getFont().deriveFont(Font.BOLD, 24.0)
-        Box newContent = null
-        SwingBuilder.edtBuilder {
-            newContent = vbox {
-                list['groups'].eachWithIndex { group, index ->
-                    hbox {
-                        if (contextIcons.keySet().contains(group['title'])) {
-                            //TODO : find image
-                            // imageIcon(?getSystemIcon?(contextIcons.get(it['title']) ))
+    private Component formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
+        Font titleFont = mainFrame.getFont().deriveFont(Font.BOLD, 16.0)
 
+        Component retval
+        SwingBuilder.edtBuilder {
+            Border border = lineBorder(color: Color.BLACK) as Border
+            retval = panel(border: border, ) {
+                gridBagLayout()
+                list['groups'].eachWithIndex { group, index ->
+                    panel(border: border, constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
+                        gridBagLayout()
+                        if (contextIcons.keySet().contains(group['title'])) {
+                            label(icon: imageIcon(url: MindIconFactory.createIcon(contextIcons.get(group['title'])).url),
+                                    text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
+                        } else {
+                            label(text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
                         }
-                        label(text: group['title'], font: titleFont)
+
                         button(
                                 text: TextUtils.getText("freeplaneGTD.button.copy"),
+                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
                                 actionPerformed: {
                                     copyToClipboard(index)
                                 }
                         )
                         button(text: TextUtils.getText("freeplaneGTD.button.select"),
+                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
                                 actionPerformed: {
                                     selectOnMap(index)
                                 }
@@ -275,75 +285,71 @@ class ReportWindow {
                     }
                     //TODO: Indent task group
                     group['items'].each { Object item ->
-                        hbox {
-                            rigidArea(width: 10)
+                        rigidArea(width: 30, border: border)
 
-
-                            // priority block
-                            panel {
-                                if (item['priority']) {
-                                    //TODO : find image
-                                    //imageIcon(image:  IconStore.newInstance().getMindIcon("full-" + it['priority']).icon)
-                                    // imageIcon(?getSystemIcon("full-" + it['priority'] + "))
-                                    label(text: item['priority'])
-                                }
-                            }
-                            // done checkbox
-                            checkBox(selected: item['done'],
-                                    actionPerformed: {
-                                        toggleDone((String) item['nodeId'])
-                                    })
-                            // context icons
-                            panel {
-                                (item['context'] as String)?.tokenize(',')?.each { key ->
-                                    if (contextIcons.keySet().contains(key)) {
-
-                                        // imageIcon(?getSystemIcon(contextIcons.get(key)))
-                                    }
-                                }
-                            }
-                            // task content
-                            panel {
-                                // TODO: set color for overdue
-                                //  if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
-                                StringBuilder actionText = new StringBuilder(item['action'] as String)
-
-                                !item['who'] ?: actionText.append(' [' + item['who'] + ']')
-                                !item['when'] ?: actionText.append(' {' + item['when'] + '}')
-                                !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
-                                    actionText.append('@')
-                                    actionText.append(key)
-                                }
-                                !item['project'] ?: actionText.append(' for ' + item['project'])
-                                // TODO: differentiate waitfor somehow?
-                                if (item['waitFor'] || item['waitUntil']) {
-                                    actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
-                                }
-                                button(text: actionText,
-                                        actionPerformed: {
-                                            followLink(item['nodeId'] as String)
-                                        }
-                                )
-                                //TODO Invent something to show the notes\
-                                /*
-                                if (showNotes) {
-                                    if (it['details']) {
-                                        wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
-                                    }
-                                    if (it['notes']) {
-                                        wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
-                                    }
-                                }
-
-                                */
+                        // priority block
+                        JPanel prioPanel = panel(border: border, constraints: gbc(weightx: 0.0))
+                        if (item['priority']) {
+                            createLabelIcon(prioPanel, "full-" + item['priority'])
+                        }
+                        // done checkbox
+                        checkBox(selected: item['done'],
+                                constraints: gbc(weightx: 0.0),
+                                actionPerformed: {
+                                    toggleDone((String) item['nodeId'])
+                                })
+                        // context icons
+                        JPanel iconPanel = panel(border: border, constraints: gbc(weightx: 0.0))
+                        (item['context'] as String)?.tokenize(',')?.each { key ->
+                            if (contextIcons.keySet().contains(key)) {
+                                createLabelIcon(iconPanel, contextIcons.get(key))
                             }
                         }
+                        // task content
+
+                        // TODO: set color for overdue
+                        //  if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
+                        StringBuilder actionText = new StringBuilder(item['action'] as String)
+
+                        !item['who'] ?: actionText.append(' [' + item['who'] + ']')
+                        !item['when'] ?: actionText.append(' {' + item['when'] + '}')
+                        !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
+                            actionText.append('@')
+                            actionText.append(key)
+                        }
+                        !item['project'] ?: actionText.append(' for ' + item['project'])
+                        // TODO: differentiate waitfor somehow?
+                        if (item['waitFor'] || item['waitUntil']) {
+                            actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
+                        }
+                        label(text: actionText,
+                                constraints: gbc(weightx: 1.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER)
+//                                    actionPerformed: {
+//                                        followLink(item['nodeId'] as String)
+//                                    }
+                        )
+                        //TODO Invent something to show the notes\
+                        /*
+                        if (showNotes) {
+                            if (it['details']) {
+                                wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
+                            }
+                            if (it['notes']) {
+                                wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
+                            }
+                        }
+
+                        */
                     }
                 }
-            }
-            vglue()
+                vglue(background: Color.BLUE,constraints: gbc( fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
+            } as Component
         }
-        return newContent
+        return retval
+    }
+
+    void createLabelIcon(JComponent parent, String key) {
+        parent.add(new JLabel(new ImageIcon(MindIconFactory.createIcon(key).url)))
     }
 
     void show(FreeplaneScriptBaseClass.ConfigProperties config) {
