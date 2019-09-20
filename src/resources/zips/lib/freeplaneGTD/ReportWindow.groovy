@@ -2,9 +2,11 @@ package freeplaneGTD
 
 import groovy.swing.SwingBuilder
 import org.freeplane.api.Node
+import org.freeplane.core.ui.components.MultipleImage
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
+import org.freeplane.features.format.FormattedDate
 import org.freeplane.features.icon.factory.MindIconFactory
 import org.freeplane.features.map.clipboard.MapClipboardController
 import org.freeplane.features.mode.Controller
@@ -12,7 +14,6 @@ import org.freeplane.plugin.script.FreeplaneScriptBaseClass
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import javax.swing.*
-import javax.swing.border.Border
 import java.awt.*
 import java.awt.datatransfer.Clipboard
 import java.awt.event.*
@@ -140,7 +141,7 @@ class ReportWindow {
                         )
                     }
                     scrollPane(constraints: BorderLayout.CENTER) {
-                        taskPanel = panel(background: Color.RED) {
+                        taskPanel = panel(border: emptyBorder(bottom: 10, left: 10, top: 10, right: 10)) {
                             borderLayout()
                         }
                     }
@@ -251,14 +252,15 @@ class ReportWindow {
 
         Component retval
         SwingBuilder.edtBuilder {
-            Border border = lineBorder(color: Color.BLACK) as Border
             retval = panel {
                 gridBagLayout()
                 list['groups'].eachWithIndex { group, index ->
                     panel(constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
                         gridBagLayout()
                         if (contextIcons.keySet().contains(group['title'])) {
-                            label(icon: imageIcon(url: MindIconFactory.createIcon(contextIcons.get(group['title'])).url),
+                            MultipleImage multipleImage = new MultipleImage()
+                            multipleImage.addIcon(MindIconFactory.createIcon(contextIcons.get(group['title'])))
+                            label(icon: multipleImage,
                                     text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
                         } else {
                             label(text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
@@ -278,14 +280,17 @@ class ReportWindow {
                                 }
                         )
                     }
-                    //TODO: Indent task group
+
                     group['items'].each { Object item ->
-                        rigidArea(width: 24)
+                        rigidArea(width: 15)
 
                         // priority block
-                        JPanel prioPanel = panel(constraints: gbc(weightx: 0.0))
-                        if (item['priority']) {
-                            createLabelIcon(prioPanel, "full-" + item['priority'])
+                        panel(constraints: gbc(weightx: 0.0)) {
+                            MultipleImage multipleImage = new MultipleImage()
+                            if (item['priority']) {
+                                multipleImage.addIcon(MindIconFactory.createIcon("full-" + item['priority']))
+                            }
+                            label(icon: multipleImage)
                         }
                         // done checkbox
                         checkBox(selected: item['done'],
@@ -294,16 +299,19 @@ class ReportWindow {
                                     toggleDone((String) item['nodeID'])
                                 })
                         // context icons
-                        JPanel iconPanel = panel(constraints: gbc(weightx: 0.0))
-                        (item['context'] as String)?.tokenize(',')?.each { key ->
-                            if (contextIcons.keySet().contains(key)) {
-                                createLabelIcon(iconPanel, contextIcons.get(key))
+                        panel(constraints: gbc(weightx: 0.0)) {
+                            MultipleImage multipleImage = new MultipleImage()
+                            (item['context'] as String)?.tokenize(',')?.each { key ->
+                                if (contextIcons.keySet().contains(key)) {
+                                    multipleImage.addIcon(MindIconFactory.createIcon(contextIcons.get(key)))
+                                }
                             }
+                            label(icon: multipleImage)
                         }
                         // task content
 
                         // TODO: set color for overdue
-                        //  if (it['time'] instanceof FormattedDate && ((FormattedDate) it['time']).before(now)) wrap.addProperty('class', 'overdue')
+                        boolean overdue = item['time'] instanceof FormattedDate && ((FormattedDate) item['time']).before(new Date())
                         StringBuilder actionText = new StringBuilder(item['action'] as String)
 
                         !item['who'] ?: actionText.append(' [' + item['who'] + ']')
@@ -317,9 +325,10 @@ class ReportWindow {
                         if (item['waitFor'] || item['waitUntil']) {
                             actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                         }
-                        JLabel taskLabel = label(text: actionText,
-                                constraints: gbc(weightx: 1.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER)
+                        JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK,
+                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
                         )
+                        glue(constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
                         taskLabel.addMouseListener(new MouseAdapter() {
                             @Override
                             void mouseClicked(MouseEvent e) {
@@ -340,14 +349,10 @@ class ReportWindow {
                         */
                     }
                 }
-                rigidArea(background: Color.BLUE, constraints: gbc(fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
+                glue(constraints: gbc(fill: GridBagConstraints.BOTH, gridheight: GridBagConstraints.REMAINDER, gridwidth: GridBagConstraints.REMAINDER))
             } as Component
         }
         return retval
-    }
-
-    void createLabelIcon(JComponent parent, String key) {
-        parent.add(new JLabel(new ImageIcon(MindIconFactory.createIcon(key).url)))
     }
 
     void show(FreeplaneScriptBaseClass.ConfigProperties config) {
