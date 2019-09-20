@@ -5,10 +5,8 @@ import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
-import org.freeplane.features.icon.IconController
-import org.freeplane.features.icon.IconStore
-import org.freeplane.features.icon.factory.IconStoreFactory
 import org.freeplane.features.icon.factory.MindIconFactory
+import org.freeplane.features.map.clipboard.MapClipboardController
 import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.FreeplaneScriptBaseClass
 import org.freeplane.plugin.script.proxy.ScriptUtils
@@ -17,10 +15,7 @@ import javax.swing.*
 import javax.swing.border.Border
 import java.awt.*
 import java.awt.datatransfer.Clipboard
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.*
 import java.util.List
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -257,10 +252,10 @@ class ReportWindow {
         Component retval
         SwingBuilder.edtBuilder {
             Border border = lineBorder(color: Color.BLACK) as Border
-            retval = panel(border: border, ) {
+            retval = panel {
                 gridBagLayout()
                 list['groups'].eachWithIndex { group, index ->
-                    panel(border: border, constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
+                    panel(constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
                         gridBagLayout()
                         if (contextIcons.keySet().contains(group['title'])) {
                             label(icon: imageIcon(url: MindIconFactory.createIcon(contextIcons.get(group['title'])).url),
@@ -285,10 +280,10 @@ class ReportWindow {
                     }
                     //TODO: Indent task group
                     group['items'].each { Object item ->
-                        rigidArea(width: 30, border: border)
+                        rigidArea(width: 24)
 
                         // priority block
-                        JPanel prioPanel = panel(border: border, constraints: gbc(weightx: 0.0))
+                        JPanel prioPanel = panel(constraints: gbc(weightx: 0.0))
                         if (item['priority']) {
                             createLabelIcon(prioPanel, "full-" + item['priority'])
                         }
@@ -296,10 +291,10 @@ class ReportWindow {
                         checkBox(selected: item['done'],
                                 constraints: gbc(weightx: 0.0),
                                 actionPerformed: {
-                                    toggleDone((String) item['nodeId'])
+                                    toggleDone((String) item['nodeID'])
                                 })
                         // context icons
-                        JPanel iconPanel = panel(border: border, constraints: gbc(weightx: 0.0))
+                        JPanel iconPanel = panel(constraints: gbc(weightx: 0.0))
                         (item['context'] as String)?.tokenize(',')?.each { key ->
                             if (contextIcons.keySet().contains(key)) {
                                 createLabelIcon(iconPanel, contextIcons.get(key))
@@ -322,12 +317,15 @@ class ReportWindow {
                         if (item['waitFor'] || item['waitUntil']) {
                             actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                         }
-                        label(text: actionText,
+                        JLabel taskLabel = label(text: actionText,
                                 constraints: gbc(weightx: 1.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER)
-//                                    actionPerformed: {
-//                                        followLink(item['nodeId'] as String)
-//                                    }
                         )
+                        taskLabel.addMouseListener(new MouseAdapter() {
+                            @Override
+                            void mouseClicked(MouseEvent e) {
+                                followLink(item['nodeID'] as String)
+                            }
+                        })
                         //TODO Invent something to show the notes\
                         /*
                         if (showNotes) {
@@ -342,7 +340,7 @@ class ReportWindow {
                         */
                     }
                 }
-                vglue(background: Color.BLUE,constraints: gbc( fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
+                rigidArea(background: Color.BLUE, constraints: gbc(fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
             } as Component
         }
         return retval
@@ -384,7 +382,7 @@ class ReportWindow {
                         } else {
                             node.icons.add(report.mapReader.iconDone)
                         }
-                        target.refreshContent()
+                        refreshContent()
                     } else {
                         Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot find node to mark as done")
                         UITools.informationMessage("Cannot find node to mark as done")
@@ -405,7 +403,7 @@ class ReportWindow {
                     List<? extends Node> nodesFound = ScriptUtils.c().find { it.id == linkNodeID }
 
                     if (nodesFound[0] != null) {
-                        if (target.autoFoldMap) {
+                        if (autoFoldMap) {
                             foldToTop(nodesFound[0])
                         }
                         unfoldBranch(nodesFound[0])
@@ -425,15 +423,15 @@ class ReportWindow {
     void copyToClipboard(int pos) {
         try {
             Map feeder
-            ClipboardController clip = ClipboardController.controller
-            switch (target.selectedView) {
+            ClipboardController clip = Controller.currentModeController.getExtension(MapClipboardController.class)
+            switch (selectedView) {
                 case VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
                 case VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
                 case VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
                 case VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
                 default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
             }
-            clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, target.showNotes)
+            clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, showNotes)
             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
         } catch (Exception e) {
             Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
@@ -443,12 +441,12 @@ class ReportWindow {
     void selectOnMap(int pos) {
         try {
             List list
-            switch (target.selectedView) {
+            switch (selectedView) {
                 case VIEW.PROJECT: list = (List) report.projectList()['groups'][pos]['items']; break
                 case VIEW.WHO: list = (List) report.delegateList()['groups'][pos]['items']; break
                 case VIEW.CONTEXT: list = (List) report.contextList()['groups'][pos]['items']; break
                 case VIEW.WHEN: list = (List) report.timelineList()['groups'][pos]['items']; break
-                default: throw new UnsupportedOperationException("Invalid selection pane: " + target.selectedView)
+                default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
             }
             List ids = list.collect { it['nodeID'] }
             SwingUtilities.invokeLater(new Runnable() {
@@ -457,7 +455,7 @@ class ReportWindow {
                     switchToMainWindow()
                     def nodesFound = ScriptUtils.c().find { ids.contains(it.id) }
                     if (nodesFound.size() > 0) {
-                        if (target.autoFoldMap) {
+                        if (autoFoldMap) {
                             foldToTop(nodesFound[0])
                         }
                         nodesFound.each {
