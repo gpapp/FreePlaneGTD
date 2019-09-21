@@ -72,10 +72,12 @@ Will be converted to a node with attributes
 
 The plugin uses a number of pre-set icons to identify the action items, and their properties. These can be changed according to the users liking.
 
-* Icon: Project – specifies the grouping node for actions
-* Icon: Next action – specifies the individual actions
-* Icon: Today – specifies the next actions (When property will be ignored on grouping)
-* Icon: Done –  Once an item is completed it can be marked as done.
+* Icon: Project (default icon: 'list' looks like a checklist) – specifies the grouping node for actions
+* Icon: Next action (default icon: 'yes' - looks like !) – specifies the individual actions
+* Icon: Today (default icon: 'bookmark' - looks like a star) – specifies the next actions (When property will be ignored on grouping)
+* Icon: Week (default icon: 'idea' - looks like a lightbulb)– specifies the next actions (When property will be ignored on grouping)
+* Icon: Done (default icon: 'button_ok' - looks like a checkmark)–  Once an item is completed it can be marked as done.
+* Icon: Cancel (default icon: 'button_cancel' - looks like a cross)–  Once an item is cancelled it can be marked as cancelled.
 
 To customize these icons you must place a node with the text above anywhere in your map and add a desired icon to that node. I suggest you place it under a "Config" or "Settings" node in the root of the map, so it doesn't get mixed up with the actual map content.
 
