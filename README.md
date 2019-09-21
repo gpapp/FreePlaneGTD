@@ -75,7 +75,7 @@ The plugin uses a number of pre-set icons to identify the action items, and thei
 * Icon: Project (default icon: 'list' looks like a checklist) – specifies the grouping node for actions
 * Icon: Next action (default icon: 'yes' - looks like !) – specifies the individual actions
 * Icon: Today (default icon: 'bookmark' - looks like a star) – specifies the next actions (When property will be ignored on grouping)
-* Icon: Week (default icon: 'idea' - looks like a lightbulb)– specifies the next actions (When property will be ignored on grouping)
+* Icon: Week (default icon: 'idea' - looks like a lightbulb)– specifies the tasks until the end of the week (will be sorted accordingly) 
 * Icon: Done (default icon: 'button_ok' - looks like a checkmark)–  Once an item is completed it can be marked as done.
 * Icon: Cancel (default icon: 'button_cancel' - looks like a cross)–  Once an item is cancelled it can be marked as cancelled.
 
