@@ -1,7 +1,7 @@
 package freeplaneGTD.mover
 
 import freeplaneGTD.GTDMapReader
-import org.freeplane.plugin.script.proxy.Proxy
+import org.freeplane.api.Node
 
 /**
  * Created by gpapp on 2016.01.24..
@@ -15,13 +15,13 @@ abstract class DoneMover {
      * @param projectDir which node we currently try to look at
      * @return
      */
-    Proxy.Node findProjectRoot(final Proxy.Node targetDir, final Proxy.Node projectDir) {
+    Node findProjectRoot(final Node targetDir, final Node projectDir) {
         if (projectDir == targetDir.map.root) {
             return targetDir
         }
-        Proxy.Node targetParentDir = findProjectRoot(targetDir, projectDir.parent)
+        Node targetParentDir = findProjectRoot(targetDir, projectDir.parent)
         if (projectDir.icons.contains(mapReader.iconProject)) {
-            Proxy.Node targetProjectDir = targetParentDir.children.find { it.text == projectDir.text }
+            Node targetProjectDir = targetParentDir.children.find { it.text == projectDir.text }
             if (!targetProjectDir) {
                 targetProjectDir = targetParentDir.appendChild(projectDir)
             }
@@ -30,7 +30,7 @@ abstract class DoneMover {
         return targetParentDir
     }
 
-    void execute(final Proxy.Node targetDir, final Proxy.Node node) {
+    void execute(final Node targetDir, final Node node) {
         // Must reread it every time in case the configuration nodes were changed
         mapReader.findIcons()
         mapReader.internalConvertShorthand()
@@ -40,22 +40,22 @@ abstract class DoneMover {
 
         if (!node.icons.contains(mapReader.iconNextAction) || !mapReader.isDone(node)) {
             node.children.each {
-                Proxy.Node it ->
-                if (it==targetDir){
-                    return
-                }
-                this.execute(targetDir, it)
+                Node it ->
+                    if (it == targetDir) {
+                        return
+                    }
+                    this.execute(targetDir, it)
             }
             return
         }
 
-        Proxy.Node targetNode = findProjectRoot(targetDir, node.parent)
-        Proxy.Node oldParentPtr = node.parent
+        Node targetNode = findProjectRoot(targetDir, node.parent)
+        Node oldParentPtr = node.parent
         node.moveTo(targetNode)
-        node.left=targetNode.left
+        node.left = targetNode.left
 
         while (!oldParentPtr.children && oldParentPtr.icons.contains(mapReader.iconProject) && oldParentPtr.parent) {
-            Proxy.Node toDelete = oldParentPtr
+            Node toDelete = oldParentPtr
             oldParentPtr = oldParentPtr.parent
             toDelete.delete()
         }

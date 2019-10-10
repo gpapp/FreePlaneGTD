@@ -1,15 +1,15 @@
 package freeplaneGTD.mover
 
+import org.freeplane.api.Node
 import org.freeplane.core.util.TextUtils
-import org.freeplane.plugin.script.proxy.Proxy
 
 class ReviewTask extends DoneMover {
 
-    static Proxy.Node findOrCreateReviewDir(Proxy.Node node) {
-        final Proxy.Node rootNode = node.map.root
-        final String reviewDirName = TextUtils.getText("freeplaneGTD.config.reviewDirName")
+    static Node findOrCreateReviewDir(Node node) {
+        String reviewDirName = TextUtils.getText("freeplaneGTD.config.reviewDirName")
+        Node rootNode = node.map.root
 
-        Proxy.Node archiveNode = rootNode.children.find {
+        Node archiveNode = rootNode.children.find {
             it.transformedText == reviewDirName
         }
         if (!archiveNode) {
