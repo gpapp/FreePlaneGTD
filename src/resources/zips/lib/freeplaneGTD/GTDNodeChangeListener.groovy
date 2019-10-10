@@ -1,42 +1,32 @@
 package freeplaneGTD
 
+import groovy.util.logging.Log
+import org.freeplane.api.Node
 import org.freeplane.features.attribute.NodeAttributeTableModel
 import org.freeplane.features.map.INodeChangeListener
 import org.freeplane.features.map.NodeChangeEvent
-import org.freeplane.features.map.NodeModel
-import org.freeplane.plugin.script.proxy.Proxy
-import org.freeplane.plugin.script.proxy.ProxyFactory
+import org.freeplane.plugin.script.proxy.ScriptUtils
 
-import java.util.logging.Level
-import java.util.logging.Logger
-
+@Log
 class GTDNodeChangeListener implements INodeChangeListener {
     boolean mutex
     GTDMapReader reader
 
     GTDNodeChangeListener() {
         reader = GTDMapReader.instance
-		reader.findIcons()
+        reader.findIcons()
     }
 
-    def getReportWindow() {
-        return ReportWindow.instance
-    }
-
-    void nodeChanged(NodeChangeEvent[] events) {
-		events.each { event -> nodeChanged(event)}
-	}
-	
     void nodeChanged(NodeChangeEvent event) {
-        // freeplane doesn't previous state of a node
-        // so will make some assumptions
+        if (!event.setsDirtyFlag()) return
         if (mutex) return
         mutex = true
         try {
-            NodeModel nodeModel = event.getNode()
+            log.info("Got event:" + event.source.class)
             boolean changed = true
             if (event.property == 'node_text') {
-                Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
+
+                Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
                 if (GTDMapReader.isConfigAlias(node)) {
                     reader.findAliases()
                 } else if (GTDMapReader.isConfigIcon(node)) {
@@ -55,36 +45,31 @@ class GTDNodeChangeListener implements INodeChangeListener {
                     changed = false
                 }
             } else if (event.property == 'icon') {
-                Proxy.Node node = ProxyFactory.createNode(nodeModel, null)
-				
-				reader.findIcons()
-				if (reader.isTask(node)) {
-					// re-read icons on context change
-					if (!event.oldValue && event.newValue) {
-						reader.handleIconAdd(node,event.newValue.name)
-					} else if (event.oldValue && !event.newValue) {
-						reader.handleIconRemove(node,event.oldValue.name)
-					} else if (event.oldValue && event.newValue) {
-						reader.handleIconRemove(node,event.oldValue.name)
-						reader.handleIconAdd(node,event.newValue.name)
-					} else {
-						changed = false
-					}
+                Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
+
+                reader.findIcons()
+                if (reader.isTask(node)) {
+                    // re-read icons on context change
+                    if (!event.oldValue && event.newValue) {
+                        reader.handleIconAdd(node, event.newValue.name)
+                    } else if (event.oldValue && !event.newValue) {
+                        reader.handleIconRemove(node, event.oldValue.name)
+                    } else if (event.oldValue && event.newValue) {
+                        reader.handleIconRemove(node, event.oldValue.name)
+                        reader.handleIconAdd(node, event.newValue.name)
+                    } else {
+                        changed = false
+                    }
                 }
-            } else if (event.property == NodeAttributeTableModel.class) {
-                changed = true
-            } else {
-                changed = false
-            }
+            } else changed = event.property == NodeAttributeTableModel.class
             if (changed) {
-                getReportWindow()?.refresh()
+                ReportWindow.instance.refresh()
             }
 
         } catch (Exception e) {
             // exceptions from a handler are destructive for freeplane
             // so handling everything here
-            Logger.anonymousLogger.log(Level.SEVERE, "Error caught:" + e.message, e)
-            System.err.print("caught in handler" + this.toString() + ": " + e.toString())
+            log.severe("Error caught:" + e.message)
         }
         mutex = false
     }

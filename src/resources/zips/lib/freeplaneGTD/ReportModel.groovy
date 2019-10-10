@@ -3,8 +3,6 @@ package freeplaneGTD
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.ConvertibleDate
 
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.temporal.ChronoUnit
 
 /**
@@ -45,7 +43,7 @@ class ReportModel {
         if (whenDate && !waitUntilDate) retval = whenDate
         else if (!whenDate && waitUntilDate) retval = waitUntilDate
         else retval = whenDate < waitUntilDate ? whenDate : waitUntilDate
-        return retval.equals(today) ? todayText : retval
+        return retval == today ? todayText : retval
     }
 
     /**
@@ -54,7 +52,7 @@ class ReportModel {
     def taskDateComparator = { a, b ->
         def aw = a['when']
         def bw = b['when']
-        if ((!aw && !bw) || aw.equals(bw)) {
+        if ((!aw && !bw) || aw == bw) {
             return 0
         }
         Date ad = null
@@ -80,7 +78,7 @@ class ReportModel {
     def taskSortComparator = { a, b ->
         def ap = a['priority'] ?: '5'
         def bp = b['priority'] ?: '5'
-        if ((!ap && !bp) || ap.equals(bp)) {
+        if ((!ap && !bp) || ap == bp) {
             return taskDateComparator(a, b)
         }
         return ap <=> bp
@@ -92,10 +90,12 @@ class ReportModel {
 
     //--------------------------------------------------------------
     // parse the GTD mind map
-    void parseMap(boolean filterDone) {
+    void parseMap() {
         // Expand any nodes with next action shorthand
         mapReader.convertShorthand()
+    }
 
+    void refreshModel(boolean filterDone) {
         // Get next action lists
         actionList = mapReader.getActionList(filterDone)
         doneList = mapReader.getDoneList()
@@ -107,7 +107,7 @@ class ReportModel {
     def projectList() {
         Map retval = [type: 'project' as Object]
         List<Map> groups = []
-        Map<Object, List> naByGroup = actionList.groupBy { it['project'] }
+        Map<Object, Object> naByGroup = actionList.groupBy { it['project'] }
         naByGroup = naByGroup.sort { it.toString().toLowerCase() }
         naByGroup.each {
             key, value ->
@@ -296,10 +296,10 @@ class ReportModel {
     def doneTimeline() {
         Map retval = [type: 'whenDone' as Object]
         List groups = []
-        Map<ReportWindow.DONE_TIMELINE, List> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
+        Map<ReportWindow.DONE_TIMELINE, Object> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
         byDoneTimeline.each {
             key, value ->
-                groups << [title: TextUtils.getText("freeplaneGTD.doneTimeline."+key), items: value]
+                groups << [title: TextUtils.getText("freeplaneGTD.doneTimeline." + key), items: value]
         }
         retval['groups'] = groups
         return retval

@@ -20,4 +20,5 @@
 //
 //=========================================================
 import freeplaneGTD.ReportWindow
-ReportWindow.instance.refresh()
+
+ReportWindow.instance.parseAndRefresh()

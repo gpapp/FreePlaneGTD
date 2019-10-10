@@ -1,6 +1,7 @@
 package freeplaneGTD
 
 import groovy.swing.SwingBuilder
+import groovy.util.logging.Log
 import org.freeplane.api.Node
 import org.freeplane.core.ui.components.MultipleImage
 import org.freeplane.core.ui.components.UITools
@@ -19,8 +20,8 @@ import java.awt.datatransfer.Clipboard
 import java.awt.event.*
 import java.util.List
 import java.util.logging.Level
-import java.util.logging.Logger
 
+@Log
 class ReportWindow {
     static enum VIEW {
         PROJECT, WHO, CONTEXT, WHEN, DONETIMELINE
@@ -38,7 +39,7 @@ class ReportWindow {
     public static final String FREEPLANE_GTD_DEFAULT_VIEW = 'freeplaneGTD_default_view'
     public static final String FREEPLANE_GTD_REMEMBER_LAST_POSITION = 'freeplaneGTD_remember_last_position'
     private FreeplaneScriptBaseClass.ConfigProperties config
-    private ReportModel report
+    private ReportModel report = new ReportModel()
     private JFrame mainFrame
     private JPanel taskPanel
     private ButtonGroup contentTypeGroup
@@ -55,6 +56,7 @@ class ReportWindow {
         } catch (Exception e) {
             reportWindow = new ReportWindow()
             currentController.metaClass.getGtdReportWindow = { reportWindow }
+            log.info("Monkey patching report window in Controller")
         }
         return reportWindow
     }
@@ -181,12 +183,14 @@ class ReportWindow {
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
                                     config.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected as boolean)
+                                    report.parseMap(it.source.selected as boolean)
                                     refreshContent()
                                 })
                         checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
                                 selected: showNotes,
                                 actionPerformed: {
-                                    showNotes = it.source.selected; refreshContent()
+                                    showNotes = it.source.selected
+                                    refreshContent()
                                 })
                     }
                 }
@@ -203,10 +207,10 @@ class ReportWindow {
                     })
             mainFrame.addWindowListener(new WindowAdapter() {
                 void windowClosing(WindowEvent e) {
-                    Logger.getAnonymousLogger().log(Level.INFO, "Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
+                    log.info("Closing window. rememberLastPosition=" + config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION))
 
                     if (config.getBooleanProperty(FREEPLANE_GTD_REMEMBER_LAST_POSITION)) {
-                        Logger.getAnonymousLogger().log(Level.INFO, "lastPosition=" + Integer.toString(mainFrame.x) + ", " + Integer.toString(mainFrame.y) + ", " + Integer.toString(mainFrame.width) + ", " + Integer.toString(mainFrame.height))
+                        log.info("lastPosition=" + Integer.toString(mainFrame.x) + ", " + Integer.toString(mainFrame.y) + ", " + Integer.toString(mainFrame.width) + ", " + Integer.toString(mainFrame.height))
                         config.properties.put('freeplaneGTD_last_position_x', Integer.toString(mainFrame.x))
                         config.properties.put('freeplaneGTD_last_position_y', Integer.toString(mainFrame.y))
                         config.properties.put('freeplaneGTD_last_position_w', Integer.toString(mainFrame.width))
@@ -226,7 +230,6 @@ class ReportWindow {
 
     void refreshContent() {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
-        report.parseMap(cbFilterDone.selected)
 
         Component content
         selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
@@ -360,12 +363,15 @@ class ReportWindow {
         frameinstance.visible = true
     }
 
+    void parseAndRefresh() {
+        report.parseMap()
+        refresh()
+    }
+
     void refresh() {
-        report = new ReportModel()
         if (mainFrame?.visible) {
+            report.refreshModel(cbFilterDone ? cbFilterDone.selected : false)
             refreshContent()
-        } else {
-            report.parseMap(false)
         }
     }
 
@@ -389,13 +395,13 @@ class ReportWindow {
                         }
                         refreshContent()
                     } else {
-                        Logger.getAnonymousLogger().log(Level.SEVERE, "Cannot find node to mark as done")
+                        log.severe("Cannot find node to mark as done")
                         UITools.informationMessage("Cannot find node to mark as done")
                     }
                 }
             })
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Error in toggling as done", e)
+            log.severe("Error in toggling as done:" + e.message)
         }
     }
 
@@ -415,13 +421,13 @@ class ReportWindow {
                         ScriptUtils.c().centerOnNode(nodesFound[0])
                         ScriptUtils.c().select(nodesFound[0])
                     } else {
-                        Logger.anonymousLogger.log(Level.SEVERE, "Next Action not found in mind map. Refresh Next Action list")
+                        log.severe("Next Action not found in mind map. Refresh Next Action list")
                         UITools.informationMessage("Next Action not found in mind map. Refresh Next Action list")
                     }
                 }
             })
         } catch (Exception e) {
-            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+            log.severe(e.message)
         }
     }
 
@@ -439,7 +445,7 @@ class ReportWindow {
             clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, showNotes)
             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
         } catch (Exception e) {
-            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+            log.severe(e.message)
         }
     }
 
@@ -474,7 +480,7 @@ class ReportWindow {
                 }
             })
         } catch (Exception e) {
-            Logger.anonymousLogger.log(Level.SEVERE, e.message, e)
+            log.severe(e.message)
         }
     }
 
