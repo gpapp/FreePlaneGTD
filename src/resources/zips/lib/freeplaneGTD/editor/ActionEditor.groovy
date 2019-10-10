@@ -4,9 +4,9 @@ import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
 import freeplaneGTD.ReportWindow
 import groovy.swing.SwingBuilder
+import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
-import org.freeplane.plugin.script.proxy.Proxy
 
 import javax.swing.*
 import java.awt.*
@@ -25,14 +25,16 @@ class ActionEditor {
         String waitUntil
         boolean done
 
-        Proxy.Node editedNodes
+        Node editedNodes
 
-        boolean setNode(Proxy.Node node) {
+        boolean setNode(Node node) {
             this.editedNodes = node
             GTDMapReader mapReader = GTDMapReader.instance
+            if (GTDMapReader.isShorthandTask(node)) {
+                mapReader.parseSingleTaskNode(node)
+            }
             mapReader.findIcons()
-            mapReader.internalConvertShorthand()
-            if (!node.icons.contains(mapReader.iconNextAction)) {
+            if (!mapReader.isTask(node)) {
                 UITools.errorMessage('Selected node is not a task')
                 return false
             }
@@ -48,13 +50,13 @@ class ActionEditor {
             return true
         }
 
-        void updateNode() {           
-			editedNodes.text = "$action" 
-            delegate ? editedNodes['Who']=delegate      : editedNodes.attributes.removeAll('Who') 
-            context  ? editedNodes['Where']=context     : editedNodes.attributes.removeAll('Where')
-            when     ? editedNodes['When']=when         : editedNodes.attributes.removeAll('When') 
-            priority ? editedNodes['Priority']=priority : editedNodes.attributes.removeAll('Priority') 
-			 
+        void updateNode() {
+            editedNodes.text = "$action"
+            delegate ? editedNodes['Who'] = delegate : editedNodes.attributes.removeAll('Who')
+            context ? editedNodes['Where'] = context : editedNodes.attributes.removeAll('Where')
+            when ? editedNodes['When'] = when : editedNodes.attributes.removeAll('When')
+            priority ? editedNodes['Priority'] = priority : editedNodes.attributes.removeAll('Priority')
+
             if (waitFor) {
                 editedNodes.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
             } else
@@ -83,10 +85,10 @@ class ActionEditor {
             }
             // Find icons in the entire map
             mapReader.findIcons()
-			
+
             // Re-parse map
-			mapReader.fixAliasesForNode(editedNodes)
-			mapReader.fixIconsForNode(editedNodes)
+            mapReader.fixAliasesForNode(editedNodes)
+            mapReader.fixIconsForNode(editedNodes)
 
             ReportWindow.instance.refresh()
         }
@@ -196,7 +198,7 @@ class ActionEditor {
                 })
     }
 
-    void editNode(Proxy.Node node) {
+    void editNode(Node node) {
         if (!model.setNode(node)) {
             return
         }
