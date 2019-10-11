@@ -312,21 +312,20 @@ class ReportWindow {
                             label(icon: multipleImage)
                         }
                         // task content
-
-                        // TODO: set color for overdue
+                       
                         boolean overdue = item['time'] instanceof FormattedDate && ((FormattedDate) item['time']).before(new Date())
                         StringBuilder actionText = new StringBuilder(item['action'] as String)
 
                         !item['who'] ?: actionText.append(' [' + item['who'] + ']')
                         !item['when'] ?: actionText.append(' {' + item['when'] + '}')
                         !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
-                            actionText.append('@')
+                            actionText.append(' @')
                             actionText.append(key)
                         }
                         !item['project'] ?: actionText.append(' for ' + item['project'])
                         // TODO: differentiate waitfor somehow?
                         if (item['waitFor'] || item['waitUntil']) {
-                            actionText.append('wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
+                            actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                         }
                         JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK,
                                 constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
