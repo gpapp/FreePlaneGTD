@@ -25,10 +25,10 @@ class ActionEditor {
         String waitUntil
         boolean done
 
-        Node editedNodes
+        Node editedNode
 
         boolean setNode(Node node) {
-            this.editedNodes = node
+            this.editedNode = node
             GTDMapReader mapReader = GTDMapReader.instance
             if (GTDMapReader.isShorthandTask(node)) {
                 mapReader.parseSingleTaskNode(node)
@@ -51,44 +51,44 @@ class ActionEditor {
         }
 
         void updateNode() {
-            editedNodes.text = "$action"
-            delegate ? editedNodes['Who'] = delegate : editedNodes.attributes.removeAll('Who')
-            context ? editedNodes['Where'] = context : editedNodes.attributes.removeAll('Where')
-            when ? editedNodes['When'] = when : editedNodes.attributes.removeAll('When')
-            priority ? editedNodes['Priority'] = priority : editedNodes.attributes.removeAll('Priority')
+            editedNode.text = "$action"
+            delegate ? editedNode['Who'] = delegate : editedNode.attributes.removeAll('Who')
+            context ? editedNode['Where'] = context : editedNode.attributes.removeAll('Where')
+            when ? editedNode['When'] = when : editedNode.attributes.removeAll('When')
+            priority ? editedNode['Priority'] = priority : editedNode.attributes.removeAll('Priority')
 
             if (waitFor) {
-                editedNodes.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
+                editedNode.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
             } else
-                editedNodes.attributes.removeAll('WaitFor')
+                editedNode.attributes.removeAll('WaitFor')
 
             if (waitUntil) {
                 def waitUntilDate = DateUtil.normalizeDate(waitUntil)
-                editedNodes.attributes.set('WaitUntil', waitUntilDate)
+                editedNode.attributes.set('WaitUntil', waitUntilDate)
             } else
-                editedNodes.attributes.removeAll('WaitUntil')
+                editedNode.attributes.removeAll('WaitUntil')
 
             GTDMapReader mapReader = GTDMapReader.instance
-            if (editedNodes.icons.contains(mapReader.iconToday) != today) {
+            if (editedNode.icons.contains(mapReader.iconToday) != today) {
                 if (!today) {
-                    editedNodes.icons.remove(mapReader.iconToday)
+                    editedNode.icons.remove(mapReader.iconToday)
                 } else {
-                    editedNodes.icons.add(mapReader.iconToday)
+                    editedNode.icons.add(mapReader.iconToday)
                 }
             }
-            if (editedNodes.icons.contains(mapReader.iconDone) != done) {
+            if (editedNode.icons.contains(mapReader.iconDone) != done) {
                 if (!done) {
-                    editedNodes.icons.remove(mapReader.iconDone)
+                    editedNode.icons.remove(mapReader.iconDone)
                 } else {
-                    editedNodes.icons.add(mapReader.iconDone)
+                    editedNode.icons.add(mapReader.iconDone)
                 }
             }
             // Find icons in the entire map
             mapReader.findIcons()
 
             // Re-parse map
-            mapReader.fixAliasesForNode(editedNodes)
-            mapReader.fixIconsForNode(editedNodes)
+            mapReader.fixAliasesForNode(editedNode)
+            mapReader.fixIconsForNode(editedNode)
 
             ReportWindow.instance.refresh()
         }

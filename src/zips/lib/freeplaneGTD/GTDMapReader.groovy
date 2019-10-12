@@ -107,7 +107,7 @@ class GTDMapReader {
     }
 
     //--------------------------------------------------------------
-    //Get icon key names from Settings/Icons nodes
+    //Get aliases from Settings/Alias nodes
     void findAliases() {
         def aliasesFound = ScriptUtils.c().find { Node it -> isConfigAlias(it) }
         contextAliases = [:]
@@ -231,7 +231,7 @@ class GTDMapReader {
         }
     }
 
-    List<String> replaceWithAlias(originalAttr, aliases) {
+    static List<String> replaceWithAlias(originalAttr, aliases) {
         List newList = [] as List<String>
         if (originalAttr) {
             originalAttr.toString().split(',')*.trim().each { String curItem ->
@@ -359,7 +359,7 @@ class GTDMapReader {
         }
     }
 
-    Node findArchiveNode() {
+    static Node findArchiveNode() {
         Node rootNode = ScriptUtils.node().map.root
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
 
@@ -369,74 +369,6 @@ class GTDMapReader {
         return archiveNode
     }
 
-    List getDoneList() {
-        // TODO remove items from this list that are already archived
-        Node archiveNode = findArchiveNode()
-        def taskNodes = ScriptUtils.c().find { Node it -> it.icons.icons.contains(iconNextAction) && (archiveNode ? !it.isDescendantOf(archiveNode) : true) }
-
-        def result = []
-        // include result if it has next action icon and its not the icon setting node for next actions
-        taskNodes.each {
-            Node thisNode = it
-            def icons = thisNode.icons.icons
-            def naNodeID = thisNode.id
-            // use index method to get attributes
-            String naContext = thisNode['Where'].toString()
-            String naWho = thisNode['Who'].toString()
-            Object naWhen = thisNode['When']
-            Object naWaitFor = thisNode['WaitFor']
-            Object naWaitUntil = thisNode['WaitUntil']
-            String naPriority = thisNode['Priority'].toString()
-            Object naWhenDone = thisNode['WhenDone']
-
-            // take care of missing attributes. null or empty string evaluates as boolean false
-            if (!naWhen) {
-                naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
-            } else {
-                naWhen = DateUtil.normalizeDate(naWhen)
-                thisNode['When'] = naWhen
-            }
-            if ((naWhen != null) && (naWhen instanceof Date)) {
-                if (today == naWhen.clearTime()) {
-                    naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
-                }
-            }
-
-            if (naWaitUntil) {
-                naWaitUntil = DateUtil.normalizeDate(naWaitUntil)
-                thisNode['WaitUntil'] = naWaitUntil
-            }
-
-            String naAction = thisNode.transformedText
-            if (!(naAction =~ /Icon:/)) {
-                String naDetails = stripHTMLTags(thisNode.detailsText)
-                String naNotes = stripHTMLTags(thisNode.noteText)
-                String naProject = findNextActionProject(thisNode, iconProject)
-                if (icons.contains(iconToday)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
-                }
-                boolean done = isDone(it)
-                if (done) {
-                    result << [node     : thisNode,
-                               action   : naAction,
-                               project  : naProject,
-                               context  : naContext,
-                               who      : naWho,
-                               when     : naWhen,
-                               priority : naPriority,
-                               nodeID   : naNodeID,
-                               details  : naDetails,
-                               notes    : naNotes,
-                               waitFor  : naWaitFor,
-                               waitUntil: naWaitUntil,
-                               whenDone : naWhenDone,
-                               done     : done]
-                }
-            }
-        }
-
-        return result
-    }
 
     List getActionList(boolean filterDone) {
         // TODO remove items from this list that are already archived
@@ -449,8 +381,35 @@ class GTDMapReader {
         // include result if it has next action icon and its not the icon setting node for next actions
         taskNodes.each {
             Node thisNode = it
-            def icons = thisNode.icons.icons
-            def naNodeID = thisNode.id
+            String naAction = thisNode.transformedText
+            boolean needed = !(filterDone && isDone(it))
+            createTaskToReturn(naAction, needed, thisNode, result, it)
+        }
+
+        return result
+    }
+
+    List getDoneList() {
+        // TODO remove items from this list that are already archived
+        Node archiveNode = findArchiveNode()
+        def taskNodes = ScriptUtils.c().find { Node it -> it.icons.icons.contains(iconNextAction) && (archiveNode ? !it.isDescendantOf(archiveNode) : true) }
+
+        def result = []
+        // include result if it has next action icon and its not the icon setting node for next actions
+        taskNodes.each {
+            Node thisNode = it
+            String naAction = thisNode.transformedText
+            boolean needed = isDone(it)
+            createTaskToReturn(naAction, needed, thisNode, result, it)
+        }
+
+        return result
+    }
+
+    private void createTaskToReturn(String naAction, boolean needed, Node thisNode, List result, ? extends org.freeplane.api.Node it) {
+        if (!(naAction =~ /Icon:/) && needed) {
+            String[] icons = thisNode.icons.icons
+            String naNodeID = thisNode.id
             // use index method to get attributes
             String naContext = thisNode['Where'].toString()
             String naWho = thisNode['Who'].toString()
@@ -478,37 +437,30 @@ class GTDMapReader {
                 thisNode['WaitUntil'] = naWaitUntil
             }
 
-            String naAction = thisNode.transformedText
-            if (!(naAction =~ /Icon:/)) {
-                String naDetails = stripHTMLTags(thisNode.detailsText)
-                String naNotes = stripHTMLTags(thisNode.noteText)
-                String naProject = findNextActionProject(thisNode, iconProject)
-                if (icons.contains(iconToday)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
-                }
-                boolean done = isDone(it)
-                if (!(filterDone && done)) {
-                    result << [node     : thisNode,
-                               action   : naAction,
-                               project  : naProject,
-                               context  : naContext,
-                               who      : naWho,
-                               when     : naWhen,
-                               priority : naPriority,
-                               nodeID   : naNodeID,
-                               details  : naDetails,
-                               notes    : naNotes,
-                               waitFor  : naWaitFor,
-                               waitUntil: naWaitUntil,
-                               whenDone : naWhenDone,
-                               done     : done]
-                }
+            String naDetails = stripHTMLTags(thisNode.detailsText)
+            String naNotes = stripHTMLTags(thisNode.noteText)
+            String naProject = findNextActionProject(thisNode, iconProject)
+            if (icons.contains(iconToday)) {
+                naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
+            }
+            if (needed) {
+                result << [node     : thisNode,
+                           action   : naAction,
+                           project  : naProject,
+                           context  : naContext,
+                           who      : naWho,
+                           when     : naWhen,
+                           priority : naPriority,
+                           nodeID   : naNodeID,
+                           details  : naDetails,
+                           notes    : naNotes,
+                           waitFor  : naWaitFor,
+                           waitUntil: naWaitUntil,
+                           whenDone : naWhenDone,
+                           done     : isDone(it)]
             }
         }
-
-        return result
     }
-
     //--------------------------------------------------------------
     // Convert next action shorthand notation with recursive walk:
     // shorthand: *<next action> @<Context> [<who>] {<when>} #<priority>
@@ -534,7 +486,7 @@ class GTDMapReader {
 
     }
 
-    void parseSingleQuestionNode(Node it) {
+    static void parseSingleQuestionNode(Node it) {
         String nodeText = it.transformedText.trim()
         nodeText = nodeText.substring(1).trim()
         it.text = nodeText
