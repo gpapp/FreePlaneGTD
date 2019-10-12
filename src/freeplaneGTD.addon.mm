@@ -1,6 +1,6 @@
 <map version="freeplane 1.7.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1570730109340" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
+<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1570906397427" LINK="http://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" show_note_icons="true" fit_to_viewport="false;"/>
@@ -58,7 +58,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="129.74999613314878 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v3.0.0-alpha2"/>
+<attribute NAME="version" VALUE="v3.0.0-alpha3"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.7.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -278,7 +278,7 @@
 <attribute NAME="addons.${name}" VALUE="Freeplane|GTD+"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1541834984017">
+<node TEXT="deinstall" POSITION="left" ID="ID_1357879524" CREATED="1323057303788" MODIFIED="1570906419734">
 <edge COLOR="#999999" WIDTH="3"/>
 <richcontent TYPE="NOTE">
 
@@ -324,13 +324,6 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ShowTasks.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ReviewTask.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/ArchiveTask.groovy"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_nl.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_ru.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_de.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_hu.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_es.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_en.properties"/>
-<attribute NAME="delete" VALUE="${installationbase}/translations/freeplaneGTD_fr.properties"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/JSHandler.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/ReportWindow.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/freeplaneGTD/mover/DoneMover.groovy"/>
