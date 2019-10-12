@@ -382,7 +382,6 @@ class GTDMapReader {
         taskNodes.each {
             Node thisNode = it
             String naAction = thisNode.transformedText
-            boolean needed = isDone(it)
             if (!(naAction =~ /Icon:/) && needed) {
                 String[] icons = thisNode.icons.icons
                 String naNodeID = thisNode.id
@@ -418,22 +417,21 @@ class GTDMapReader {
                 if (icons.contains(iconToday)) {
                     naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
                 }
-                if (needed) {
-                    result << [node     : thisNode,
-                               action   : naAction,
-                               project  : naProject,
-                               context  : naContext,
-                               who      : naWho,
-                               when     : naWhen,
-                               priority : naPriority,
-                               nodeID   : naNodeID,
-                               details  : naDetails,
-                               notes    : naNotes,
-                               waitFor  : naWaitFor,
-                               waitUntil: naWaitUntil,
-                               whenDone : naWhenDone,
-                               done     : isDone(thisNode)]
-                }
+
+                result << [node     : thisNode,
+                           action   : naAction,
+                           project  : naProject,
+                           context  : naContext,
+                           who      : naWho,
+                           when     : naWhen,
+                           priority : naPriority,
+                           nodeID   : naNodeID,
+                           details  : naDetails,
+                           notes    : naNotes,
+                           waitFor  : naWaitFor,
+                           waitUntil: naWaitUntil,
+                           whenDone : naWhenDone,
+                           done     : isDone(thisNode)]
             }
         }
         return result

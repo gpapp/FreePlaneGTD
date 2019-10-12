@@ -230,7 +230,7 @@ class ReportWindow {
 
     void refreshContent() {
         cbFilterDone.selected = config.getBooleanProperty('freeplaneGTD_filter_done')
-
+        report.refreshModel(cbFilterDone.selected)
         Component content
         selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
         switch (selectedView) {
@@ -312,7 +312,7 @@ class ReportWindow {
                             label(icon: multipleImage)
                         }
                         // task content
-                       
+
                         boolean overdue = item['time'] instanceof FormattedDate && ((FormattedDate) item['time']).before(new Date())
                         StringBuilder actionText = new StringBuilder(item['action'] as String)
 
@@ -369,7 +369,6 @@ class ReportWindow {
 
     void refresh() {
         if (mainFrame?.visible) {
-            report.refreshModel(cbFilterDone ? cbFilterDone.selected : false)
             refreshContent()
         }
     }
