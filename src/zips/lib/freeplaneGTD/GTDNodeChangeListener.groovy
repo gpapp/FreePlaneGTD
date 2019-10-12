@@ -29,8 +29,10 @@ class GTDNodeChangeListener implements INodeChangeListener {
                 Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
                 if (GTDMapReader.isConfigAlias(node)) {
                     reader.findAliases()
+                    reader.fixIconsOnAliasConfigChange()
                 } else if (GTDMapReader.isConfigIcon(node)) {
                     reader.findIcons()
+                    reader.fixIconsOnContextConfigChange()
                 } else if (GTDMapReader.isShorthandQuestion(node)) {
                     reader.parseSingleQuestionNode(node)
                 } else if (GTDMapReader.isShorthandTask(node)) {
@@ -47,8 +49,8 @@ class GTDNodeChangeListener implements INodeChangeListener {
             } else if (event.property == 'icon') {
                 Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
 
-                reader.findIcons()
                 if (reader.isTask(node)) {
+                    reader.findIcons()
                     // re-read icons on context change
                     if (!event.oldValue && event.newValue) {
                         reader.handleIconAdd(node, event.newValue.name)
@@ -59,6 +61,20 @@ class GTDNodeChangeListener implements INodeChangeListener {
                         reader.handleIconAdd(node, event.newValue.name)
                     } else {
                         changed = false
+                    }
+                } else if (GTDMapReader.isConfigIcon(node) || GTDMapReader.isConfigAlias(node)) {
+                    if (node.icons.size() > 1 && !event.oldValue) {
+                        node.icons.remove(1)
+                    } else {
+                        try {
+                            reader.findIcons()
+                            reader.handleConfigIconChange(node, event.oldValue?.name, event.newValue?.name)
+                        } catch (Exception e) {
+                            node.icons.remove(0)
+                            reader.findIcons()
+                            ScriptUtils.c().statusInfo = e.message
+                            log.severe("Error caught:" + e.message)
+                        }
                     }
                 }
             } else changed = event.property == NodeAttributeTableModel.class

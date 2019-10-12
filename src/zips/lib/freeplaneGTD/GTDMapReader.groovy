@@ -46,6 +46,13 @@ class GTDMapReader {
     Map<String, String> contextIcons
     Map<String, String> contextAliases
     Map<String, String> delegateAliases
+    private final String defaultIconNextAction = "yes"
+    private final String defaultIconProject = "list"
+    private final String defaultIconToday = "bookmark"
+    private final String defaultIconWeek = "idea"
+    private final String defaultIconDone = "button_ok"
+    private final String defaultIconCancel = "button_cancel"
+
 
     static GTDMapReader getInstance() {
         if (!instance) {
@@ -93,7 +100,7 @@ class GTDMapReader {
     }
 
     boolean isTask(Node node) {
-        node.icons.contains(iconNextAction)
+        !node.transformedText.startsWith('Icon: ') && node.icons.contains(iconNextAction)
     }
 
     boolean isDone(Node node) {
@@ -135,16 +142,81 @@ class GTDMapReader {
         }
     }
 
+    void fixIconsOnAliasConfigChange() {
+        // Run on all nodes that are tasks and have Who or Where attributes
+        ScriptUtils.c().find { Node it -> isTask(it) && (it.attributes['Who'] || it.attributes['Where']) }.each {
+            fixAliasesForNode(it)
+            fixIconsForNode(it)
+        }
+    }
+
+    void fixIconsOnContextConfigChange() {
+        // Run on all nodes that are tasks and have at least another icon
+        ScriptUtils.c().find { Node it -> isTask(it) && it.attributes['Where'] }.each {
+            fixIconsForNode(it)
+        }
+    }
+
+    void handleConfigIconChange(Node node, String oldIcon, String newIcon) {
+        //prevent reuse
+        findIcons()
+
+        boolean wasTaskIcon = false
+        String nodeText = node.transformedText.trim()
+        if (nodeText == 'Icon: Next action') {
+            wasTaskIcon = true
+        }
+        if (!oldIcon) {
+            oldIcon = getDefaultIcon(nodeText)
+        }
+        if (!newIcon) {
+            newIcon = getDefaultIcon(nodeText)
+        }
+        if (oldIcon == newIcon)
+            return
+        if (!oldIcon) {
+            fixIconsOnContextConfigChange()
+        }
+        if (!newIcon) {
+            ScriptUtils.c().find { Node it -> isTask(it) && it.icons.contains(oldIcon) }.each {
+                it.icons.remove(oldIcon)
+            }
+        } else {
+            ScriptUtils.c().find { Node it -> (wasTaskIcon ? !it.text.startsWith('Icon:') : isTask(it)) && it.icons.contains(oldIcon) }.each {
+                it.icons.remove(oldIcon)
+                it.icons.add(newIcon)
+            }
+        }
+    }
+
+    private String getDefaultIcon(String nodeText) {
+        String toReturn = null
+        if (nodeText == 'Icon: Next action') {
+            toReturn = defaultIconNextAction
+        } else if (nodeText == 'Icon: Project') {
+            toReturn = defaultIconProject
+        } else if (nodeText == 'Icon: Today') {
+            toReturn = defaultIconToday
+        } else if (nodeText == 'Icon: Week') {
+            toReturn = defaultIconWeek
+        } else if (nodeText == 'Icon: Done') {
+            toReturn = defaultIconDone
+        } else if (nodeText == 'Icon: Cancel') {
+            toReturn = defaultIconCancel
+        }
+        return toReturn
+    }
+
     //--------------------------------------------------------------
     //Get icon key names from Settings/Icons nodes
     void findIcons() {
         // Get icon keys for next actions and projects
-        iconNextAction = "yes"
-        iconProject = "list"
-        iconToday = "bookmark"
-        iconWeek = "idea"
-        iconDone = "button_ok"
-        iconCancel = "button_cancel"
+        iconNextAction = defaultIconNextAction
+        iconProject = defaultIconProject
+        iconToday = defaultIconToday
+        iconWeek = defaultIconWeek
+        iconDone = defaultIconDone
+        iconCancel = defaultIconCancel
         contextIcons = [:]
 
         def iconsFound = ScriptUtils.c().find { Node it -> isConfigIcon(it) }
@@ -152,6 +224,8 @@ class GTDMapReader {
         iconsFound.each {
             Node it ->
                 String firstIcon = it.icons.first
+                if (!firstIcon)
+                    return
                 String nodeText = it.transformedText.trim()
 
                 if (firstIcon ==~ /^full-\d$/) {
@@ -170,6 +244,9 @@ class GTDMapReader {
                 } else if (nodeText == 'Icon: Cancel') {
                     iconCancel = firstIcon
                 } else if (nodeText =~ '^Icon: @') {
+                    if (contextIcons.containsValue(firstIcon)) {
+                        throw new Exception('Trying to reuse context icon:' + firstIcon + ' on node ' + nodeText)
+                    }
                     String context = nodeText.replaceAll(/^Icon: @(\S*)/, '$1')
                     contextIcons[context] = firstIcon
                 }
@@ -344,6 +421,7 @@ class GTDMapReader {
         }
     }
 
+
     static Node findArchiveNode() {
         Node rootNode = ScriptUtils.node().map.root
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
@@ -382,7 +460,7 @@ class GTDMapReader {
         taskNodes.each {
             Node thisNode = it
             String naAction = thisNode.transformedText
-            if (!(naAction =~ /Icon:/) && needed) {
+            if (!(naAction =~ /Icon:/)) {
                 String[] icons = thisNode.icons.icons
                 String naNodeID = thisNode.id
                 String naContext = thisNode['Where'].toString()
@@ -564,5 +642,6 @@ class GTDMapReader {
         fields['action'] = toParse.replaceAll(/^\s*\*\s*/, '').trim()
         return fields
     }
+
 
 }

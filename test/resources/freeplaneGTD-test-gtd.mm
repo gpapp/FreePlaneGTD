@@ -267,10 +267,10 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="Parse normal" ID="ID_1688946449" CREATED="1413839788216" MODIFIED="1570907647154">
+<node TEXT="Parse normal" ID="ID_1688946449" CREATED="1413839788216" MODIFIED="1570912672795">
 <icon BUILTIN="yes"/>
 <attribute NAME="When" VALUE="2014-10-05" OBJECT="org.freeplane.features.format.FormattedDate|2014-10-05T00:00+0200|yyyy-MM-dd"/>
-<attribute NAME="Where" VALUE="la"/>
+<attribute NAME="Where" VALUE="long,b"/>
 </node>
 <node TEXT="* Parse normal {2014.10.06.}" ID="ID_67657887" CREATED="1413839788216" MODIFIED="1425007694260"/>
 <node TEXT="* Parse normal {2014.10.07}" ID="ID_661306974" CREATED="1413839788219" MODIFIED="1425007699380"/>
@@ -346,7 +346,7 @@
 <node TEXT="Icon: d" ID="ID_359275779" CREATED="1425334301550" MODIFIED="1425334353719">
 <icon BUILTIN="smily_bad"/>
 </node>
-<node TEXT="Alias: @LongAlias @la" ID="ID_1617690789" CREATED="1570906519991" MODIFIED="1570906535743"/>
+<node TEXT="Alias: @LongAlias @la" ID="ID_1617690789" CREATED="1570906519991" MODIFIED="1570911674105"/>
 <node TEXT="Alias: @ShortAlias @sa @s" ID="ID_1948533325" CREATED="1570906537262" MODIFIED="1570906555184"/>
 </node>
 </node>
