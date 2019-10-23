@@ -7,6 +7,8 @@ import org.freeplane.features.map.INodeChangeListener
 import org.freeplane.features.map.NodeChangeEvent
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
+import java.util.logging.Level
+
 @Log
 class GTDNodeChangeListener implements INodeChangeListener {
     boolean mutex
@@ -79,13 +81,13 @@ class GTDNodeChangeListener implements INodeChangeListener {
                 }
             } else changed = event.property == NodeAttributeTableModel.class
             if (changed) {
-                ReportWindow.instance.refresh()
+                GtdReportController.gtdReportViewController.refreshContent()
             }
 
         } catch (Exception e) {
             // exceptions from a handler are destructive for freeplane
             // so handling everything here
-            log.severe("Error caught:" + e.message)
+            log.log(Level.SEVERE, "Error caught:" + e.message, e)
         }
         mutex = false
     }

@@ -17,13 +17,12 @@ import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import javax.swing.*
 import java.awt.*
-import java.awt.datatransfer.Clipboard
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.logging.Level
 
 @Log
-class GTDReportViewController {
+class GtdReportViewController {
 
     public static final String FREEPLANE_GTD_DEFAULT_VIEW = 'freeplaneGTD_default_view'
     static enum VIEW {
@@ -53,7 +52,7 @@ class GTDReportViewController {
             defaultView = VIEW.valueOf(ResourceController.resourceController.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
         } catch (Exception e) {
             defaultView = VIEW.PROJECT.toString()
-            log.log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
+            log.log(Level.WARNING, "Cannot parse default view property:" + ResourceController.resourceController.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
         }
 
         JPanel newPanel = null
@@ -122,21 +121,7 @@ class GTDReportViewController {
                             })
                     button(text: TextUtils.getText("freeplaneGTD.button.copy"),
                             actionPerformed: {
-                                Clipboard clip = taskPanel.getToolkit().getSystemClipboard()
-                                if (clip != null) {
-                                    Map<String, Object> curContent
-                                    switch (contentTypeGroup.getSelection().actionCommand) {
-                                        case VIEW.PROJECT.name():
-                                            curContent = report.projectList(); break
-                                        case VIEW.WHO.name(): curContent = report.delegateList(); break
-                                        case VIEW.CONTEXT.name(): curContent = report.contextList(); break
-                                        case VIEW.WHEN.name(): curContent = report.timelineList(); break
-                                        case VIEW.DONETIMELINE.name(): curContent = report.doneTimeline(); break
-                                        default: curContent = report.projectList(); break
-                                    }
-                                    clip.setContents(ClipBoardUtil.createTransferable(curContent, report.mapReader, showNotes), null)
-                                    UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
-                                }
+                                copyToClipboard(-1)
                             })
                     cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
                             selected: ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done'),
@@ -291,18 +276,22 @@ class GTDReportViewController {
         return newList
     }
 
+    private List findSelectedGroup(int pos) {
+        java.util.List list
+        switch (selectedView) {
+            case VIEW.PROJECT: list = (java.util.List) report.projectList(); break
+            case VIEW.WHO: list = (java.util.List) report.delegateList(); break
+            case VIEW.CONTEXT: list = (java.util.List) report.contextList(); break
+            case VIEW.WHEN: list = (java.util.List) report.timelineList(); break
+            default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
+        }
+        return pos < 0 ? list['groups'] : list['groups'][pos]
+    }
+
     void copyToClipboard(int pos) {
         try {
-            Map feeder
             ClipboardController clip = Controller.currentModeController.getExtension(MapClipboardController.class)
-            switch (selectedView) {
-                case VIEW.PROJECT: feeder = [type: 'project', groups: [report.projectList()['groups'][pos]]]; break
-                case VIEW.WHO: feeder = [type: 'who', groups: [report.delegateList()['groups'][pos]]]; break
-                case VIEW.CONTEXT: feeder = [type: 'context', groups: [report.contextList()['groups'][pos]]]; break
-                case VIEW.WHEN: feeder = [type: 'when', groups: [report.timelineList()['groups'][pos]]]; break
-                default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
-            }
-            clip.clipboardContents = ClipBoardUtil.createTransferable(feeder, report.mapReader, showNotes)
+            clip.clipboardContents = ClipBoardUtil.createTransferable([type: selectedView.name().toLowerCase(), groups: findSelectedGroup(pos)], report.mapReader, showNotes)
             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
         } catch (Exception e) {
             log.severe(e.message)
@@ -311,15 +300,7 @@ class GTDReportViewController {
 
     void selectOnMap(int pos) {
         try {
-            java.util.List list
-            switch (selectedView) {
-                case VIEW.PROJECT: list = (java.util.List) report.projectList()['groups'][pos]['items']; break
-                case VIEW.WHO: list = (java.util.List) report.delegateList()['groups'][pos]['items']; break
-                case VIEW.CONTEXT: list = (java.util.List) report.contextList()['groups'][pos]['items']; break
-                case VIEW.WHEN: list = (java.util.List) report.timelineList()['groups'][pos]['items']; break
-                default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
-            }
-            java.util.List ids = list.collect { it['nodeID'] }
+            java.util.List ids = findSelectedGroup(pos)['items'].collect { it['nodeID'] }
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 void run() {
@@ -418,4 +399,8 @@ class GTDReportViewController {
         rootNode.setFolded(false)
     }
 
+    void parseAndRefresh() {
+        report.parseMap()
+        refreshContent()
+    }
 }

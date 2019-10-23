@@ -277,8 +277,8 @@ class ReportModel {
         return retval
     }
 
-    ReportWindow.DONE_TIMELINE doneTimeline(Object time) {
-        if (!time) return ReportWindow.DONE_TIMELINE.EARLIER
+    GtdReportViewController.DONE_TIMELINE doneTimeline(Object time) {
+        if (!time) return GtdReportViewController.DONE_TIMELINE.EARLIER
         Date date = DateUtil.normalizeDate(time) as Date
 
         // today to compare with
@@ -291,16 +291,16 @@ class ReportModel {
         if (days < 0) {
             throw new IllegalArgumentException("date from future $time")
         }
-        if (days < 1) return ReportWindow.DONE_TIMELINE.TODAY
-        if (days < 7) return ReportWindow.DONE_TIMELINE.LAST_WEEK
-        if (days < 30) return ReportWindow.DONE_TIMELINE.LAST_MONTH
-        return ReportWindow.DONE_TIMELINE.EARLIER
+        if (days < 1) return GtdReportViewController.DONE_TIMELINE.TODAY
+        if (days < 7) return GtdReportViewController.DONE_TIMELINE.LAST_WEEK
+        if (days < 30) return GtdReportViewController.DONE_TIMELINE.LAST_MONTH
+        return GtdReportViewController.DONE_TIMELINE.EARLIER
     }
 
     def doneTimeline() {
         Map retval = [type: 'whenDone' as Object]
         List groups = []
-        Map<ReportWindow.DONE_TIMELINE, Object> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
+        Map<GtdReportViewController.DONE_TIMELINE, Object> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
         byDoneTimeline.each {
             key, value ->
                 groups << [title: TextUtils.getText("freeplaneGTD.doneTimeline." + key), items: value]

@@ -2,7 +2,7 @@ package freeplaneGTD.editor
 
 import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
-import freeplaneGTD.ReportWindow
+import freeplaneGTD.GtdReportController
 import groovy.swing.SwingBuilder
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
@@ -104,7 +104,7 @@ class MultinodeActionEditor {
             // Only re-parse the current node
             mapReader.internalConvertShorthand(editedNodes)
 
-            ReportWindow.instance.refresh(editedNodes.map.root)
+            GtdReportController.gtdReportViewController.refreshContent()
         }
     }
     ActionEditorModel model = new ActionEditorModel()

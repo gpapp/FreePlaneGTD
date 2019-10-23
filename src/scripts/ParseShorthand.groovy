@@ -1,4 +1,3 @@
-
 // @ExecutionModes({on_single_node="main_menu_scripting/freeplaneGTD[addons.parseShorthand]"})
 //=========================================================
 // Freeplane GTD+
@@ -19,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-import freeplaneGTD.ReportWindow
+import freeplaneGTD.GtdReportController
+import org.freeplane.features.mode.Controller
 
-ReportWindow.instance.parseAndRefresh()
+Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+        gtdReportViewController.parseAndRefresh()

@@ -2,12 +2,13 @@ package freeplaneGTD.editor
 
 import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
-import freeplaneGTD.ReportWindow
+import freeplaneGTD.GtdReportController
 import groovy.swing.SwingBuilder
 import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.icon.factory.MindIconFactory
+import org.freeplane.features.mode.Controller
 
 import javax.swing.*
 import java.awt.*
@@ -100,7 +101,8 @@ class ActionEditor {
             mapReader.fixAliasesForNode(editedNode)
             mapReader.fixIconsForNode(editedNode)
 
-            ReportWindow.instance.refresh()
+            Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+                    gtdReportViewController.parseAndRefresh()
         }
     }
     ActionEditorModel model = new ActionEditorModel()
