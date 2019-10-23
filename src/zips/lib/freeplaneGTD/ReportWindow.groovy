@@ -301,6 +301,12 @@ class ReportWindow {
                                 actionPerformed: {
                                     toggleDone((String) item['nodeID'])
                                 })
+                        // cancelled checkbox
+                        checkBox(selected: item['cancelled'],
+                                constraints: gbc(weightx: 0.0),
+                                actionPerformed: {
+                                    toggleDone((String) item['nodeID'])
+                                })
                         // context icons
                         panel(constraints: gbc(weightx: 0.0)) {
                             MultipleImage multipleImage = new MultipleImage()

@@ -115,6 +115,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              cancelled: it['cancelled'],
                               whenDone : it['whenDone'],
                               time     : it['time'],
                               priority : it['priority'],
@@ -167,6 +168,7 @@ class ReportModel {
                 def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
+                                   cancelled: it['cancelled'],
                                    whenDone : it['whenDone'],
                                    time     : it['time'],
                                    priority : it['priority'],
@@ -216,6 +218,7 @@ class ReportModel {
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
+                              cancelled: it['cancelled'],
                               whenDone : it['whenDone'],
                               time     : it['time'],
                               priority : it['priority'],
@@ -246,18 +249,19 @@ class ReportModel {
                 List<Map> items = []
                 def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
                 curGroup.each {
-                    def newItem = [done    : it['done'],
-                                   whenDone: it['whenDone'],
-                                   time    : it['time'],
-                                   priority: it['priority'],
-                                   action  : it['action'],
-                                   nodeID  : it['nodeID'],
-                                   who     : it['who'],
-                                   project : it['project'],
-                                   context : it['context'],
-                                   waitFor : it['waitFor'],
-                                   details : it['details'],
-                                   notes   : it['notes']
+                    def newItem = [done     : it['done'],
+                                   cancelled: it['cancelled'],
+                                   whenDone : it['whenDone'],
+                                   time     : it['time'],
+                                   priority : it['priority'],
+                                   action   : it['action'],
+                                   nodeID   : it['nodeID'],
+                                   who      : it['who'],
+                                   project  : it['project'],
+                                   context  : it['context'],
+                                   waitFor  : it['waitFor'],
+                                   details  : it['details'],
+                                   notes    : it['notes']
                     ]
                     if (it['when'] && it['when'] != key) {
                         newItem['when'] = it['when']

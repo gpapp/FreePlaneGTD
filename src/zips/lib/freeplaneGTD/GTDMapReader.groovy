@@ -509,7 +509,8 @@ class GTDMapReader {
                            waitFor  : naWaitFor,
                            waitUntil: naWaitUntil,
                            whenDone : naWhenDone,
-                           done     : isDone(thisNode)]
+                           done     : icons.contains(iconDone),
+                           cancelled: icons.contains(iconCancel)]
             }
         }
         return result
