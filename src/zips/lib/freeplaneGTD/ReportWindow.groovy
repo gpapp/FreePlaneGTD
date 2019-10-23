@@ -70,7 +70,7 @@ class ReportWindow {
                 defaultView = VIEW.valueOf(config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW)).toString()
             } catch (Exception e) {
                 defaultView = VIEW.PROJECT.toString()
-                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
+                log.log(Level.WARNING, "Cannot parse default view property:" + config.getProperty(FREEPLANE_GTD_DEFAULT_VIEW), e)
             }
 
             Dimension screenSize = Toolkit.defaultToolkit.screenSize

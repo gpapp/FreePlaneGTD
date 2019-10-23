@@ -7,6 +7,7 @@ import groovy.swing.SwingBuilder
 import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
+import org.freeplane.features.icon.factory.MindIconFactory
 
 import javax.swing.*
 import java.awt.*
@@ -151,8 +152,24 @@ class ActionEditor {
                     whenField = textField(preferredSize: new Dimension(250, 25),
                             constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
                     hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
-                        doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"))
-                        cancelledField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"))
+                        doneField = checkBox(
+                                text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
+                                icon: MindIconFactory.createIcon("unchecked").icon,
+                                selectedIcon: MindIconFactory.createIcon("button_ok").icon,
+                                actionPerformed: {
+                                    if (doneField.selected && cancelledField.selected) {
+                                        cancelledField.selected = false
+                                    }
+                                })
+                        cancelledField = checkBox(
+                                text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"),
+                                icon: MindIconFactory.createIcon("unchecked").icon,
+                                selectedIcon: MindIconFactory.createIcon("button_cancel").icon,
+                                actionPerformed: {
+                                    if (doneField.selected && cancelledField.selected) {
+                                        doneField.selected = false
+                                    }
+                                })
                     }
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
