@@ -298,14 +298,18 @@ class ReportWindow {
                         // done checkbox
                         checkBox(selected: item['done'],
                                 constraints: gbc(weightx: 0.0),
+                                icon: MindIconFactory.createIcon("unchecked").icon,
+                                selectedIcon: MindIconFactory.createIcon("yes").icon,
                                 actionPerformed: {
-                                    toggleDone((String) item['nodeID'])
+                                    toggleDone((String) item['nodeID'], false)
                                 })
                         // cancelled checkbox
                         checkBox(selected: item['cancelled'],
                                 constraints: gbc(weightx: 0.0),
+                                icon: MindIconFactory.createIcon("unchecked").icon,
+                                selectedIcon: MindIconFactory.createIcon("no").icon,
                                 actionPerformed: {
-                                    toggleDone((String) item['nodeID'])
+                                    toggleDone((String) item['nodeID'], true)
                                 })
                         // context icons
                         panel(constraints: gbc(weightx: 0.0)) {
@@ -383,7 +387,7 @@ class ReportWindow {
         return config.getBooleanProperty('freeplaneGTD_auto_fold_map')
     }
 
-    void toggleDone(String linkNodeID) {
+    void toggleDone(String linkNodeID, boolean isCancel) {
         try {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
@@ -392,10 +396,11 @@ class ReportWindow {
 
                     if (nodesFound[0] != null) {
                         def node = nodesFound[0]
-                        if (node.icons.contains(report.mapReader.iconDone)) {
+                        if (node.icons.contains(report.mapReader.iconDone) || node.icons.contains(report.mapReader.iconCancel)) {
                             node.icons.remove(report.mapReader.iconDone)
+                            node.icons.remove(report.mapReader.iconCancel)
                         } else {
-                            node.icons.add(report.mapReader.iconDone)
+                            node.icons.add(isCancel ? report.mapReader.iconCancel : report.mapReader.iconDone)
                         }
                         refreshContent()
                     } else {
