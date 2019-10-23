@@ -260,9 +260,7 @@ class ReportWindow {
                     panel(constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
                         gridBagLayout()
                         if (contextIcons.keySet().contains(group['title'])) {
-                            MultipleImage multipleImage = new MultipleImage()
-                            multipleImage.addIcon(MindIconFactory.createIcon(contextIcons.get(group['title'])))
-                            label(icon: multipleImage,
+                            label(icon: MindIconFactory.createIcon(contextIcons.get(group['title'])).icon,
                                     text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
                         } else {
                             label(text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
@@ -288,11 +286,9 @@ class ReportWindow {
 
                         // priority block
                         panel(constraints: gbc(weightx: 0.0)) {
-                            MultipleImage multipleImage = new MultipleImage()
                             if (item['priority']) {
-                                multipleImage.addIcon(MindIconFactory.createIcon("full-" + item['priority']))
+                                label(icon: MindIconFactory.createIcon("full-" + item['priority']).icon)
                             }
-                            label(icon: multipleImage)
                         }
                         // done checkbox
                         checkBox(selected: item['done'],
@@ -395,10 +391,10 @@ class ReportWindow {
 
                     if (nodesFound[0] != null) {
                         def node = nodesFound[0]
-                        if (node.icons.contains(report.mapReader.iconDone) || node.icons.contains(report.mapReader.iconCancel)) {
-                            node.icons.remove(report.mapReader.iconDone)
-                            node.icons.remove(report.mapReader.iconCancel)
-                        } else {
+                        boolean needsNewIcon = isCancel ? !node.icons.contains(report.mapReader.iconCancel) : !node.icons.contains(report.mapReader.iconDone)
+                        node.icons.remove(report.mapReader.iconDone)
+                        node.icons.remove(report.mapReader.iconCancel)
+                        if (needsNewIcon) {
                             node.icons.add(isCancel ? report.mapReader.iconCancel : report.mapReader.iconDone)
                         }
                         refreshContent()
