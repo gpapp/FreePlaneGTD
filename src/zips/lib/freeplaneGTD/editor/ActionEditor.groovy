@@ -24,6 +24,7 @@ class ActionEditor {
         String waitFor
         String waitUntil
         boolean done
+        boolean cancelled
 
         Node editedNode
 
@@ -47,6 +48,7 @@ class ActionEditor {
             waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
             waitUntil = node.attributes['WaitUntil']
             done = node.icons.contains(GTDMapReader.instance.iconDone)
+            cancelled = node.icons.contains(GTDMapReader.instance.iconCancel)
             return true
         }
 
@@ -83,6 +85,13 @@ class ActionEditor {
                     editedNode.icons.add(mapReader.iconDone)
                 }
             }
+            if (editedNode.icons.contains(mapReader.iconCancel) != cancelled) {
+                if (!cancelled) {
+                    editedNode.icons.remove(mapReader.iconCancel)
+                } else {
+                    editedNode.icons.add(mapReader.iconCancel)
+                }
+            }
             // Find icons in the entire map
             mapReader.findIcons()
 
@@ -103,6 +112,7 @@ class ActionEditor {
     JTextField whenField
     JTextField priorityField
     JCheckBox doneField
+    JCheckBox cancelledField
     JTextField waitForField
     JTextField waitUntilField
     JButton doneButton
@@ -142,6 +152,8 @@ class ActionEditor {
                             constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
                     doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                             constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL))
+                    cancelledField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"),
+                            constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
                             constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
@@ -178,6 +190,7 @@ class ActionEditor {
                                 model.waitFor = waitForField.text
                                 model.waitUntil = waitUntilField.text
                                 model.done = doneField.selected
+                                model.cancelled = cancelledField.selected
                                 model.updateNode()
                                 mainFrame.setVisible(false)
                                 mainFrame.dispose()
@@ -211,6 +224,7 @@ class ActionEditor {
         waitForField.text = model.waitFor
         waitUntilField.text = model.waitUntil
         doneField.selected = model.done
+        cancelledField.selected = model.cancelled
         mainFrame.pack()
         mainFrame.setLocationRelativeTo(UITools.frame)
         mainFrame.setVisible(true)
