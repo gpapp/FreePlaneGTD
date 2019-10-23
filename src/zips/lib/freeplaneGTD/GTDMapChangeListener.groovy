@@ -4,6 +4,7 @@ import groovy.util.logging.Log
 import org.freeplane.features.map.IMapChangeListener
 import org.freeplane.features.map.NodeDeletionEvent
 import org.freeplane.features.map.NodeMoveEvent
+import org.freeplane.features.mode.Controller
 
 import java.util.logging.Level
 
@@ -13,7 +14,8 @@ class GTDMapChangeListener implements IMapChangeListener {
     @Override
     void onNodeDeleted(NodeDeletionEvent nodeDeletionEvent) {
         try {
-            GtdReportController.getGtdReportViewController().refreshContent()
+            Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+                    gtdReportViewController.refreshContent()
         } catch (Exception e) {
             log.log(Level.SEVERE, e.message, e)
         }
@@ -23,7 +25,8 @@ class GTDMapChangeListener implements IMapChangeListener {
     @Override
     void onNodeMoved(NodeMoveEvent nodeMoveEvent) {
         try {
-            GtdReportController.getGtdReportViewController().refreshContent()
+            Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+                    gtdReportViewController.refreshContent()
         } catch (Exception e) {
             log.log(Level.SEVERE, e.message, e)
         }

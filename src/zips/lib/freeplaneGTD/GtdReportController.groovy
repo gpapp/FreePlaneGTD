@@ -2,7 +2,6 @@ package freeplaneGTD
 
 import groovy.util.logging.Log
 import org.freeplane.core.extension.IExtension
-import org.freeplane.core.ui.components.JAutoScrollBarPane
 import org.freeplane.features.map.MapController
 import org.freeplane.features.mode.ModeController
 
@@ -42,6 +41,6 @@ class GtdReportController implements IExtension {
 
     private Component createPanel() {
         Component presentationEditor = this.gtdReportViewController.createPanel(this.modeController)
-        return new JAutoScrollBarPane(presentationEditor)
+        return presentationEditor
     }
 }

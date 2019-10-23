@@ -5,6 +5,7 @@ import org.freeplane.api.Node
 import org.freeplane.features.attribute.NodeAttributeTableModel
 import org.freeplane.features.map.INodeChangeListener
 import org.freeplane.features.map.NodeChangeEvent
+import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import java.util.logging.Level
@@ -81,7 +82,8 @@ class GTDNodeChangeListener implements INodeChangeListener {
                 }
             } else changed = event.property == NodeAttributeTableModel.class
             if (changed) {
-                GtdReportController.gtdReportViewController.refreshContent()
+                Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+                        gtdReportViewController.refreshContent()
             }
 
         } catch (Exception e) {
