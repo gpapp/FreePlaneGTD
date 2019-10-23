@@ -183,7 +183,6 @@ class ReportWindow {
                                 selected: config.getBooleanProperty('freeplaneGTD_filter_done'),
                                 actionPerformed: {
                                     config.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected as boolean)
-                                    report.parseMap(it.source.selected as boolean)
                                     refreshContent()
                                 })
                         checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
@@ -299,7 +298,7 @@ class ReportWindow {
                         checkBox(selected: item['done'],
                                 constraints: gbc(weightx: 0.0),
                                 icon: MindIconFactory.createIcon("unchecked").icon,
-                                selectedIcon: MindIconFactory.createIcon("yes").icon,
+                                selectedIcon: MindIconFactory.createIcon("button_ok").icon,
                                 actionPerformed: {
                                     toggleDone((String) item['nodeID'], false)
                                 })
@@ -307,7 +306,7 @@ class ReportWindow {
                         checkBox(selected: item['cancelled'],
                                 constraints: gbc(weightx: 0.0),
                                 icon: MindIconFactory.createIcon("unchecked").icon,
-                                selectedIcon: MindIconFactory.createIcon("no").icon,
+                                selectedIcon: MindIconFactory.createIcon("button_cancel").icon,
                                 actionPerformed: {
                                     toggleDone((String) item['nodeID'], true)
                                 })

@@ -150,10 +150,10 @@ class ActionEditor {
                             constraints: gbc(gridx: 1, gridy: 3, ipadx: 5))
                     whenField = textField(preferredSize: new Dimension(250, 25),
                             constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
-                    doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                            constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL))
-                    cancelledField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"),
-                            constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL))
+                    hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
+                        doneField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.done"))
+                        cancelledField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"))
+                    }
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
                             constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
