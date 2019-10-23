@@ -102,7 +102,7 @@ class ActionEditor {
             mapReader.fixIconsForNode(editedNode)
 
             Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
-                    gtdReportViewController.parseAndRefresh()
+                    gtdReportViewController.refreshContent()
         }
     }
     ActionEditorModel model = new ActionEditorModel()

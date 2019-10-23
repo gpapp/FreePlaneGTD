@@ -4,7 +4,6 @@ import groovy.util.logging.Log
 import org.freeplane.core.extension.IExtension
 import org.freeplane.core.ui.components.JAutoScrollBarPane
 import org.freeplane.features.map.MapController
-import org.freeplane.features.mode.Controller
 import org.freeplane.features.mode.ModeController
 
 import javax.swing.*
@@ -27,7 +26,7 @@ class GtdReportController implements IExtension {
 
         // I hate OSGI and Groovy all classloaders are running amok, so I need a monkeypatch to keep my reference
         modeController.metaClass.getGtdReportControllerClass = { GtdReportController.class }
-        log.info("Monkey patching report window in Controller")
+        log.info("Monkey patching report view in Controller")
 
         JTabbedPane tabs = (JTabbedPane) modeController.getUserInputListenerFactory().getToolBar("/format").getComponent(1)
         tabs.add(controllerTitle, reportController.createPanel())
@@ -44,12 +43,5 @@ class GtdReportController implements IExtension {
     private Component createPanel() {
         Component presentationEditor = this.gtdReportViewController.createPanel(this.modeController)
         return new JAutoScrollBarPane(presentationEditor)
-    }
-
-    private void repaintMap() {
-        Component mapViewComponent = Controller.getCurrentController().getMapViewManager().getMapViewComponent()
-        if (mapViewComponent != null) {
-            mapViewComponent.repaint()
-        }
     }
 }
