@@ -146,27 +146,13 @@ class GtdReportViewController {
     void refreshContent() {
         cbFilterDone.selected = ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done')
         report.refreshModel(cbFilterDone.selected)
-        Component content
-        selectedView = VIEW.valueOf(contentTypeGroup.selection?.actionCommand)
-        switch (selectedView) {
-            case VIEW.WHO: content = formatList(report.delegateList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.CONTEXT: content = formatList(report.contextList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.WHEN: content = formatList(report.timelineList(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.DONETIMELINE: content = formatList(report.doneTimeline(), report.mapReader.contextIcons, showNotes)
-                break
-            case VIEW.PROJECT:
-                content = formatList(report.projectList(), report.mapReader.contextIcons, showNotes)
-        }
         taskPanel.clear()
-        taskPanel.add(content)
+        taskPanel.add(formatList(findSelectedGroup(), report.mapReader.contextIcons, showNotes))
         taskPanel.updateUI()
     }
 
     private Component formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-        Component newList
+        Component newList = new JLabel("ERROR RENDERING LIST!")
         SwingBuilder.edtBuilder {
             newList = panel {
 
@@ -279,7 +265,7 @@ class GtdReportViewController {
         return newList
     }
 
-    private List findSelectedGroup(int pos) {
+    private Map<String, List> findSelectedGroup() {
         java.util.List list
         switch (selectedView) {
             case VIEW.PROJECT: list = (java.util.List) report.projectList(); break
@@ -288,13 +274,13 @@ class GtdReportViewController {
             case VIEW.WHEN: list = (java.util.List) report.timelineList(); break
             default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
         }
-        return pos < 0 ? list['groups'] : list['groups'][pos]
+        return list
     }
 
     void copyToClipboard(int pos) {
         try {
             ClipboardController clip = Controller.currentModeController.getExtension(MapClipboardController.class)
-            clip.clipboardContents = ClipBoardUtil.createTransferable([type: selectedView.name().toLowerCase(), groups: findSelectedGroup(pos)], report.mapReader, showNotes)
+            clip.clipboardContents = ClipBoardUtil.createTransferable([type: selectedView.name().toLowerCase(), groups: findSelectedGroup()['groups'][pos]], report.mapReader, showNotes)
             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
         } catch (Exception e) {
             log.severe(e.message)
@@ -303,7 +289,7 @@ class GtdReportViewController {
 
     void selectOnMap(int pos) {
         try {
-            java.util.List ids = findSelectedGroup(pos)['items'].collect { it['nodeID'] }
+            java.util.List ids = findSelectedGroup()['groups'][pos]['items'].collect { it['nodeID'] }
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 void run() {

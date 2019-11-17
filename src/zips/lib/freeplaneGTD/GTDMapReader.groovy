@@ -434,7 +434,7 @@ class GTDMapReader {
 
 
     static Node findArchiveNode() {
-        Node rootNode = Controller.currentController.map.rootNode
+        Node rootNode = ScriptUtils.node().map.root
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
 
         Node archiveNode = rootNode.children.find {

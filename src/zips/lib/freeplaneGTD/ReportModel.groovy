@@ -114,30 +114,32 @@ class ReportModel {
     def projectList() {
         Map retval = [type: 'project' as Object]
         List<Map> groups = []
-        Map<Object, Object> naByGroup = actionList.groupBy { it['project'] }
-        naByGroup = naByGroup.sort { it.toString().toLowerCase() }
-        naByGroup.each {
-            key, value ->
-                List<Map> items = []
-                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
-                curGroup.each {
-                    items << [done     : it['done'],
-                              cancelled: it['cancelled'],
-                              whenDone : it['whenDone'],
-                              time     : it['time'],
-                              priority : it['priority'],
-                              action   : it['action'],
-                              nodeID   : it['nodeID'],
-                              who      : it['who'],
-                              when     : it['when'],
-                              context  : it['context'],
-                              waitFor  : it['waitFor'],
-                              waitUntil: it['waitUntil'],
-                              details  : it['details'],
-                              notes    : it['notes']
-                    ]
-                }
-                groups << [title: key, items: items]
+        if (actionList) {
+            Map<Object, Object> naByGroup = actionList.groupBy { it['project'] }
+            naByGroup = naByGroup.sort { it.toString().toLowerCase() }
+            naByGroup.each {
+                key, value ->
+                    List<Map> items = []
+                    def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                    curGroup.each {
+                        items << [done     : it['done'],
+                                  cancelled: it['cancelled'],
+                                  whenDone : it['whenDone'],
+                                  time     : it['time'],
+                                  priority : it['priority'],
+                                  action   : it['action'],
+                                  nodeID   : it['nodeID'],
+                                  who      : it['who'],
+                                  when     : it['when'],
+                                  context  : it['context'],
+                                  waitFor  : it['waitFor'],
+                                  waitUntil: it['waitUntil'],
+                                  details  : it['details'],
+                                  notes    : it['notes']
+                        ]
+                    }
+                    groups << [title: key, items: items]
+            }
         }
         retval['groups'] = groups
         return retval

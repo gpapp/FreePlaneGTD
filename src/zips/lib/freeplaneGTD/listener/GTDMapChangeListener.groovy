@@ -13,7 +13,7 @@ import java.util.logging.Level
 class GTDMapChangeListener implements IMapChangeListener {
     private boolean enabled
 
-    private GTDMapChangeListener() {
+    GTDMapChangeListener() {
         enabled = true
     }
 
