@@ -279,7 +279,11 @@ class GtdReportViewController {
     void copyToClipboard(int pos) {
         try {
             ClipboardController clip = Controller.currentModeController.getExtension(MapClipboardController.class)
-            clip.clipboardContents = ClipBoardUtil.createTransferable([type: selectedView.name().toLowerCase(), groups: findSelectedGroup()['groups'][pos]], report.mapReader, showNotes)
+            def selection = findSelectedGroup()
+            if (pos >= 0) {
+                selection['groups'] = [selection['groups'][pos]]
+            }
+            clip.clipboardContents = ClipBoardUtil.createTransferable(selection, report.mapReader, showNotes)
             UITools.informationMessage(TextUtils.getText('freeplaneGTD.message.copy_ok'))
         } catch (Exception e) {
             log.severe(e.message)
