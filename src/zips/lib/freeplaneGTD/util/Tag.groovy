@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-package freeplaneGTD
+package freeplaneGTD.util
 
 class Tag {
     String tagName

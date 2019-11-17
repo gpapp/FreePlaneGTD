@@ -1,5 +1,6 @@
-package freeplaneGTD
+package freeplaneGTD.util
 
+import freeplaneGTD.GTDMapReader
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.features.format.FormattedNumber

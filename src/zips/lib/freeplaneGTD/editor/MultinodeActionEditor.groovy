@@ -1,12 +1,11 @@
 package freeplaneGTD.editor
 
-import freeplaneGTD.DateUtil
 import freeplaneGTD.GTDMapReader
 import freeplaneGTD.GtdReportController
+import freeplaneGTD.util.DateUtil
 import groovy.swing.SwingBuilder
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
-import org.freeplane.plugin.script.proxy.Proxy
 
 import javax.swing.*
 import java.awt.*

@@ -20,7 +20,7 @@
 //=========================================================
 package freeplaneGTD
 
-
+import freeplaneGTD.util.DateUtil
 import org.freeplane.api.Node
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils

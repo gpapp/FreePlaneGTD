@@ -1,5 +1,6 @@
 package freeplaneGTD
 
+import freeplaneGTD.util.DateUtil
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.ConvertibleDate
 

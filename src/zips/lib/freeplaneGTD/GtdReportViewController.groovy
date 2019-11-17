@@ -1,5 +1,6 @@
 package freeplaneGTD
 
+import freeplaneGTD.util.ClipBoardUtil
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Log
 import org.freeplane.api.Node

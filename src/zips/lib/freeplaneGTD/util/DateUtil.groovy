@@ -21,7 +21,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //=========================================================
-package freeplaneGTD
+package freeplaneGTD.util
 
 import org.freeplane.features.format.FormattedDate
 import org.freeplane.plugin.script.proxy.Convertible
