@@ -1,5 +1,7 @@
-package freeplaneGTD
+package freeplaneGTD.listener
 
+import freeplaneGTD.GTDMapReader
+import freeplaneGTD.GtdReportController
 import groovy.util.logging.Log
 import org.freeplane.api.Node
 import org.freeplane.features.attribute.NodeAttributeTableModel

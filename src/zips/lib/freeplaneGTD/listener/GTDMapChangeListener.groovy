@@ -1,5 +1,6 @@
-package freeplaneGTD
+package freeplaneGTD.listener
 
+import freeplaneGTD.GtdReportController
 import groovy.util.logging.Log
 import org.freeplane.features.map.IMapChangeListener
 import org.freeplane.features.map.NodeDeletionEvent
