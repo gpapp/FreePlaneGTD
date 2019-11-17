@@ -232,30 +232,32 @@ class GtdReportViewController {
                         if (item['waitFor'] || item['waitUntil']) {
                             actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                         }
-                        JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK,
-                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
-                        )
-                        glue(constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
-                        taskLabel.addMouseListener(new MouseAdapter() {
-                            @Override
-                            void mouseClicked(MouseEvent e) {
-                                followLink(item['nodeID'] as String)
-                            }
-                        })
-                        //TODO Invent something to show the notes\
+                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
+                            flowLayout()
+                            JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
 
-                        if (showNotes) {
-                            if (item['details']) {
-                                label(text: item['details'],
-                                        constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
-                                )
-                            }
-                            if (item['notes']) {
-                                label(text: item['notes'],
-                                        constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
-                                )
+                            taskLabel.addMouseListener(new MouseAdapter() {
+                                @Override
+                                void mouseClicked(MouseEvent e) {
+                                    followLink(item['nodeID'] as String)
+                                }
+                            })
+                            //TODO Invent something to show the notes\
+
+                            if (showNotes) {
+                                if (item['details']) {
+                                    label(text: item['details'],
+                                            constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                    )
+                                }
+                                if (item['notes']) {
+                                    label(text: item['notes'],
+                                            constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                    )
+                                }
                             }
                         }
+                        glue(constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
                     }
                 }
                 glue(constraints: gbc(fill: GridBagConstraints.BOTH, gridheight: GridBagConstraints.REMAINDER, gridwidth: GridBagConstraints.REMAINDER))
