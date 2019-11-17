@@ -45,7 +45,6 @@ class GtdReportViewController {
     private Font titleFont
 
     protected boolean showNotes
-    protected VIEW selectedView
 
     Component createPanel(ModeController modeController) {
         String defaultView
@@ -265,14 +264,14 @@ class GtdReportViewController {
         return newList
     }
 
-    private Map<String, List> findSelectedGroup() {
-        java.util.List list
-        switch (selectedView) {
-            case VIEW.PROJECT: list = (java.util.List) report.projectList(); break
-            case VIEW.WHO: list = (java.util.List) report.delegateList(); break
-            case VIEW.CONTEXT: list = (java.util.List) report.contextList(); break
-            case VIEW.WHEN: list = (java.util.List) report.timelineList(); break
-            default: throw new UnsupportedOperationException("Invalid selection pane: " + selectedView)
+    private Map<String, Object> findSelectedGroup() {
+        Map<String, Object> list
+        switch (VIEW.valueOf(contentTypeGroup.selection.actionCommand)) {
+            case VIEW.PROJECT: list = report.projectList(); break
+            case VIEW.WHO: list = report.delegateList(); break
+            case VIEW.CONTEXT: list = report.contextList(); break
+            case VIEW.WHEN: list = report.timelineList(); break
+            default: throw new UnsupportedOperationException("Invalid selection pane: " + contentTypeGroup.selection.actionCommand)
         }
         return list
     }
