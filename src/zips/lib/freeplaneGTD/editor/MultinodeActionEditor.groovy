@@ -4,6 +4,7 @@ import freeplaneGTD.GTDMapReader
 import freeplaneGTD.GtdReportController
 import freeplaneGTD.util.DateUtil
 import groovy.swing.SwingBuilder
+import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 
@@ -25,9 +26,9 @@ class MultinodeActionEditor {
         String waitUntil
         boolean done
 
-       List< Proxy.Node> editedNodes
+        List<Node> editedNodes
 
-        boolean setNode(Proxy.Node node) {
+        boolean setNode(Node node) {
             this.editedNodes = node
             GTDMapReader mapReader = GTDMapReader.instance
             mapReader.findIcons(node.map.root)
@@ -211,7 +212,7 @@ class MultinodeActionEditor {
                 })
     }
 
-    void editNodes(List<Proxy.Node> nodes) {
+    void editNodes(List<Node> nodes) {
         if (!model.setEditedNodes(nodes)) {
             return
         }
