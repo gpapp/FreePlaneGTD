@@ -81,9 +81,16 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     void convertShorthand() {
-        findIcons()
-        findAliases()
-        internalConvertShorthand()
+        // disable change listener
+        try {
+            Controller.currentController.modeController.getExtension(GtdReportController.getGtdReportControllerClass()).disableListeners()
+            findIcons()
+            findAliases()
+            internalConvertShorthand()
+        } finally {
+            // reenable change listener
+            Controller.currentController.modeController.getExtension(GtdReportController.getGtdReportControllerClass()).enableListeners()
+        }
     }
 
     static boolean isShorthandTask(Node it) {

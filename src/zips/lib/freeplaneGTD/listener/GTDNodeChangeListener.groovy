@@ -14,18 +14,18 @@ import java.util.logging.Level
 
 @Log
 class GTDNodeChangeListener implements INodeChangeListener {
-    boolean mutex
+    boolean enabled
     GTDMapReader reader
 
     GTDNodeChangeListener() {
+        enabled = true
         reader = GTDMapReader.instance
         reader.findIcons()
     }
 
     void nodeChanged(NodeChangeEvent event) {
         if (!event.setsDirtyFlag()) return
-        if (mutex) return
-        mutex = true
+        if (!enabled) return
         try {
             log.info("Got event:" + event.source.class)
             boolean changed = true
@@ -93,6 +93,9 @@ class GTDNodeChangeListener implements INodeChangeListener {
             // so handling everything here
             log.log(Level.SEVERE, "Error caught:" + e.message, e)
         }
-        mutex = false
+    }
+
+    void setEnabled(boolean b) {
+        enabled = b
     }
 }

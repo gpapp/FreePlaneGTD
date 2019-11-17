@@ -11,9 +11,15 @@ import java.util.logging.Level
 
 @Log
 class GTDMapChangeListener implements IMapChangeListener {
+    private boolean enabled
+
+    private GTDMapChangeListener() {
+        enabled = true
+    }
 
     @Override
     void onNodeDeleted(NodeDeletionEvent nodeDeletionEvent) {
+        if (!enabled) return
         try {
             Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
                     gtdReportViewController.refreshContent()
@@ -25,11 +31,16 @@ class GTDMapChangeListener implements IMapChangeListener {
 
     @Override
     void onNodeMoved(NodeMoveEvent nodeMoveEvent) {
+        if (!enabled) return
         try {
             Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
                     gtdReportViewController.refreshContent()
         } catch (Exception e) {
             log.log(Level.SEVERE, e.message, e)
         }
+    }
+
+    void setEnabled(boolean b) {
+        enabled = b
     }
 }

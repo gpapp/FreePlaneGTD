@@ -17,6 +17,8 @@ class GtdReportController implements IExtension {
     ModeController modeController
     public GtdReportViewController gtdReportViewController
     static final String controllerTitle = 'GTD Next Actions'
+    static private GTDMapChangeListener gtdMapChangeListener
+    static private GTDNodeChangeListener gtdNodeChangeListener
 
     GtdReportController(ModeController modeController) {
         this.modeController = modeController
@@ -39,13 +41,26 @@ class GtdReportController implements IExtension {
         controller.getMapViewManager().addMapSelectionListener(new GTDMapSelectionListener())
 
         MapController mapController = modeController.mapController
-        mapController.addMapChangeListener(new GTDMapChangeListener())
-        mapController.addNodeChangeListener(new GTDNodeChangeListener())
+        gtdMapChangeListener = new GTDMapChangeListener()
+        mapController.addMapChangeListener(gtdMapChangeListener)
+
+        gtdNodeChangeListener = new GTDNodeChangeListener()
+        mapController.addNodeChangeListener(gtdNodeChangeListener)
     }
 
     static Class<GtdReportController> getGtdReportControllerClass(ModeController modeController) {
         // use the monkeypatch
         return modeController.getGtdReportControllerClass()
+    }
+
+    static void disableListeners() {
+        gtdMapChangeListener.setEnabled(false)
+        gtdNodeChangeListener.setEnabled(false)
+    }
+
+    static void enableListeners() {
+        gtdMapChangeListener.setEnabled(true)
+        gtdNodeChangeListener.setEnabled(true)
     }
 
     private Component createPanel() {
