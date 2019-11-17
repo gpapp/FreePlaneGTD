@@ -185,14 +185,14 @@ class GtdReportViewController {
                         rigidArea(width: 15)
 
                         // priority block
-                        panel(constraints: gbc(weightx: 0.0)) {
+                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
                             if (item['priority']) {
                                 label(icon: MindIconFactory.createIcon("full-" + item['priority']).icon)
                             }
                         }
                         // done checkbox
                         checkBox(selected: item['done'],
-                                constraints: gbc(weightx: 0.0),
+                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
                                 icon: MindIconFactory.createIcon("unchecked").icon,
                                 selectedIcon: MindIconFactory.createIcon("button_ok").icon,
                                 actionPerformed: {
@@ -200,14 +200,14 @@ class GtdReportViewController {
                                 })
                         // cancelled checkbox
                         checkBox(selected: item['cancelled'],
-                                constraints: gbc(weightx: 0.0),
+                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
                                 icon: MindIconFactory.createIcon("unchecked").icon,
                                 selectedIcon: MindIconFactory.createIcon("button_cancel").icon,
                                 actionPerformed: {
                                     toggleDone((String) item['nodeID'], true)
                                 })
                         // context icons
-                        panel(constraints: gbc(weightx: 0.0)) {
+                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
                             MultipleImage multipleImage = new MultipleImage()
                             (item['context'] as String)?.tokenize(',')?.each { key ->
                                 if (contextIcons.keySet().contains(key)) {
@@ -232,8 +232,7 @@ class GtdReportViewController {
                         if (item['waitFor'] || item['waitUntil']) {
                             actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                         }
-                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
-                            flowLayout()
+                        vbox(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
                             JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
 
                             taskLabel.addMouseListener(new MouseAdapter() {
@@ -242,16 +241,15 @@ class GtdReportViewController {
                                     followLink(item['nodeID'] as String)
                                 }
                             })
-                            //TODO Invent something to show the notes\
 
                             if (showNotes) {
                                 if (item['details']) {
-                                    label(text: item['details'],
+                                    label(text: item['details'], background: new Color(255, 247, 147),
                                             constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
                                     )
                                 }
                                 if (item['notes']) {
-                                    label(text: item['notes'],
+                                    label(text: item['notes'], background: new Color(255, 255, 230),
                                             constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
                                     )
                                 }

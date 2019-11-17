@@ -267,10 +267,24 @@
   </body>
 </html>
 </richcontent>
-<node TEXT="Parse normal" ID="ID_1688946449" CREATED="1413839788216" MODIFIED="1570912672795">
+<node TEXT="Parse normal" ID="ID_1688946449" CREATED="1413839788216" MODIFIED="1574020303274">
 <icon BUILTIN="yes"/>
 <attribute NAME="When" VALUE="2014-10-05" OBJECT="org.freeplane.features.format.FormattedDate|2014-10-05T00:00+0200|yyyy-MM-dd"/>
 <attribute NAME="Where" VALUE="long,b"/>
+<richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      123<b>456</b>
+    </p>
+  </body>
+</html>
+
+</richcontent>
 </node>
 <node TEXT="* Parse normal {2014.10.06.}" ID="ID_67657887" CREATED="1413839788216" MODIFIED="1425007694260"/>
 <node TEXT="* Parse normal {2014.10.07}" ID="ID_661306974" CREATED="1413839788219" MODIFIED="1425007699380"/>
