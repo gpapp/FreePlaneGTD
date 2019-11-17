@@ -258,17 +258,19 @@ class GtdReportViewController {
                             }
                         })
                         //TODO Invent something to show the notes\
-                        /*
+
                         if (showNotes) {
-                            if (it['details']) {
-                                wrap.addChild('div', [class: 'details']).addPreformatted((String) it['details'])
+                            if (item['details']) {
+                                label(text: item['details'],
+                                        constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                )
                             }
-                            if (it['notes']) {
-                                wrap.addChild('div', [class: 'note']).addPreformatted((String) it['notes'])
+                            if (item['notes']) {
+                                label(text: item['notes'],
+                                        constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                )
                             }
                         }
-
-                        */
                     }
                 }
                 glue(constraints: gbc(fill: GridBagConstraints.BOTH, gridheight: GridBagConstraints.REMAINDER, gridwidth: GridBagConstraints.REMAINDER))

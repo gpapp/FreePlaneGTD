@@ -24,6 +24,7 @@ import freeplaneGTD.util.DateUtil
 import org.freeplane.api.Node
 import org.freeplane.core.util.HtmlUtils
 import org.freeplane.core.util.TextUtils
+import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.proxy.ScriptUtils
 
 import java.util.regex.Matcher
@@ -52,6 +53,7 @@ class GTDMapReader {
     private final String defaultIconWeek = "idea"
     private final String defaultIconDone = "button_ok"
     private final String defaultIconCancel = "button_cancel"
+    private final Controller controller
 
 
     static GTDMapReader getInstance() {
@@ -62,7 +64,8 @@ class GTDMapReader {
         return instance
     }
 
-    private GTDMapReader() {
+    private GTDMapReader(Controller controller) {
+        this.controller = controller
         findIcons()
         findAliases()
     }
@@ -144,7 +147,8 @@ class GTDMapReader {
 
     void fixIconsOnAliasConfigChange() {
         // Run on all nodes that are tasks and have Who or Where attributes
-        ScriptUtils.c().find { Node it -> isTask(it) && (it.attributes['Who'] || it.attributes['Where']) }.each {
+//        controller.mapReader.
+        ScriptUtils.c().find { Node it -> isTask(it) && (it.attributes['Who'] || it.attributes['Where']) }.each { Node it ->
             fixAliasesForNode(it)
             fixIconsForNode(it)
         }
@@ -152,7 +156,7 @@ class GTDMapReader {
 
     void fixIconsOnContextConfigChange() {
         // Run on all nodes that are tasks and have at least another icon
-        ScriptUtils.c().find { Node it -> isTask(it) && it.attributes['Where'] }.each {
+        ScriptUtils.c().find { Node it -> isTask(it) && it.attributes['Where'] }.each { Node it ->
             fixIconsForNode(it)
         }
     }
@@ -423,7 +427,7 @@ class GTDMapReader {
 
 
     static Node findArchiveNode() {
-        Node rootNode = ScriptUtils.node().map.root
+        Node rootNode = Controller.currentController.map.rootNode
         String archiveDirName = TextUtils.getText("freeplaneGTD.config.archiveDirName")
 
         Node archiveNode = rootNode.children.find {
@@ -457,8 +461,7 @@ class GTDMapReader {
     private List createTaskToReturn(List<Node> taskNodes) {
         def result = []
         // include result if it has next action icon and its not the icon setting node for next actions
-        taskNodes.each {
-            Node thisNode = it
+        taskNodes.each { Node thisNode ->
             String naAction = thisNode.transformedText
             if (!(naAction =~ /Icon:/)) {
                 String[] icons = thisNode.icons.icons
@@ -526,18 +529,18 @@ class GTDMapReader {
     // node['Priority']  = <priority>
     //
     void internalConvertShorthand() {
-        def questionNodes = ScriptUtils.c().find { Node it -> isShorthandQuestion(it) }
 
-        questionNodes.each {
+        def questionNodes = ScriptUtils.c().find()
+                { Node it -> isShorthandQuestion(it) }
+
+        questionNodes.each { Node it ->
             parseSingleQuestionNode(it)
         }
-
         def unparsedNodes = ScriptUtils.c().find { Node it -> isShorthandTask(it) }
 
-        unparsedNodes.each {
+        unparsedNodes.each { Node it ->
             parseSingleTaskNode(it)
         }
-
     }
 
     static void parseSingleQuestionNode(Node it) {

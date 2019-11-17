@@ -1,17 +1,19 @@
 package freeplaneGTD
 
 import freeplaneGTD.util.DateUtil
+import groovy.util.logging.Log
 import org.freeplane.core.util.TextUtils
 import org.freeplane.plugin.script.proxy.ConvertibleDate
 
 import java.time.temporal.ChronoUnit
+import java.util.logging.Level
 
 /**
  * Model for the freeplaneGTD.report pane.
  *
  * Created by gpapp on 2015.03.05..
  */
-
+@Log
 class ReportModel {
     List actionList
     List doneList
@@ -97,12 +99,16 @@ class ReportModel {
     }
 
     void refreshModel(boolean filterDone) {
-        // Get next action lists
-        actionList = mapReader.getActionList(filterDone)
-        doneList = mapReader.getDoneList()
+        try {
+            // Get next action lists
+            actionList = mapReader.getActionList(filterDone)
+            doneList = mapReader.getDoneList()
 
-        // Fill actionList with next actionable time
-        actionList.each { it['time'] = taskDate(it) }
+            // Fill actionList with next actionable time
+            actionList.each { it['time'] = taskDate(it) }
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error refreshing model", e)
+        }
     }
 
     def projectList() {
