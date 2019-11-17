@@ -14,6 +14,8 @@ import org.freeplane.features.mode.Controller
 class GTDMapSelectionListener implements IMapSelectionListener {
     @Override
     void afterMapChange(MapModel oldMap, MapModel newMap) {
-        Controller.currentModeController.getExtension(GtdReportController.class).gtdReportViewController.refreshContent()
+        if (newMap) {
+            Controller.currentModeController.getExtension(GtdReportController.class).gtdReportViewController.refreshContent()
+        }
     }
 }
