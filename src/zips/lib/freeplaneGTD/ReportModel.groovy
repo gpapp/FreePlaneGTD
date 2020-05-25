@@ -82,7 +82,7 @@ class ReportModel {
         def ap = a['priority'] ?: '5'
         def bp = b['priority'] ?: '5'
         if ((!ap && !bp) || ap == bp) {
-            return taskDateComparator(a, b)
+            return taskDateComparator.call(a, b)
         }
         return ap <=> bp
     }
@@ -120,7 +120,7 @@ class ReportModel {
             naByGroup.each {
                 key, value ->
                     List<Map> items = []
-                    def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                    def curGroup = naByGroup[key].sort { a, b -> taskSortComparator.call(a, b) }
                     curGroup.each {
                         items << [done     : it['done'],
                                   cancelled: it['cancelled'],
@@ -174,7 +174,7 @@ class ReportModel {
         naByDelegate.each {
             key, value ->
                 List<Map> items = []
-                def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator(a, b) }
+                def curGroup = naByDelegate[key].sort { a, b -> taskSortComparator.call(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
                                    cancelled: it['cancelled'],
@@ -224,7 +224,7 @@ class ReportModel {
         naByGroup.each {
             key, value ->
                 List<Map> items = []
-                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator.call(a, b) }
                 curGroup.each {
                     items << [done     : it['done'],
                               cancelled: it['cancelled'],
@@ -251,12 +251,12 @@ class ReportModel {
     def timelineList() {
         Map retval = [type: 'when' as Object]
         List groups = []
-        def sortedList = actionList.sort { a, b -> taskDateComparator(a, b) }
+        def sortedList = actionList.sort { a, b -> taskDateComparator.call(a, b) }
         def naByGroup = sortedList.groupBy { it['time'] }
         naByGroup.each {
             key, value ->
                 List<Map> items = []
-                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator(a, b) }
+                def curGroup = naByGroup[key].sort { a, b -> taskSortComparator.call(a, b) }
                 curGroup.each {
                     def newItem = [done     : it['done'],
                                    cancelled: it['cancelled'],

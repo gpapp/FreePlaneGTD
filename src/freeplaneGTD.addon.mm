@@ -58,9 +58,9 @@
 </hook>
 <attribute_layout NAME_WIDTH="129.74999613314878 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v3.5.0-alpha2"/>
+<attribute NAME="version" VALUE="v3.6.0-alpha1"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
-<attribute NAME="freeplaneVersionFrom" VALUE="1.7.0"/>
+    <attribute NAME="freeplaneVersionFrom" VALUE="1.8.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
 <attribute NAME="downloadUrl" VALUE="https://www.itworks.hu/freeplanegtd-release/"/>
 <attribute NAME="changelogUrl" VALUE=""/>

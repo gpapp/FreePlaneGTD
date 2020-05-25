@@ -12,10 +12,14 @@ import java.util.logging.Level
 @Log
 class GTDMapChangeListener implements IMapChangeListener {
     private boolean enabled
+    private final Class<GtdReportController> gtdReportControllerClass
 
-    GTDMapChangeListener() {
+    GTDMapChangeListener(Class<GtdReportController> gtdReportControllerClass) {
+        this.gtdReportControllerClass = gtdReportControllerClass
         enabled = true
     }
+
+    Class<GtdReportController> getGtdReportControllerClass() { return gtdReportControllerClass }
 
     @Override
     void onNodeDeleted(NodeDeletionEvent nodeDeletionEvent) {

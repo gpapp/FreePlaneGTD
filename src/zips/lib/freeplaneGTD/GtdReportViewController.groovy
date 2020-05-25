@@ -1,6 +1,7 @@
 package freeplaneGTD
 
 import freeplaneGTD.util.ClipBoardUtil
+import freeplaneGTD.util.IconUtil
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Log
 import org.freeplane.api.Node
@@ -10,7 +11,6 @@ import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
 import org.freeplane.features.format.FormattedDate
-import org.freeplane.features.icon.factory.MindIconFactory
 import org.freeplane.features.map.clipboard.MapClipboardController
 import org.freeplane.features.mode.Controller
 import org.freeplane.features.mode.ModeController
@@ -57,84 +57,91 @@ class GtdReportViewController {
 
         JPanel newPanel = null
         SwingBuilder.edtBuilder {
-            newPanel = panel {
-                borderLayout()
-                panel(constraints: BorderLayout.NORTH) {
-                    gridLayout(columns: 1, rows: 1)
-                    contentTypeGroup = buttonGroup()
-                    radioButton(
-                            buttonGroup: contentTypeGroup,
-                            actionCommand: VIEW.PROJECT.name(),
-                            text: "1 - " + TextUtils.getText("freeplaneGTD.tab.project.title"),
-                            toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
-                            mnemonic: (char) '1',
-                            selected: defaultView == "PROJECT",
-                            actionPerformed: { refreshContent() }
-                    )
-                    radioButton(
-                            buttonGroup: contentTypeGroup,
-                            actionCommand: VIEW.WHO.name(),
-                            text: "2 - " + TextUtils.getText("freeplaneGTD.tab.who.title"),
-                            toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
-                            mnemonic: (char) '2',
-                            selected: defaultView == "WHO",
-                            actionPerformed: { refreshContent() }
-                    )
-                    radioButton(
-                            buttonGroup: contentTypeGroup,
-                            actionCommand: VIEW.CONTEXT.name(),
-                            text: "3 - " + TextUtils.getText("freeplaneGTD.tab.context.title"),
-                            toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
-                            mnemonic: (char) '3',
-                            selected: defaultView == "CONTEXT",
-                            actionPerformed: { refreshContent() }
-                    )
-                    radioButton(
-                            buttonGroup: contentTypeGroup,
-                            actionCommand: VIEW.WHEN.name(),
-                            text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
-                            toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
-                            mnemonic: (char) '4',
-                            selected: defaultView == "WHEN",
-                            actionPerformed: { refreshContent() }
-                    )
-                    radioButton(
-                            buttonGroup: contentTypeGroup,
-                            actionCommand: VIEW.DONETIMELINE.name(),
-                            text: "5 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
-                            toolTipText: TextUtils.getText("freeplaneGTD.tab.done_timeline.tooltip"),
-                            mnemonic: (char) '5',
-                            actionPerformed: { refreshContent() }
-                    )
-                }
-                scrollPane(constraints: BorderLayout.CENTER) {
-                    taskPanel = panel(border: emptyBorder(bottom: 10, left: 10, top: 10, right: 10)) {
-                        borderLayout()
+            try {
+                newPanel = panel() {
+                    borderLayout()
+                    panel(constraints: BorderLayout.NORTH) {
+                        gridLayout(columns: 1, rows: 1)
+                        contentTypeGroup = buttonGroup()
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.PROJECT.name(),
+                                text: "1 - " + TextUtils.getText("freeplaneGTD.tab.project.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.project.tooltip"),
+                                mnemonic: (char) '1',
+                                selected: defaultView == "PROJECT",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.WHO.name(),
+                                text: "2 - " + TextUtils.getText("freeplaneGTD.tab.who.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.who.tooltip"),
+                                mnemonic: (char) '2',
+                                selected: defaultView == "WHO",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.CONTEXT.name(),
+                                text: "3 - " + TextUtils.getText("freeplaneGTD.tab.context.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.context.tooltip"),
+                                mnemonic: (char) '3',
+                                selected: defaultView == "CONTEXT",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.WHEN.name(),
+                                text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                                mnemonic: (char) '4',
+                                selected: defaultView == "WHEN",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.DONETIMELINE.name(),
+                                text: "5 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.done_timeline.tooltip"),
+                                mnemonic: (char) '5',
+                                actionPerformed: { refreshContent() }
+                        )
+                    }
+                    scrollPane(constraints: BorderLayout.CENTER) {
+                        taskPanel = panel(border: emptyBorder(bottom: 10, left: 10, top: 10, right: 10)) {
+                            borderLayout()
+                        }
+                    }
+
+                    panel(constraints: BorderLayout.SOUTH) {
+                        boxLayout(axis: BoxLayout.X_AXIS)
+                        button(text: TextUtils.getText("freeplaneGTD.button.refresh"),
+                                actionPerformed: {
+                                    refreshContent()
+                                })
+                        button(text: TextUtils.getText("freeplaneGTD.button.copy"),
+                                actionPerformed: {
+                                    copyToClipboard(-1)
+                                })
+                        cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
+                                selected: ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done'),
+                                actionPerformed: {
+                                    ResourceController.resourceController.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected as boolean)
+                                    refreshContent()
+                                })
+                        checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
+                                selected: showNotes,
+                                actionPerformed: {
+                                    showNotes = it.source.selected
+                                    refreshContent()
+                                })
                     }
                 }
 
-                panel(constraints: BorderLayout.SOUTH) {
-                    boxLayout(axis: BoxLayout.X_AXIS)
-                    button(text: TextUtils.getText("freeplaneGTD.button.refresh"),
-                            actionPerformed: {
-                                refreshContent()
-                            })
-                    button(text: TextUtils.getText("freeplaneGTD.button.copy"),
-                            actionPerformed: {
-                                copyToClipboard(-1)
-                            })
-                    cbFilterDone = checkBox(text: TextUtils.getText("freeplaneGTD.button.filter_done"),
-                            selected: ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done'),
-                            actionPerformed: {
-                                ResourceController.resourceController.properties['freeplaneGTD_filter_done'] = Boolean.toString(it.source.selected as boolean)
-                                refreshContent()
-                            })
-                    checkBox(text: TextUtils.getText("freeplaneGTD.button.show_notes"),
-                            selected: showNotes,
-                            actionPerformed: {
-                                showNotes = it.source.selected
-                                refreshContent()
-                            })
+            } catch (Exception e) {
+                newPanel = panel() {
+                    textPane(text: "Exception rendering list" + e.dump())
                 }
             }
         }
@@ -151,116 +158,123 @@ class GtdReportViewController {
     }
 
     private Component formatList(Map list, Map<String, String> contextIcons, boolean showNotes) {
-        Component newList = new JLabel("ERROR RENDERING LIST!")
+        JPanel newList
         SwingBuilder.edtBuilder {
-            newList = panel {
-
-                gridBagLayout()
-                list['groups'].eachWithIndex { group, index ->
-                    panel(constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
-                        gridBagLayout()
-                        if (contextIcons.keySet().contains(group['title'])) {
-                            label(icon: MindIconFactory.createIcon(contextIcons.get(group['title'])).icon,
-                                    text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
-                        } else {
-                            label(text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
-                        }
-
-                        button(
-                                text: TextUtils.getText("freeplaneGTD.button.copy"),
-                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
-                                actionPerformed: {
-                                    copyToClipboard(index)
-                                }
-                        )
-                        button(text: TextUtils.getText("freeplaneGTD.button.select"),
-                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
-                                actionPerformed: {
-                                    selectOnMap(index)
-                                }
-                        )
-                    }
-
-                    group['items'].each { Object item ->
-                        rigidArea(width: 15)
-
-                        // priority block
-                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
-                            if (item['priority']) {
-                                label(icon: MindIconFactory.createIcon("full-" + item['priority']).icon)
+            try {
+                newList = panel() {
+                    gridBagLayout()
+                    list['groups'].eachWithIndex { group, index ->
+                        panel(constraints: gbc(anchor: GridBagConstraints.NORTHWEST, fill: GridBagConstraints.HORIZONTAL, gridwidth: GridBagConstraints.REMAINDER)) {
+                            gridBagLayout()
+                            if (contextIcons.keySet().contains(group['title'])) {
+                                label(icon: IconUtil.getIcon(contextIcons.get(group['title'])),
+                                        text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
+                            } else {
+                                label(text: group['title'], font: titleFont, constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH))
                             }
+
+                            button(
+                                    text: TextUtils.getText("freeplaneGTD.button.copy"),
+                                    constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
+                                    actionPerformed: {
+                                        copyToClipboard(index)
+                                    }
+                            )
+                            button(text: TextUtils.getText("freeplaneGTD.button.select"),
+                                    constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.EAST),
+                                    actionPerformed: {
+                                        selectOnMap(index)
+                                    }
+                            )
                         }
-                        // done checkbox
-                        checkBox(selected: item['done'],
-                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
-                                icon: MindIconFactory.createIcon("unchecked").icon,
-                                selectedIcon: MindIconFactory.createIcon("button_ok").icon,
-                                actionPerformed: {
-                                    toggleDone((String) item['nodeID'], false)
+
+                        group['items'].each { Object item ->
+                            rigidArea(width: 15)
+
+                            // priority block
+                            panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
+                                if (item['priority']) {
+                                    label(icon: IconUtil.getIcon("full-" + item['priority']))
+                                }
+                            }
+                            // done checkbox
+                            checkBox(selected: item['done'],
+                                    constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
+                                    icon: IconUtil.getIcon("unchecked"),
+                                    selectedIcon: IconUtil.getIcon("button_ok"),
+                                    actionPerformed: {
+                                        toggleDone((String) item['nodeID'], false)
+                                    })
+                            // cancelled checkbox
+                            checkBox(selected: item['cancelled'],
+                                    constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
+                                    icon: IconUtil.getIcon("unchecked"),
+                                    selectedIcon: IconUtil.getIcon("button_cancel"),
+                                    actionPerformed: {
+                                        toggleDone((String) item['nodeID'], true)
+                                    })
+                            // context icons
+                            panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
+                                MultipleImage multipleImage = new MultipleImage()
+                                (item['context'] as String)?.tokenize(',')?.each { key ->
+                                    if (contextIcons.keySet().contains(key)) {
+                                        multipleImage.addIcon(IconUtil.getUIIcon(contextIcons.get(key)))
+                                    }
+                                }
+                                label(icon: multipleImage)
+                            }
+                            // task content
+
+                            boolean overdue = item['time'] instanceof FormattedDate && ((FormattedDate) item['time']).before(new Date())
+                            StringBuilder actionText = new StringBuilder(item['action'] as String)
+
+                            !item['who'] ?: actionText.append(' [' + item['who'] + ']')
+                            !item['when'] ?: actionText.append(' {' + item['when'] + '}')
+                            !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
+                                actionText.append(' @')
+                                actionText.append(key)
+                            }
+                            !item['project'] ?: actionText.append(' for ' + item['project'])
+                            // TODO: differentiate waitfor somehow?
+                            if (item['waitFor'] || item['waitUntil']) {
+                                actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
+                            }
+                            vbox(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
+                                JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
+
+                                taskLabel.addMouseListener(new MouseAdapter() {
+                                    @Override
+                                    void mouseClicked(MouseEvent e) {
+                                        followLink(item['nodeID'] as String)
+                                    }
                                 })
-                        // cancelled checkbox
-                        checkBox(selected: item['cancelled'],
-                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTH),
-                                icon: MindIconFactory.createIcon("unchecked").icon,
-                                selectedIcon: MindIconFactory.createIcon("button_cancel").icon,
-                                actionPerformed: {
-                                    toggleDone((String) item['nodeID'], true)
-                                })
-                        // context icons
-                        panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
-                            MultipleImage multipleImage = new MultipleImage()
-                            (item['context'] as String)?.tokenize(',')?.each { key ->
-                                if (contextIcons.keySet().contains(key)) {
-                                    multipleImage.addIcon(MindIconFactory.createIcon(contextIcons.get(key)))
+
+                                if (showNotes) {
+                                    if (item['details']) {
+                                        label(text: item['details'], background: new Color(255, 247, 147),
+                                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                        )
+                                    }
+                                    if (item['notes']) {
+                                        label(text: item['notes'], background: new Color(255, 255, 230),
+                                                constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
+                                        )
+                                    }
                                 }
                             }
-                            label(icon: multipleImage)
+                            glue(constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
                         }
-                        // task content
-
-                        boolean overdue = item['time'] instanceof FormattedDate && ((FormattedDate) item['time']).before(new Date())
-                        StringBuilder actionText = new StringBuilder(item['action'] as String)
-
-                        !item['who'] ?: actionText.append(' [' + item['who'] + ']')
-                        !item['when'] ?: actionText.append(' {' + item['when'] + '}')
-                        !item['context'] ?: (item['context'] as String)?.tokenize(',')?.each { key ->
-                            actionText.append(' @')
-                            actionText.append(key)
-                        }
-                        !item['project'] ?: actionText.append(' for ' + item['project'])
-                        // TODO: differentiate waitfor somehow?
-                        if (item['waitFor'] || item['waitUntil']) {
-                            actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
-                        }
-                        vbox(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
-                            JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
-
-                            taskLabel.addMouseListener(new MouseAdapter() {
-                                @Override
-                                void mouseClicked(MouseEvent e) {
-                                    followLink(item['nodeID'] as String)
-                                }
-                            })
-
-                            if (showNotes) {
-                                if (item['details']) {
-                                    label(text: item['details'], background: new Color(255, 247, 147),
-                                            constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
-                                    )
-                                }
-                                if (item['notes']) {
-                                    label(text: item['notes'], background: new Color(255, 255, 230),
-                                            constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)
-                                    )
-                                }
-                            }
-                        }
-                        glue(constraints: gbc(weightx: 1.0, fill: GridBagConstraints.BOTH, gridwidth: GridBagConstraints.REMAINDER))
                     }
+                    glue(constraints: gbc(fill: GridBagConstraints.BOTH, gridheight: GridBagConstraints.REMAINDER, gridwidth: GridBagConstraints.REMAINDER))
                 }
-                glue(constraints: gbc(fill: GridBagConstraints.BOTH, gridheight: GridBagConstraints.REMAINDER, gridwidth: GridBagConstraints.REMAINDER))
-            } as Component
+            } catch (Exception e) {
+                log.log(Level.SEVERE, e.message, e)
+                newList = panel() {
+                    textPane(text: "ERROR RENDERING LIST!")
+                }
+            }
         }
+
         return newList
     }
 
@@ -271,6 +285,7 @@ class GtdReportViewController {
             case VIEW.WHO: list = report.delegateList(); break
             case VIEW.CONTEXT: list = report.contextList(); break
             case VIEW.WHEN: list = report.timelineList(); break
+            case VIEW.DONETIMELINE: list = report.doneTimeline(); break
             default: throw new UnsupportedOperationException("Invalid selection pane: " + contentTypeGroup.selection.actionCommand)
         }
         return list

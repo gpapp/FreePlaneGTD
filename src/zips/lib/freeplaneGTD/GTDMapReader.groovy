@@ -82,14 +82,16 @@ class GTDMapReader {
     //
     void convertShorthand() {
         // disable change listener
+        def modeController = Controller.currentController.modeController
+        def extension = modeController.getExtension(GtdReportController.getGtdReportControllerClass(modeController))
         try {
-            Controller.currentController.modeController.getExtension(GtdReportController.getGtdReportControllerClass()).disableListeners()
+            extension.disableListeners()
             findIcons()
             findAliases()
             internalConvertShorthand()
         } finally {
             // reenable change listener
-            Controller.currentController.modeController.getExtension(GtdReportController.getGtdReportControllerClass()).enableListeners()
+            extension.enableListeners()
         }
     }
 

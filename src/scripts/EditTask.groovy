@@ -19,7 +19,6 @@
 //
 //=========================================================
 import freeplaneGTD.editor.ActionEditor
-import freeplaneGTD.editor.MultinodeActionEditor
 import org.freeplane.api.Node
 import org.freeplane.core.ui.components.UITools
 
@@ -28,8 +27,7 @@ if (selecteds.size()==1) {
     ActionEditor editor = new ActionEditor()
     editor.editNode(selecteds[0])
 } else if(selecteds.size()>1) {
-    MultinodeActionEditor editor = new MultinodeActionEditor()
-    editor.editNodes(selecteds)
+    UITools.informationMessage("Cannot edit multiple tasks at once")
 } else {
     UITools.informationMessage("Nothing selected")
 }
