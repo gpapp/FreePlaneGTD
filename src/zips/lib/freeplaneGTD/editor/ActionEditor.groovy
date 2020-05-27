@@ -127,92 +127,91 @@ class ActionEditor {
                     defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
                     show: false,
                     modal: true) {
-                boxLayout(axis: BoxLayout.Y_AXIS) {
-                    panel(border: BorderFactory.createEmptyBorder(10, 10, 10, 10)) {
-                        gridBagLayout()
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.action"),
-                                constraints: gbc(gridx: 0, gridy: 0, ipadx: 5, fill: HORIZONTAL))
-                        actionField = textField(preferredSize: new Dimension(400, 25),
-                                constraints: gbc(gridx: 1, gridy: 0, gridwidth: REMAINDER, fill: HORIZONTAL))
+                boxLayout(axis: BoxLayout.Y_AXIS) 
+                panel(border: BorderFactory.createEmptyBorder(10, 10, 10, 10)) {
+                    gridBagLayout()
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.action"),
+                            constraints: gbc(gridx: 0, gridy: 0, ipadx: 5, fill: HORIZONTAL))
+                    actionField = textField(preferredSize: new Dimension(400, 25),
+                            constraints: gbc(gridx: 1, gridy: 0, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.delegate"),
-                                constraints: gbc(gridx: 0, gridy: 1, ipadx: 5, fill: HORIZONTAL))
-                        delegateField = textField(preferredSize: new Dimension(300, 25),
-                                constraints: gbc(gridx: 1, gridy: 1, gridwidth: REMAINDER, fill: HORIZONTAL))
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.delegate"),
+                            constraints: gbc(gridx: 0, gridy: 1, ipadx: 5, fill: HORIZONTAL))
+                    delegateField = textField(preferredSize: new Dimension(300, 25),
+                            constraints: gbc(gridx: 1, gridy: 1, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.context"),
-                                constraints: gbc(gridx: 0, gridy: 2, ipadx: 5, fill: HORIZONTAL))
-                        contextField = textField(preferredSize: new Dimension(300, 25),
-                                constraints: gbc(gridx: 1, gridy: 2, gridwidth: REMAINDER, fill: HORIZONTAL))
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.context"),
+                            constraints: gbc(gridx: 0, gridy: 2, ipadx: 5, fill: HORIZONTAL))
+                    contextField = textField(preferredSize: new Dimension(300, 25),
+                            constraints: gbc(gridx: 1, gridy: 2, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
-                                constraints: gbc(gridx: 0, gridy: 3, ipadx: 5, fill: HORIZONTAL))
-                        todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
-                                preferredSize: new Dimension(50, 25),
-                                constraints: gbc(gridx: 1, gridy: 3, ipadx: 5))
-                        whenField = textField(preferredSize: new Dimension(250, 25),
-                                constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
-                        hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
-                            doneField = checkBox(
-                                    text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
-                                    icon: IconUtil.getIcon("unchecked"),
-                                    selectedIcon: IconUtil.getIcon("button_ok"),
-                                    actionPerformed: {
-                                        if (doneField.selected && cancelledField.selected) {
-                                            cancelledField.selected = false
-                                        }
-                                    })
-                            cancelledField = checkBox(
-                                    text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"),
-                                    icon: IconUtil.getIcon("unchecked"),
-                                    selectedIcon: IconUtil.getIcon("button_cancel"),
-                                    actionPerformed: {
-                                        if (doneField.selected && cancelledField.selected) {
-                                            doneField.selected = false
-                                        }
-                                    })
-                        }
-
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
-                                constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
-                        waitForField = textField(preferredSize: new Dimension(250, 25),
-                                constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
-
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
-                                constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
-                        waitUntilField = textField(preferredSize: new Dimension(250, 25),
-                                constraints: gbc(gridx: 1, gridy: 5, gridwidth: REMAINDER, fill: HORIZONTAL))
-
-                        label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
-                                constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
-                        priorityField = textField(preferredSize: new Dimension(20, 25),
-                                constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
-                    }
-                    
-                    panel() {
-                        boxLayout(axis: BoxLayout.X_AXIS)
-                        button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
+                            constraints: gbc(gridx: 0, gridy: 3, ipadx: 5, fill: HORIZONTAL))
+                    todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
+                            preferredSize: new Dimension(50, 25),
+                            constraints: gbc(gridx: 1, gridy: 3, ipadx: 5))
+                    whenField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
+                    hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
+                        doneField = checkBox(
+                                text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
+                                icon: IconUtil.getIcon("unchecked"),
+                                selectedIcon: IconUtil.getIcon("button_ok"),
                                 actionPerformed: {
-                                    mainFrame.setVisible(false)
-                                    mainFrame.dispose()
+                                    if (doneField.selected && cancelledField.selected) {
+                                        cancelledField.selected = false
+                                    }
                                 })
-                        doneButton = button(id: 'doneButton', text: TextUtils.getText("freeplaneGTD.button.done"),
+                        cancelledField = checkBox(
+                                text: TextUtils.getText("freeplaneGTD.actioneditor.cancelled"),
+                                icon: IconUtil.getIcon("unchecked"),
+                                selectedIcon: IconUtil.getIcon("button_cancel"),
                                 actionPerformed: {
-                                    model.action = actionField.text
-                                    model.delegate = delegateField.text
-                                    model.context = contextField.text
-                                    model.today = todayField.selected
-                                    model.when = whenField.text
-                                    model.priority = priorityField.text
-                                    model.waitFor = waitForField.text
-                                    model.waitUntil = waitUntilField.text
-                                    model.done = doneField.selected
-                                    model.cancelled = cancelledField.selected
-                                    model.updateNode()
-                                    mainFrame.setVisible(false)
-                                    mainFrame.dispose()
+                                    if (doneField.selected && cancelledField.selected) {
+                                        doneField.selected = false
+                                    }
                                 })
                     }
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
+                            constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
+                    waitForField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
+                            constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
+                    waitUntilField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 5, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
+                            constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
+                    priorityField = textField(preferredSize: new Dimension(20, 25),
+                            constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
+                }
+
+                panel() {
+                    boxLayout(axis: BoxLayout.X_AXIS)
+                    button(text: TextUtils.getText("freeplaneGTD.button.cancel"),
+                            actionPerformed: {
+                                mainFrame.setVisible(false)
+                                mainFrame.dispose()
+                            })
+                    doneButton = button(id: 'doneButton', text: TextUtils.getText("freeplaneGTD.button.done"),
+                            actionPerformed: {
+                                model.action = actionField.text
+                                model.delegate = delegateField.text
+                                model.context = contextField.text
+                                model.today = todayField.selected
+                                model.when = whenField.text
+                                model.priority = priorityField.text
+                                model.waitFor = waitForField.text
+                                model.waitUntil = waitUntilField.text
+                                model.done = doneField.selected
+                                model.cancelled = cancelledField.selected
+                                model.updateNode()
+                                mainFrame.setVisible(false)
+                                mainFrame.dispose()
+                            })
                 }
             }
             mainFrame.getRootPane().setDefaultButton(doneButton)
