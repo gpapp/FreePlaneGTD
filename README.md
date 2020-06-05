@@ -95,9 +95,11 @@ The icons specified will be converted to the corresponding context attribute (Wh
 
 ## Aliases for people and contexts
 
-If you prefer to use shortcuts for people or contexts, it is available starting V2.0. All you have to do is to create nodes with the text `Alias: @Context @ContextAlias` or `Alias: [sc] [shortcut]` where the texts can be any string of your liking.
+If you prefer to use shortcuts for people or contexts, it is available starting V2.0. All you have to do is to create nodes with the text `Alias: @Context @ctx` or `Alias: [John Connor] [jc] ` where the texts can be any string of your liking.
 
 The defined aliases will replace the text when node is parsed with the shorcuts or edited through the editor.
+
+Aliases are case insensitive and you can specify multiple aliases for the same context/people either on the same config line or separately.
 
 ## Credits
 

@@ -1,16 +1,17 @@
-<map version="freeplane 1.7.0">
-<!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1574010506333" LINK="https://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
-<font SIZE="16" BOLD="true" ITALIC="true"/>
-<hook NAME="MapStyle">
-    <properties show_icon_for_attributes="true" show_note_icons="true" fit_to_viewport="false;"/>
+<map version="freeplane 1.8.0">
+  <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
+  <node TEXT="Freeplane|GTD+" FOLDED="false" ID="ID_1723255651" CREATED="1283093380553" MODIFIED="1591384204470"
+        LINK="https://www.itworks.hu/freeplanegtd-release/" BACKGROUND_COLOR="#97c7dc">
+    <font SIZE="16" BOLD="true" ITALIC="true"/>
+    <hook NAME="MapStyle">
+      <properties show_icon_for_attributes="true" show_note_icons="true" fit_to_viewport="false;"/>
 
-<map_styles>
-<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
-<font SIZE="24"/>
-<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
-<stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent">
-<font NAME="SansSerif" SIZE="12" BOLD="false" ITALIC="false"/>
+      <map_styles>
+        <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
+          <font SIZE="24"/>
+          <stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
+            <stylenode LOCALIZED_TEXT="default" COLOR="#000000" STYLE="as_parent">
+              <font NAME="SansSerif" SIZE="12" BOLD="false" ITALIC="false"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.details"/>
 <stylenode LOCALIZED_TEXT="defaultstyle.attributes">
@@ -58,7 +59,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="129.74999613314878 pt" VALUE_WIDTH="134.24999599903833 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v3.6.0-alpha1"/>
+    <attribute NAME="version" VALUE="v3.6.0-alpha2"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
     <attribute NAME="freeplaneVersionFrom" VALUE="1.8.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
