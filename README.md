@@ -23,7 +23,7 @@ To get more information about the add-on use follow the instructions at (http://
 ## Installation
 
 * Download and install [Freeplane](http://freeplane.org) on your computer.
-* Download the latest FreeplaneGTD plugin from the [release page](http://itworks.hu/freeplanegtd-release)
+* Download the latest FreeplaneGTD plugin from the [release page](https://github.com/gpapp/FreePlaneGTD/releases )
 * In Freeplane open the addon manager, select the previously downloaded addon, and install it.
 * Restart Freeplane to enable the plugin
 * You can now use the addon.
