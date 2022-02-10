@@ -23,15 +23,22 @@ class GTDNodeChangeListener implements INodeChangeListener {
         reader.findIcons()
     }
 
+    Node findById (def id) {
+  		try {
+  			return ScriptUtils.c().find({ Node it -> it.id === id })[0]
+  		} catch (Exception e) {
+  			throw e
+  		}
+  	}
+
     void nodeChanged(NodeChangeEvent event) {
         if (!event.setsDirtyFlag()) return
         if (!enabled) return
         try {
-            log.info("Got event:" + event.source.class)
             boolean changed = true
             if (event.property == 'node_text') {
 
-                Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
+                Node node=findById(event.node.createID())
                 if (GTDMapReader.isConfigAlias(node)) {
                     reader.findAliases()
                     reader.fixIconsOnAliasConfigChange()
@@ -52,7 +59,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
                     changed = false
                 }
             } else if (event.property == 'icon') {
-                Node node = ScriptUtils.c().find({ Node it -> it.id == event.node.id })[0]
+                Node node=findById(event.node.createID())
 
                 if (reader.isTask(node)) {
                     reader.findIcons()
