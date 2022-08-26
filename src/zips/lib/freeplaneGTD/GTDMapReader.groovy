@@ -96,26 +96,27 @@ class GTDMapReader {
     }
 
     static boolean isShorthandTask(Node it) {
-        it.transformedText.startsWith('*')
+        it?it.transformedText.startsWith('*'):false
     }
 
     static boolean isShorthandQuestion(Node it) {
-        it.transformedText.startsWith('?')
+        it?it.transformedText.startsWith('?'):false
     }
 
     static boolean isConfigAlias(Node it) {
-        it.transformedText.startsWith('Alias: ')
+        it?it.transformedText.startsWith('Alias: '):false
     }
 
     static boolean isConfigIcon(Node it) {
-        it.transformedText.startsWith('Icon: ')
+        it?it.transformedText.startsWith('Icon: '):false
     }
 
     boolean isTask(Node node) {
-        !node.transformedText.startsWith('Icon: ') && node.icons.contains(iconNextAction)
+        node?(!node.transformedText.startsWith('Icon: ') && node.icons.contains(iconNextAction)):false
     }
 
     boolean isDone(Node node) {
+        if (!node) return false
         def icons = node.icons.icons
         return icons.contains(iconDone) || icons.contains(iconCancel)
     }
