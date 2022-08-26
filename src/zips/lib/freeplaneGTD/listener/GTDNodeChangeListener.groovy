@@ -53,16 +53,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
                     reader.fixAliasesForNode(node)
                     reader.fixIconsForNode(node)
                 } else if (reader.isTask(node)) {
-					def prevTime=node.attributes['When']
                     reader.parseSingleTaskNode(node)
-					def newTime=node.attributes['When']
-					if (!newTime){
-						node.reminder.remove()
-					} else if (prevTime!=newTime) {
-						if (newTime instanceof java.util.Date) {
-							node.reminder.createOrReplace (newTime,"DAY",1)
-						}
-					}
                     reader.fixAliasesForNode(node)
                     reader.fixIconsForNode(node)
                 } else {
@@ -113,7 +104,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
 					
 					if ((!whenDone) && (when instanceof java.util.Date)) {
 						node.reminder.remove()
-						def nextReminder = new Date() + 1
+						def nextReminder = new Date().clearTime() + 1
 						if (when.before(nextReminder)) {
 							when = nextReminder
 						}
