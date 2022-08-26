@@ -286,20 +286,15 @@ class ReportModel {
         return retval
     }
 
-    GtdReportViewController.DONE_TIMELINE doneTimeline(Object time) {
+    GtdReportViewController.DONE_TIMELINE doneTimeline(Date today, Object time) {
         if (!time) return GtdReportViewController.DONE_TIMELINE.EARLIER
         Date date = DateUtil.normalizeDate(time) as Date
-
-        // today to compare with
-        Date today = mapReader.today
 
         // consider today as exactly this day
         // consider this month as today + month before
         def days = ChronoUnit.DAYS.between(date.toInstant(), today.toInstant())
         println "diff days $today->$date = $days"
-        if (days < 0) {
-            throw new IllegalArgumentException("date from future $time")
-        }
+        
         if (days < 1) return GtdReportViewController.DONE_TIMELINE.TODAY
         if (days < 7) return GtdReportViewController.DONE_TIMELINE.LAST_WEEK
         if (days < 30) return GtdReportViewController.DONE_TIMELINE.LAST_MONTH
@@ -309,7 +304,9 @@ class ReportModel {
     def doneTimeline() {
         Map retval = [type: 'whenDone' as Object]
         List groups = []
-        Map<GtdReportViewController.DONE_TIMELINE, Object> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
+        // today to compare with
+        Date today = new Date();
+        Map<GtdReportViewController.DONE_TIMELINE, Object> byDoneTimeline = doneList.groupBy({ node -> doneTimeline(today, node['whenDone']) }).sort { a, b -> a.key.compareTo(b.key) }
         byDoneTimeline.each {
             key, value ->
                 groups << [title: TextUtils.getText("freeplaneGTD.doneTimeline." + key), items: value]
