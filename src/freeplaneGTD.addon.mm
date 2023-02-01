@@ -65,7 +65,7 @@
 <attribute NAME="freeplaneVersionFrom" VALUE="1.9.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
 <attribute NAME="downloadUrl" VALUE="https://www.itworks.hu/freeplanegtd-release/"/>
-<attribute NAME="changelogUrl" VALUE=""/>
+<attribute NAME="changelogUrl" VALUE="https://github.com/gpapp/FreePlaneGTD/releases/tag/${version}"/>
 <attribute NAME="updateUrl" VALUE="https://www.itworks.hu/freeplanegtd-release/version.properties"/>
 <richcontent TYPE="NOTE" CONTENT-TYPE="xml/">
 <html>

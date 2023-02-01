@@ -6,6 +6,7 @@ import groovy.util.logging.Log
 import org.freeplane.api.Node
 import org.freeplane.features.attribute.NodeAttributeTableModel
 import org.freeplane.features.map.INodeChangeListener
+import org.freeplane.features.map.NodeModel
 import org.freeplane.features.map.NodeChangeEvent
 import org.freeplane.features.mode.Controller
 import org.freeplane.plugin.script.proxy.ScriptUtils
@@ -36,7 +37,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
         if (!enabled) return
         try {
             boolean changed = true
-            if (event.property == 'node_text') {
+            if (NodeModel.NODE_TEXT==event.property) {
 
                 Node node=findById(event.node.createID())
                 if (GTDMapReader.isConfigAlias(node)) {
@@ -58,7 +59,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
                 } else {
                     changed = false
                 }
-            } else if (event.property == 'icon') {
+            } else if (NodeModel.NODE_ICON == event.property) {
                 Node node=findById(event.node.createID())
 
                 if (reader.isTask(node)) {
@@ -90,9 +91,29 @@ class GTDNodeChangeListener implements INodeChangeListener {
                     }
                 }
             } else changed = event.property == NodeAttributeTableModel.class
-            if (changed) {
-                Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
-                        gtdReportViewController.refreshContent()
+				/* TODO: 
+						event is fired on each node attribute modification with no before/after
+						Will trigger multiple times on parsing string or action dialog
+						Should find a way to reduce bogus events
+				*/
+				if (changed) {
+					Node node=findById(event.node.createID())
+
+					def when=node.attributes['When']
+					def whenDone=node.attributes['WhenDone']
+					
+					if ((!whenDone) && (when instanceof java.util.Date)) {
+						node.reminder.remove()
+						def nextReminder = new Date().clearTime() + 1
+						if (when.before(nextReminder)) {
+							when = nextReminder
+						}
+						node.reminder.createOrReplace (when, "DAY",1)
+					} else {
+						node.reminder.remove()
+					}
+					Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+							gtdReportViewController.refreshContent()
             }
 
         } catch (Exception e) {
