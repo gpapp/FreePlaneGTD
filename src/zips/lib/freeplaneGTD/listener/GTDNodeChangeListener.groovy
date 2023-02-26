@@ -98,6 +98,7 @@ class GTDNodeChangeListener implements INodeChangeListener {
 				*/
 				if (changed) {
 					Node node=findById(event.node.createID())
+                                        if (!node) return
 
 					def when=node.attributes['When']
 					def whenDone=node.attributes['WhenDone']
