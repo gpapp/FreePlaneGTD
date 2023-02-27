@@ -98,22 +98,24 @@ class GTDNodeChangeListener implements INodeChangeListener {
 				*/
 				if (changed) {
 					Node node=findById(event.node.createID())
-
-					def when=node.attributes['When']
-					def whenDone=node.attributes['WhenDone']
 					
-					if ((!whenDone) && (when instanceof java.util.Date)) {
-						node.reminder.remove()
-						def nextReminder = new Date().clearTime() + 1
-						if (when.before(nextReminder)) {
-							when = nextReminder
+					if(node){
+						def when=node.attributes['When']
+						def whenDone=node.attributes['WhenDone']
+
+						if ((!whenDone) && (when instanceof java.util.Date)) {
+							node.reminder.remove()
+							def nextReminder = new Date().clearTime() + 1
+							if (when.before(nextReminder)) {
+								when = nextReminder
+							}
+							node.reminder.createOrReplace (when, "DAY",1)
+						} else {
+							node.reminder.remove()
 						}
-						node.reminder.createOrReplace (when, "DAY",1)
-					} else {
-						node.reminder.remove()
+						Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
+								gtdReportViewController.refreshContent()
 					}
-					Controller.currentModeController.getExtension(GtdReportController.getGtdReportControllerClass(Controller.currentModeController)).
-							gtdReportViewController.refreshContent()
             }
 
         } catch (Exception e) {
