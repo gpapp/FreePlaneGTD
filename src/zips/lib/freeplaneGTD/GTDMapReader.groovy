@@ -486,14 +486,20 @@ class GTDMapReader {
 
                 // take care of missing attributes. null or empty string evaluates as boolean false
                 if (!naWhen) {
-                    naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
+                    if (icons.contains(iconWeek)) {
+                        naWhen = TextUtils.getText("freeplaneGTD.view.when.this_week")
+                    } else if (icons.contains(iconToday)) {
+                        naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+                    } else {
+                        naWhen = TextUtils.getText("freeplaneGTD.view.when.unscheduled")
+                    }
                 } else {
                     naWhen = DateUtil.normalizeDate(naWhen)
                     thisNode['When'] = naWhen
-                }
-                if ((naWhen != null) && (naWhen instanceof Date)) {
-                    if (today == naWhen.clearTime()) {
-                        naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+                    if (naWhen instanceof Date) {
+                        if (today == naWhen.clearTime()) {
+                            naWhen = TextUtils.getText("freeplaneGTD.view.when.today")
+                        }
                     }
                 }
 
@@ -505,9 +511,6 @@ class GTDMapReader {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
                 String naProject = findNextActionProject(thisNode, iconProject)
-                if (icons.contains(iconToday)) {
-                    naWhen = TextUtils.getText('freeplaneGTD.view.when.today')
-                }
 
                 result << [node     : thisNode,
                            action   : naAction,
