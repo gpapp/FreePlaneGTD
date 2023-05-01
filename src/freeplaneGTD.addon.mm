@@ -60,7 +60,7 @@
 </hook>
 <attribute_layout NAME_WIDTH="129.75 pt" VALUE_WIDTH="134.25 pt"/>
 <attribute NAME="name" VALUE="freeplaneGTD"/>
-<attribute NAME="version" VALUE="v3.7"/>
+<attribute NAME="version" VALUE="v3.8"/>
 <attribute NAME="author" VALUE="Gergely Papp"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="1.9.0"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
