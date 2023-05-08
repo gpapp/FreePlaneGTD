@@ -6,7 +6,7 @@ import groovy.swing.SwingBuilder
 import groovy.util.logging.Log
 import org.freeplane.api.Node
 import org.freeplane.core.resources.ResourceController
-import org.freeplane.core.ui.components.MultipleImage
+import org.freeplane.core.ui.components.MultipleImageIcon
 import org.freeplane.core.ui.components.UITools
 import org.freeplane.core.util.TextUtils
 import org.freeplane.features.clipboard.ClipboardController
@@ -215,13 +215,13 @@ class GtdReportViewController {
                                     })
                             // context icons
                             panel(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHWEST)) {
-                                MultipleImage multipleImage = new MultipleImage()
+                                MultipleImageIcon mii = new MultipleImageIcon()
                                 (item['context'] as String)?.tokenize(',')?.each { key ->
                                     if (contextIcons.keySet().contains(key)) {
-                                        multipleImage.addIcon(IconUtil.getUIIcon(contextIcons.get(key)))
+                                        mii.addIcon(IconUtil.getUIIcon(contextIcons.get(key)))
                                     }
                                 }
-                                label(icon: multipleImage)
+                                label(icon: mii)
                             }
                             // task content
 
