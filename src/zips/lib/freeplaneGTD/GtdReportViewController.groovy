@@ -235,6 +235,8 @@ class GtdReportViewController {
                                 actionText.append(key)
                             }
                             !item['project'] ?: actionText.append(' for ' + item['project'])
+                            !item['energy'] ?: actionText.append(' energy: ' + item['energy'])
+                            !item['duration'] ?: actionText.append(' duration: ' + item['duration'])
                             // TODO: differentiate waitfor somehow?
                             if (item['waitFor'] || item['waitUntil']) {
                                 actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
