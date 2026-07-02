@@ -134,6 +134,8 @@ class ReportModel {
                                   context  : it['context'],
                                   waitFor  : it['waitFor'],
                                   waitUntil: it['waitUntil'],
+                                  energy   : it['energy'],
+                                  duration : it['duration'],
                                   details  : it['details'],
                                   notes    : it['notes']
                         ]
@@ -187,6 +189,8 @@ class ReportModel {
                                    context  : it['context'],
                                    project  : it['project'],
                                    waitUntil: it['waitUntil'],
+                                   energy   : it['energy'],
+                                   duration : it['duration'],
                                    details  : it['details'],
                                    notes    : it['notes']
                     ]
@@ -238,6 +242,8 @@ class ReportModel {
                               project  : it['project'],
                               waitFor  : it['waitFor'],
                               waitUntil: it['waitUntil'],
+                              energy   : it['energy'],
+                              duration : it['duration'],
                               details  : it['details'],
                               notes    : it['notes']
                     ]
@@ -269,6 +275,8 @@ class ReportModel {
                                    project  : it['project'],
                                    context  : it['context'],
                                    waitFor  : it['waitFor'],
+                                   energy   : it['energy'],
+                                   duration : it['duration'],
                                    details  : it['details'],
                                    notes    : it['notes']
                     ]

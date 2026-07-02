@@ -60,6 +60,28 @@ class GTDMapReaderTest {
     }
 
     @Test
+    void testCreateTaskToReturnExposesEnergyAndDurationAsTaskMapKeys() {
+        Proxy.Node rootNode = ProxyFactory.createNode(new NodeModel(new MapModel()), new ScriptContext())
+        rootNode.icons.add('action')
+        rootNode.text = 'Config'
+
+        Proxy.Node taskNode = rootNode.createChild()
+        taskNode.text = '*Test task'
+        taskNode.attributes.set('Energy', 'High')
+        taskNode.attributes.set('Duration', '30 min')
+
+        GTDMapReader mapReader = GTDMapReader.instance
+        mapReader.parseSingleTaskNode(taskNode)
+
+        def createTaskToReturn = GTDMapReader.class.getDeclaredMethod('createTaskToReturn', List)
+        createTaskToReturn.setAccessible(true)
+        def taskMap = createTaskToReturn.invoke(mapReader, [taskNode] as List)
+
+        assert taskMap[0]['energy'] == 'High'
+        assert taskMap[0]['duration'] == '30 min'
+    }
+
+    @Test
     void testConvertShortHand() {
         Proxy.Node rootNode = ProxyFactory.createNode(new NodeModel(new MapModel()),new ScriptContext())
         rootNode.icons.add('aa')

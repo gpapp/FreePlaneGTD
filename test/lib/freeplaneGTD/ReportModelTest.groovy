@@ -40,4 +40,45 @@ class ReportModelTest extends GroovyTestCase {
             assert reportModel.taskSortComparator([priority: '1', when: 'TODAY'], [priority: '1', when: 'THIS WEEK']) == -1
         }
     }
+
+    void testGroupingListsExposeEnergyAndDuration() {
+        def mockReportModel = new MockFor(TextUtils)
+        mockReportModel.demand.getText { 'UNASSIGNED' }
+        mockReportModel.use {
+            ReportModel reportModel = new ReportModel()
+            reportModel.actionList = [[
+                    action   : 'Test task',
+                    project  : 'Project',
+                    energy   : 'High',
+                    duration : '30 min',
+                    priority : '1',
+                    done     : false,
+                    cancelled: false,
+                    nodeID   : '1',
+                    who      : 'Alice',
+                    when     : null,
+                    context  : 'Home',
+                    waitFor  : null,
+                    waitUntil: null,
+                    details  : null,
+                    notes    : null
+            ]]
+
+            def projectList = reportModel.projectList()
+            assert projectList.groups[0].items[0].energy == 'High'
+            assert projectList.groups[0].items[0].duration == '30 min'
+
+            def delegateList = reportModel.delegateList()
+            assert delegateList.groups[0].items[0].energy == 'High'
+            assert delegateList.groups[0].items[0].duration == '30 min'
+
+            def contextList = reportModel.contextList()
+            assert contextList.groups[0].items[0].energy == 'High'
+            assert contextList.groups[0].items[0].duration == '30 min'
+
+            def timelineList = reportModel.timelineList()
+            assert timelineList.groups[0].items[0].energy == 'High'
+            assert timelineList.groups[0].items[0].duration == '30 min'
+        }
+    }
 }

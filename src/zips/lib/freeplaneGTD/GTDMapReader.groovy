@@ -511,6 +511,8 @@ class GTDMapReader {
                 String naDetails = stripHTMLTags(thisNode.detailsText)
                 String naNotes = stripHTMLTags(thisNode.noteText)
                 String naProject = findNextActionProject(thisNode, iconProject)
+                String naEnergy = thisNode['Energy']?.toString()
+                String naDuration = thisNode['Duration']?.toString()
 
                 result << [node     : thisNode,
                            action   : naAction,
@@ -524,6 +526,8 @@ class GTDMapReader {
                            notes    : naNotes,
                            waitFor  : naWaitFor,
                            waitUntil: naWaitUntil,
+                           energy   : naEnergy,
+                           duration : naDuration,
                            whenDone : naWhenDone,
                            done     : icons.contains(iconDone),
                            cancelled: icons.contains(iconCancel)]
