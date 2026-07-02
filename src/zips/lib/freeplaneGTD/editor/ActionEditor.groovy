@@ -23,6 +23,8 @@ class ActionEditor {
         boolean today
         String when
         String priority
+        String energy
+        String duration
         String waitFor
         String waitUntil
         boolean done
@@ -47,6 +49,8 @@ class ActionEditor {
             today = node.icons.contains(GTDMapReader.instance.iconToday)
             when = node.attributes['When']
             priority = node.attributes['Priority']
+            energy = node.attributes['Energy']
+            duration = node.attributes['Duration']
             waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
             waitUntil = node.attributes['WaitUntil']
             done = node.icons.contains(GTDMapReader.instance.iconDone)
@@ -60,6 +64,8 @@ class ActionEditor {
             context ? editedNode['Where'] = context : editedNode.attributes.removeAll('Where')
             when ? editedNode['When'] = when : editedNode.attributes.removeAll('When')
             priority ? editedNode['Priority'] = priority : editedNode.attributes.removeAll('Priority')
+            energy ? editedNode['Energy'] = energy : editedNode.attributes.removeAll('Energy')
+            duration ? editedNode['Duration'] = duration : editedNode.attributes.removeAll('Duration')
 
             if (waitFor) {
                 editedNode.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
@@ -114,6 +120,8 @@ class ActionEditor {
     JCheckBox todayField
     JTextField whenField
     JTextField priorityField
+    JTextField energyField
+    JTextField durationField
     JCheckBox doneField
     JCheckBox cancelledField
     JTextField waitForField
@@ -187,6 +195,16 @@ class ActionEditor {
                             constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
                     priorityField = textField(preferredSize: new Dimension(20, 25),
                             constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.energy"),
+                            constraints: gbc(gridx: 0, gridy: 7, ipadx: 5, fill: HORIZONTAL))
+                    energyField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 7, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.duration"),
+                            constraints: gbc(gridx: 0, gridy: 8, ipadx: 5, fill: HORIZONTAL))
+                    durationField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 8, gridwidth: REMAINDER, fill: HORIZONTAL))
                 }
 
                 panel() {
@@ -204,6 +222,8 @@ class ActionEditor {
                                 model.today = todayField.selected
                                 model.when = whenField.text
                                 model.priority = priorityField.text
+                                model.energy = energyField.text
+                                model.duration = durationField.text
                                 model.waitFor = waitForField.text
                                 model.waitUntil = waitUntilField.text
                                 model.done = doneField.selected
@@ -238,6 +258,8 @@ class ActionEditor {
         todayField.selected = model.today
         whenField.text = model.when
         priorityField.text = model.priority
+        energyField.text = model.energy
+        durationField.text = model.duration
         waitForField.text = model.waitFor
         waitUntilField.text = model.waitUntil
         doneField.selected = model.done
