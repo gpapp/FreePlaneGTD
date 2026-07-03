@@ -280,6 +280,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Drucken"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="verschiebe Aktivität ins Archiv"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="zeitorientiert"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Wann"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorität"/>
@@ -336,6 +340,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Print"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Move completed to archive"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Timeline"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="When"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Next action list"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
@@ -397,6 +405,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Imprimir"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Pasar completadas a Archivo"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Orden temporal"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Cuando"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
@@ -453,6 +465,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Imprimer"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Déplacement terminée pour archiver"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Par échéance"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Échéance"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Liste des prochaines actions"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorité"/>
@@ -515,6 +531,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Nyomtatás"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Kész feladatok arcívumba"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Idővonal"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Időpont"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teendők"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioritás"/>
@@ -586,6 +606,10 @@
 <attribute NAME="freeplaneGTD.button.copy" VALUE="Kopieer"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Verplaats afgeronden naar archief"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Tijdslijn"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Wanneer"/>
 <attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Wie"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lijst met eerstvolgende acties"/>
@@ -631,6 +655,10 @@
 <attribute NAME="freeplaneGTD.button.print" VALUE="Печать"/>
 <attribute NAME="addons.${name}.archiveTask" VALUE="Переместить завершенное в архив"/>
 <attribute NAME="freeplaneGTD.tab.when.title" VALUE="Сроки"/>
+<attribute NAME="freeplaneGTD.tab.energy.title" VALUE="By Energy"/>
+<attribute NAME="freeplaneGTD.tab.energy.tooltip" VALUE="List actions by energy"/>
+<attribute NAME="freeplaneGTD.tab.duration.title" VALUE="By Duration"/>
+<attribute NAME="freeplaneGTD.tab.duration.tooltip" VALUE="List actions by duration"/>
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Когда"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Следующий список действий"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Приоритет"/>
