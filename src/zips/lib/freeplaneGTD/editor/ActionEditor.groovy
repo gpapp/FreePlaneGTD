@@ -60,12 +60,15 @@ class ActionEditor {
 
         void updateNode() {
             editedNode.text = "$action"
-            delegate ? editedNode['Who'] = delegate : editedNode.attributes.removeAll('Who')
-            context ? editedNode['Where'] = context : editedNode.attributes.removeAll('Where')
-            when ? editedNode['When'] = when : editedNode.attributes.removeAll('When')
-            priority ? editedNode['Priority'] = priority : editedNode.attributes.removeAll('Priority')
-            energy ? editedNode['Energy'] = energy : editedNode.attributes.removeAll('Energy')
-            duration ? editedNode['Duration'] = duration : editedNode.attributes.removeAll('Duration')
+            ['Who', 'Where', 'Duration', 'Energy', 'When', 'WaitFor', 'WaitUntil', 'Priority'].each {
+                editedNode.attributes.removeAll(it)
+            }
+
+            delegate ? editedNode['Who'] = delegate : null
+            context ? editedNode['Where'] = context : null
+            duration ? editedNode['Duration'] = duration : null
+            energy ? editedNode['Energy'] = energy : null
+            when ? editedNode['When'] = when : null
 
             if (waitFor) {
                 editedNode.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
@@ -77,6 +80,8 @@ class ActionEditor {
                 editedNode.attributes.set('WaitUntil', waitUntilDate)
             } else
                 editedNode.attributes.removeAll('WaitUntil')
+
+            priority ? editedNode['Priority'] = priority : null
 
             GTDMapReader mapReader = GTDMapReader.instance
             if (editedNode.icons.contains(mapReader.iconToday) != today) {
