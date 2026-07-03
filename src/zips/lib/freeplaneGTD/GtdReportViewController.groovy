@@ -260,7 +260,8 @@ class GtdReportViewController {
                                 actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                             }
                             vbox(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
-                                JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
+                                Color normalTextColor = UIManager.getColor("Label.foreground") ?: Color.WHITE
+                                JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : normalTextColor)
 
                                 taskLabel.addMouseListener(new MouseAdapter() {
                                     @Override
