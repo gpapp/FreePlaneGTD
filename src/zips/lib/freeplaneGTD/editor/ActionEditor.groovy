@@ -153,14 +153,24 @@ class ActionEditor {
                     contextField = textField(preferredSize: new Dimension(300, 25),
                             constraints: gbc(gridx: 1, gridy: 2, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.duration"),
                             constraints: gbc(gridx: 0, gridy: 3, ipadx: 5, fill: HORIZONTAL))
+                    durationField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 3, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.energy"),
+                            constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
+                    energyField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
+                            constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
                     todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
                             preferredSize: new Dimension(50, 25),
-                            constraints: gbc(gridx: 1, gridy: 3, ipadx: 5))
+                            constraints: gbc(gridx: 1, gridy: 5, ipadx: 5))
                     whenField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
-                    hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
+                            constraints: gbc(gridx: 2, gridy: 5, fill: HORIZONTAL))
+                    hbox(constraints: gbc(gridx: 3, gridy: 5, fill: HORIZONTAL)) {
                         doneField = checkBox(
                                 text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                                 icon: IconUtil.getIcon("unchecked"),
@@ -182,28 +192,18 @@ class ActionEditor {
                     }
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
-                            constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
-                    waitForField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
-
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
-                            constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
-                    waitUntilField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 1, gridy: 5, gridwidth: REMAINDER, fill: HORIZONTAL))
-
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
                             constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
-                    priorityField = textField(preferredSize: new Dimension(20, 25),
+                    waitForField = textField(preferredSize: new Dimension(250, 25),
                             constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.energy"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
                             constraints: gbc(gridx: 0, gridy: 7, ipadx: 5, fill: HORIZONTAL))
-                    energyField = textField(preferredSize: new Dimension(250, 25),
+                    waitUntilField = textField(preferredSize: new Dimension(250, 25),
                             constraints: gbc(gridx: 1, gridy: 7, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.duration"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
                             constraints: gbc(gridx: 0, gridy: 8, ipadx: 5, fill: HORIZONTAL))
-                    durationField = textField(preferredSize: new Dimension(250, 25),
+                    priorityField = textField(preferredSize: new Dimension(20, 25),
                             constraints: gbc(gridx: 1, gridy: 8, gridwidth: REMAINDER, fill: HORIZONTAL))
                 }
 
