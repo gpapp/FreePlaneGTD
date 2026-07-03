@@ -283,6 +283,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Wann"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Offene-Punkte-Liste, OPL"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorität"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="kontextorientiert"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Aktualisieren"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
@@ -337,6 +339,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="When"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Next action list"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priority"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="By Context"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Refresh"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
@@ -396,6 +400,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Cuando"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lista de acciones"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioridad"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="por Contexto"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Refrescar"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
@@ -450,6 +456,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Échéance"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Liste des prochaines actions"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Priorité"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="Par contexte"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Actualiser"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
@@ -510,6 +518,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Időpont"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Teendők"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioritás"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="Kontextusonként"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Frissítés"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD tulajdonságai"/>
@@ -580,6 +590,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.delegate" VALUE="Wie"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Lijst met eerstvolgende acties"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Prioriteit"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="Volgens Context"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Ververs"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="freeplaneGTD addon"/>
@@ -622,6 +634,8 @@
 <attribute NAME="freeplaneGTD.actioneditor.when" VALUE="Когда"/>
 <attribute NAME="addons.${name}.listActions" VALUE="Следующий список действий"/>
 <attribute NAME="freeplaneGTD.actioneditor.priority" VALUE="Приоритет"/>
+<attribute NAME="freeplaneGTD.actioneditor.energy" VALUE="Energy"/>
+<attribute NAME="freeplaneGTD.actioneditor.duration" VALUE="Duration"/>
 <attribute NAME="freeplaneGTD.tab.context.title" VALUE="По контексту"/>
 <attribute NAME="freeplaneGTD.button.refresh" VALUE="Обновить"/>
 <attribute NAME="OptionPanel.separator.freeplaneGTD" VALUE="дополнение freeplaneGTD"/>
