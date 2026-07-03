@@ -171,7 +171,7 @@ class GtdReportViewController {
         cbFilterDone.selected = ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done')
         report.refreshModel(cbFilterDone.selected)
         taskPanel.clear()
-        taskPanel.add(formatList(findSelectedGroup(), report.mapReader.contextIcons, showNotes))
+        taskPanel.add(formatList(findSelectedGroup(), report.mapReader.contextIcons, showNotes), BorderLayout.NORTH)
         taskPanel.updateUI()
     }
 
