@@ -13,7 +13,7 @@ Freeplane GTD is an addon, that can collect tasks specified in a mindmap, thus a
 
 ## Installation and usage instructions
 
-To get more information about the add-on use follow the instructions at (http://www.itworks.hu/index.php/freeplane-gtd/).
+For more information about using the add-on, follow the instructions at (http://www.itworks.hu/index.php/freeplane-gtd/).
 
 ===================
 
@@ -36,16 +36,50 @@ To get more information about the add-on use follow the instructions at (http://
 
 Select Tools -> Freeplane GTD -> Next Actions from the menu. As of version 0.9 the addon can be invoked using the pre-defined hotkey Ctrl-H.
 
-freeplanegtdThe main window of the Freeplane GTD addon will contain all the action items (annotated with the corresponding icon) of the current map.
+The main window of the Freeplane GTD add-on will contain all the action items (annotated with the corresponding icon) of the current map.
 
 You can close this window using the window buttons, or the ESC hotkey.
 
-The sidebar of the window contain the different groupings of the tasks.
+The sidebar of the window contains the different groupings of the tasks.
 
 * By project – the actions will be grouped based on the projects found above them
 * By who – the actions will be grouped based on the Who attribute
 * By context – the actions will be grouped based on the Where attribute
-* By when – the actions will be grouped based on the When attribute, or the ‘Do next’ icon
+* By duration – the actions will be grouped based on the Duration attribute
+* By energy – the actions will be grouped based on the Energy attribute
+* Timeline – the actions will be grouped based on the When attribute, or the ‘Do next’ icon
+* Done timeline – completed tasks will be shown in a timeline view
+
+### Duration and Energy
+
+Tasks may optionally include two additional GTD attributes:
+
+* `Duration` – estimated time required for the task
+* `Energy` – estimated energy required for the task
+
+These values can be edited in the Edit Action dialog. When present, they are displayed in the GTD Next Actions panel.
+
+The GTD Next Actions panel can also group tasks by Duration and Energy.
+
+`Duration` and `Energy` are free-text fields. For consistent grouping, it is recommended to use a small controlled set of values. Grouping is based on the exact text value, so values with different spelling, capitalization, or spacing may appear as separate groups.
+
+Suggested values for `Duration`:
+
+* `1 - 5 min`
+* `2 - 15 min`
+* `3 - 30 min`
+* `4 - 60 min`
+* `5 - 2 h+`
+
+Suggested values for `Energy`:
+
+* `1 - Low`
+* `2 - Medium`
+* `3 - High`
+
+The shorthand notation does not currently set Duration or Energy values. Use the Edit Action dialog or the Freeplane attribute editor to set these attributes.
+
+Tasks without Duration or Energy remain valid and continue to work normally.
 
 ### Shorthand notation
 
@@ -70,7 +104,7 @@ Will be converted to a node with attributes
 
 ### Icons
 
-The plugin uses a number of pre-set icons to identify the action items, and their properties. These can be changed according to the users liking.
+The plugin uses a number of preset icons to identify the action items and their properties. These can be changed according to the user's liking.
 
 * Icon: Project (default icon: 'list' looks like a checklist) – specifies the grouping node for actions
 * Icon: Next action (default icon: 'yes' - looks like !) – specifies the individual actions
@@ -83,9 +117,11 @@ To customize these icons you must place a node with the text above anywhere in y
 
 ## Using the editor
 
-The add-on comes with a simple task editor, that is mapped to the F4 key by default. This can be used to edit/set the task properties without having to use the property editor directy.
+The add-on comes with a simple task editor, that is mapped to the F4 key by default. This can be used to edit/set the task properties without having to use the property editor directly.
 
-The editor is also the place, where the WaitFor and WaitUntil properties can be edited for the tasks. These properties are relevant, when you want to override the ordering of certain tasks. Eg. if you know that a task to be performed by Alice is waiting for some other responsible Bob, than set WaitFor to Bob and set the responsible to Alice. This task will be present at both their names as responsible.
+The editor can also be used to edit the optional Duration and Energy attributes. When a task is saved through the editor, the known GTD task attributes are kept in a consistent display order.
+
+The editor is also the place, where the WaitFor and WaitUntil properties can be edited for the tasks. These properties are relevant, when you want to override the ordering of certain tasks. Eg. if you know that a task to be performed by Alice is waiting for some other responsible Bob, then set WaitFor to Bob and set the responsible to Alice. This task will be present at both their names as responsible.
 
 ## Context icons
 
@@ -97,9 +133,9 @@ The icons specified will be converted to the corresponding context attribute (Wh
 
 If you prefer to use shortcuts for people or contexts, it is available starting V2.0. All you have to do is to create nodes with the text `Alias: @Context @ctx` or `Alias: [John Connor] [jc] ` where the texts can be any string of your liking.
 
-The defined aliases will replace the text when node is parsed with the shorcuts or edited through the editor.
+The defined aliases will replace the text when node is parsed with the shortcuts or edited through the editor.
 
-Aliases are case insensitive and you can specify multiple aliases for the same context/people either on the same config line or separately.
+Aliases are case-insensitive and you can specify multiple aliases for the same context/people either on the same config line or separately.
 
 ## Credits
 
