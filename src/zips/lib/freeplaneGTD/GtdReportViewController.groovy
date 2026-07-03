@@ -27,7 +27,7 @@ class GtdReportViewController {
 
     public static final String FREEPLANE_GTD_DEFAULT_VIEW = 'freeplaneGTD_default_view'
     static enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, ENERGY, DURATION, DONETIMELINE
+        PROJECT, WHO, CONTEXT, DURATION, ENERGY, WHEN, DONETIMELINE
     }
 
     static enum DONE_TIMELINE {
@@ -92,37 +92,37 @@ class GtdReportViewController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: VIEW.WHEN.name(),
-                                text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
-                                toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                                actionCommand: VIEW.DURATION.name(),
+                                text: "4 - " + TextUtils.getText("freeplaneGTD.tab.duration.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.duration.tooltip"),
                                 mnemonic: (char) '4',
+                                selected: defaultView == "DURATION",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.ENERGY.name(),
+                                text: "5 - " + TextUtils.getText("freeplaneGTD.tab.energy.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.energy.tooltip"),
+                                mnemonic: (char) '5',
+                                selected: defaultView == "ENERGY",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.WHEN.name(),
+                                text: "6 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                                mnemonic: (char) '6',
                                 selected: defaultView == "WHEN",
                                 actionPerformed: { refreshContent() }
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
                                 actionCommand: VIEW.DONETIMELINE.name(),
-                                text: "5 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
+                                text: "7 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.done_timeline.tooltip"),
-                                mnemonic: (char) '5',
-                                actionPerformed: { refreshContent() }
-                        )
-                        radioButton(
-                                buttonGroup: contentTypeGroup,
-                                actionCommand: VIEW.ENERGY.name(),
-                                text: "6 - " + TextUtils.getText("freeplaneGTD.tab.energy.title"),
-                                toolTipText: TextUtils.getText("freeplaneGTD.tab.energy.tooltip"),
-                                mnemonic: (char) '6',
-                                selected: defaultView == "ENERGY",
-                                actionPerformed: { refreshContent() }
-                        )
-                        radioButton(
-                                buttonGroup: contentTypeGroup,
-                                actionCommand: VIEW.DURATION.name(),
-                                text: "7 - " + TextUtils.getText("freeplaneGTD.tab.duration.title"),
-                                toolTipText: TextUtils.getText("freeplaneGTD.tab.duration.tooltip"),
                                 mnemonic: (char) '7',
-                                selected: defaultView == "DURATION",
                                 actionPerformed: { refreshContent() }
                         )
                     }
@@ -305,9 +305,9 @@ class GtdReportViewController {
             case VIEW.PROJECT: list = report.projectList(); break
             case VIEW.WHO: list = report.delegateList(); break
             case VIEW.CONTEXT: list = report.contextList(); break
-            case VIEW.WHEN: list = report.timelineList(); break
-            case VIEW.ENERGY: list = report.energyList(); break
             case VIEW.DURATION: list = report.durationList(); break
+            case VIEW.ENERGY: list = report.energyList(); break
+            case VIEW.WHEN: list = report.timelineList(); break
             case VIEW.DONETIMELINE: list = report.doneTimeline(); break
             default: throw new UnsupportedOperationException("Invalid selection pane: " + contentTypeGroup.selection.actionCommand)
         }
