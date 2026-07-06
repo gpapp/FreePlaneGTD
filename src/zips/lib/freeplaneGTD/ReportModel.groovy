@@ -134,6 +134,8 @@ class ReportModel {
                                   context  : it['context'],
                                   waitFor  : it['waitFor'],
                                   waitUntil: it['waitUntil'],
+                                  energy   : it['energy'],
+                                  duration : it['duration'],
                                   details  : it['details'],
                                   notes    : it['notes']
                         ]
@@ -187,6 +189,8 @@ class ReportModel {
                                    context  : it['context'],
                                    project  : it['project'],
                                    waitUntil: it['waitUntil'],
+                                   energy   : it['energy'],
+                                   duration : it['duration'],
                                    details  : it['details'],
                                    notes    : it['notes']
                     ]
@@ -238,11 +242,87 @@ class ReportModel {
                               project  : it['project'],
                               waitFor  : it['waitFor'],
                               waitUntil: it['waitUntil'],
+                              energy   : it['energy'],
+                              duration : it['duration'],
                               details  : it['details'],
                               notes    : it['notes']
                     ]
                 }
                 groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
+        }
+        retval['groups'] = groups
+        return retval
+    }
+
+    def energyList() {
+        Map retval = [type: 'energy' as Object]
+        List groups = []
+        if (actionList) {
+            Map naByGroupFull = actionList.groupBy { it['energy']?.toString()?.trim() ?: null }
+            naByGroupFull = naByGroupFull.sort { it.toString().toLowerCase() }
+            naByGroupFull.each {
+                key, value ->
+                    List<Map> items = []
+                    def curGroup = naByGroupFull[key].sort { a, b -> taskSortComparator.call(a, b) }
+                    curGroup.each {
+                        items << [done     : it['done'],
+                                  cancelled: it['cancelled'],
+                                  whenDone : it['whenDone'],
+                                  time     : it['time'],
+                                  priority : it['priority'],
+                                  action   : it['action'],
+                                  nodeID   : it['nodeID'],
+                                  who      : it['who'],
+                                  when     : it['when'],
+                                  context  : it['context'],
+                                  project  : it['project'],
+                                  waitFor  : it['waitFor'],
+                                  waitUntil: it['waitUntil'],
+                                  energy   : it['energy'],
+                                  duration : it['duration'],
+                                  details  : it['details'],
+                                  notes    : it['notes']
+                        ]
+                    }
+                    groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
+            }
+        }
+        retval['groups'] = groups
+        return retval
+    }
+
+    def durationList() {
+        Map retval = [type: 'duration' as Object]
+        List groups = []
+        if (actionList) {
+            Map naByGroupFull = actionList.groupBy { it['duration']?.toString()?.trim() ?: null }
+            naByGroupFull = naByGroupFull.sort { it.toString().toLowerCase() }
+            naByGroupFull.each {
+                key, value ->
+                    List<Map> items = []
+                    def curGroup = naByGroupFull[key].sort { a, b -> taskSortComparator.call(a, b) }
+                    curGroup.each {
+                        items << [done     : it['done'],
+                                  cancelled: it['cancelled'],
+                                  whenDone : it['whenDone'],
+                                  time     : it['time'],
+                                  priority : it['priority'],
+                                  action   : it['action'],
+                                  nodeID   : it['nodeID'],
+                                  who      : it['who'],
+                                  when     : it['when'],
+                                  context  : it['context'],
+                                  project  : it['project'],
+                                  waitFor  : it['waitFor'],
+                                  waitUntil: it['waitUntil'],
+                                  energy   : it['energy'],
+                                  duration : it['duration'],
+                                  details  : it['details'],
+                                  notes    : it['notes']
+                        ]
+                    }
+                    groups << [title: key ?: TextUtils.getText("freeplaneGTD.view.context.unassigned"), items: items]
+            }
         }
         retval['groups'] = groups
         return retval
@@ -269,6 +349,8 @@ class ReportModel {
                                    project  : it['project'],
                                    context  : it['context'],
                                    waitFor  : it['waitFor'],
+                                   energy   : it['energy'],
+                                   duration : it['duration'],
                                    details  : it['details'],
                                    notes    : it['notes']
                     ]

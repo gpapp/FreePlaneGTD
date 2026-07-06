@@ -27,7 +27,7 @@ class GtdReportViewController {
 
     public static final String FREEPLANE_GTD_DEFAULT_VIEW = 'freeplaneGTD_default_view'
     static enum VIEW {
-        PROJECT, WHO, CONTEXT, WHEN, DONETIMELINE
+        PROJECT, WHO, CONTEXT, DURATION, ENERGY, WHEN, DONETIMELINE
     }
 
     static enum DONE_TIMELINE {
@@ -92,19 +92,37 @@ class GtdReportViewController {
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
-                                actionCommand: VIEW.WHEN.name(),
-                                text: "4 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
-                                toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                                actionCommand: VIEW.DURATION.name(),
+                                text: "4 - " + TextUtils.getText("freeplaneGTD.tab.duration.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.duration.tooltip"),
                                 mnemonic: (char) '4',
+                                selected: defaultView == "DURATION",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.ENERGY.name(),
+                                text: "5 - " + TextUtils.getText("freeplaneGTD.tab.energy.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.energy.tooltip"),
+                                mnemonic: (char) '5',
+                                selected: defaultView == "ENERGY",
+                                actionPerformed: { refreshContent() }
+                        )
+                        radioButton(
+                                buttonGroup: contentTypeGroup,
+                                actionCommand: VIEW.WHEN.name(),
+                                text: "6 - " + TextUtils.getText("freeplaneGTD.tab.when.title"),
+                                toolTipText: TextUtils.getText("freeplaneGTD.tab.when.tooltip"),
+                                mnemonic: (char) '6',
                                 selected: defaultView == "WHEN",
                                 actionPerformed: { refreshContent() }
                         )
                         radioButton(
                                 buttonGroup: contentTypeGroup,
                                 actionCommand: VIEW.DONETIMELINE.name(),
-                                text: "5 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
+                                text: "7 - " + TextUtils.getText("freeplaneGTD.tab.done_timeline.title"),
                                 toolTipText: TextUtils.getText("freeplaneGTD.tab.done_timeline.tooltip"),
-                                mnemonic: (char) '5',
+                                mnemonic: (char) '7',
                                 actionPerformed: { refreshContent() }
                         )
                     }
@@ -153,7 +171,7 @@ class GtdReportViewController {
         cbFilterDone.selected = ResourceController.resourceController.getBooleanProperty('freeplaneGTD_filter_done')
         report.refreshModel(cbFilterDone.selected)
         taskPanel.clear()
-        taskPanel.add(formatList(findSelectedGroup(), report.mapReader.contextIcons, showNotes))
+        taskPanel.add(formatList(findSelectedGroup(), report.mapReader.contextIcons, showNotes), BorderLayout.NORTH)
         taskPanel.updateUI()
     }
 
@@ -235,12 +253,15 @@ class GtdReportViewController {
                                 actionText.append(key)
                             }
                             !item['project'] ?: actionText.append(' for ' + item['project'])
+                            !item['energy'] ?: actionText.append(' energy: ' + item['energy'])
+                            !item['duration'] ?: actionText.append(' duration: ' + item['duration'])
                             // TODO: differentiate waitfor somehow?
                             if (item['waitFor'] || item['waitUntil']) {
                                 actionText.append(' wait' + (item['waitFor'] ? ' for ' + item['waitFor'] : '') + (item['waitUntil'] ? ' until ' + item['waitUntil'] : ''))
                             }
                             vbox(constraints: gbc(weightx: 0.0, anchor: GridBagConstraints.NORTHEAST, fill: GridBagConstraints.BOTH)) {
-                                JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : Color.BLACK)
+                                Color normalTextColor = UIManager.getColor("Label.foreground") ?: Color.WHITE
+                                JLabel taskLabel = label(text: actionText, foreground: overdue ? Color.RED : normalTextColor)
 
                                 taskLabel.addMouseListener(new MouseAdapter() {
                                     @Override
@@ -284,6 +305,8 @@ class GtdReportViewController {
             case VIEW.PROJECT: list = report.projectList(); break
             case VIEW.WHO: list = report.delegateList(); break
             case VIEW.CONTEXT: list = report.contextList(); break
+            case VIEW.DURATION: list = report.durationList(); break
+            case VIEW.ENERGY: list = report.energyList(); break
             case VIEW.WHEN: list = report.timelineList(); break
             case VIEW.DONETIMELINE: list = report.doneTimeline(); break
             default: throw new UnsupportedOperationException("Invalid selection pane: " + contentTypeGroup.selection.actionCommand)

@@ -23,6 +23,8 @@ class ActionEditor {
         boolean today
         String when
         String priority
+        String energy
+        String duration
         String waitFor
         String waitUntil
         boolean done
@@ -47,6 +49,8 @@ class ActionEditor {
             today = node.icons.contains(GTDMapReader.instance.iconToday)
             when = node.attributes['When']
             priority = node.attributes['Priority']
+            energy = node.attributes['Energy']
+            duration = node.attributes['Duration']
             waitFor = node.attributes['WaitFor']?.replaceAll(',', ', ')
             waitUntil = node.attributes['WaitUntil']
             done = node.icons.contains(GTDMapReader.instance.iconDone)
@@ -56,10 +60,15 @@ class ActionEditor {
 
         void updateNode() {
             editedNode.text = "$action"
-            delegate ? editedNode['Who'] = delegate : editedNode.attributes.removeAll('Who')
-            context ? editedNode['Where'] = context : editedNode.attributes.removeAll('Where')
-            when ? editedNode['When'] = when : editedNode.attributes.removeAll('When')
-            priority ? editedNode['Priority'] = priority : editedNode.attributes.removeAll('Priority')
+            ['Who', 'Where', 'Duration', 'Energy', 'When', 'WaitFor', 'WaitUntil', 'Priority'].each {
+                editedNode.attributes.removeAll(it)
+            }
+
+            delegate ? editedNode['Who'] = delegate : null
+            context ? editedNode['Where'] = context : null
+            duration ? editedNode['Duration'] = duration : null
+            energy ? editedNode['Energy'] = energy : null
+            when ? editedNode['When'] = when : null
 
             if (waitFor) {
                 editedNode.attributes.set('WaitFor', waitFor.split(',')*.trim().unique({ a, b -> a.toLowerCase() <=> b.toLowerCase() }).join(','))
@@ -71,6 +80,8 @@ class ActionEditor {
                 editedNode.attributes.set('WaitUntil', waitUntilDate)
             } else
                 editedNode.attributes.removeAll('WaitUntil')
+
+            priority ? editedNode['Priority'] = priority : null
 
             GTDMapReader mapReader = GTDMapReader.instance
             if (editedNode.icons.contains(mapReader.iconToday) != today) {
@@ -114,6 +125,8 @@ class ActionEditor {
     JCheckBox todayField
     JTextField whenField
     JTextField priorityField
+    JTextField energyField
+    JTextField durationField
     JCheckBox doneField
     JCheckBox cancelledField
     JTextField waitForField
@@ -145,14 +158,24 @@ class ActionEditor {
                     contextField = textField(preferredSize: new Dimension(300, 25),
                             constraints: gbc(gridx: 1, gridy: 2, gridwidth: REMAINDER, fill: HORIZONTAL))
 
-                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.duration"),
                             constraints: gbc(gridx: 0, gridy: 3, ipadx: 5, fill: HORIZONTAL))
+                    durationField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 3, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.energy"),
+                            constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
+                    energyField = textField(preferredSize: new Dimension(250, 25),
+                            constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
+
+                    label(text: TextUtils.getText("freeplaneGTD.actioneditor.when"),
+                            constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
                     todayField = checkBox(text: TextUtils.getText("freeplaneGTD.actioneditor.today"),
                             preferredSize: new Dimension(50, 25),
-                            constraints: gbc(gridx: 1, gridy: 3, ipadx: 5))
+                            constraints: gbc(gridx: 1, gridy: 5, ipadx: 5))
                     whenField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 2, gridy: 3, fill: HORIZONTAL))
-                    hbox(constraints: gbc(gridx: 3, gridy: 3, fill: HORIZONTAL)) {
+                            constraints: gbc(gridx: 2, gridy: 5, fill: HORIZONTAL))
+                    hbox(constraints: gbc(gridx: 3, gridy: 5, fill: HORIZONTAL)) {
                         doneField = checkBox(
                                 text: TextUtils.getText("freeplaneGTD.actioneditor.done"),
                                 icon: IconUtil.getIcon("unchecked"),
@@ -174,19 +197,19 @@ class ActionEditor {
                     }
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitFor"),
-                            constraints: gbc(gridx: 0, gridy: 4, ipadx: 5, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
                     waitForField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 1, gridy: 4, gridwidth: REMAINDER, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.waitUntil"),
-                            constraints: gbc(gridx: 0, gridy: 5, ipadx: 5, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 0, gridy: 7, ipadx: 5, fill: HORIZONTAL))
                     waitUntilField = textField(preferredSize: new Dimension(250, 25),
-                            constraints: gbc(gridx: 1, gridy: 5, gridwidth: REMAINDER, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 1, gridy: 7, gridwidth: REMAINDER, fill: HORIZONTAL))
 
                     label(text: TextUtils.getText("freeplaneGTD.actioneditor.priority"),
-                            constraints: gbc(gridx: 0, gridy: 6, ipadx: 5, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 0, gridy: 8, ipadx: 5, fill: HORIZONTAL))
                     priorityField = textField(preferredSize: new Dimension(20, 25),
-                            constraints: gbc(gridx: 1, gridy: 6, gridwidth: REMAINDER, fill: HORIZONTAL))
+                            constraints: gbc(gridx: 1, gridy: 8, gridwidth: REMAINDER, fill: HORIZONTAL))
                 }
 
                 panel() {
@@ -204,6 +227,8 @@ class ActionEditor {
                                 model.today = todayField.selected
                                 model.when = whenField.text
                                 model.priority = priorityField.text
+                                model.energy = energyField.text
+                                model.duration = durationField.text
                                 model.waitFor = waitForField.text
                                 model.waitUntil = waitUntilField.text
                                 model.done = doneField.selected
@@ -238,6 +263,8 @@ class ActionEditor {
         todayField.selected = model.today
         whenField.text = model.when
         priorityField.text = model.priority
+        energyField.text = model.energy
+        durationField.text = model.duration
         waitForField.text = model.waitFor
         waitUntilField.text = model.waitUntil
         doneField.selected = model.done

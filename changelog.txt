@@ -1,3 +1,14 @@
+Unreleased
+    Added optional Duration and Energy task attributes.
+    Added Duration and Energy fields to the Edit Action dialog.
+    Displayed Duration and Energy values in the GTD Next Actions panel when present.
+    Added GTD Next Actions grouping by Duration and Energy.
+    Reordered GTD Next Actions grouping options to: Project, Who, Context, Duration, Energy, Timeline, Done timeline.
+    Reordered Edit Action fields so Duration and Energy appear after Context.
+    Kept known GTD task attributes in a consistent order when saving through the Edit Action dialog.
+    Improved GTD Next Actions text color handling for dark Freeplane themes.
+    Top-aligned GTD Next Actions report content in the tool panel.
+
 v0.9
     Added support to close the GTD window with ESC key
     Added Done icon marking
